@@ -98,6 +98,7 @@ var params = {
  	
  	
  	
+/*
  	//////////////////////////////////////////////////////////////////////////////////////// IF DEV (overriding some)
 	eventSourceChannel:	"devMessagChan",
 	sendReplyTweet:	false,
@@ -121,6 +122,7 @@ var params = {
 	// sur mongod://supervide pour tests
 	// paris16mai
 	// sur mongod://devdevdev pour clean
+*/
 };
 
 module.exports = params;
