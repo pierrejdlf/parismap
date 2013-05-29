@@ -431,12 +431,14 @@ var processAndStoreTweet = function(tweet) {
 // twitter listener
 var worker = function() {
 	var twitter = require("ntwitter");
+	console.log("Twitter init");
 	var t = new twitter({
 		consumer_key: params.consumer_key,
 		consumer_secret: params.consumer_secret,
 		access_token_key: params.access_token_key,
 		access_token_secret: params.access_token_secret
 	});
+	console.log("Twitter init done");
 	t.stream(
 		'statuses/filter',{
 			//'language':en,
@@ -515,8 +517,11 @@ var worker = function() {
 					}
 				}
 			});
+			stream.on('error', function(error, code) {
+				console.log("TWITTER STREAM ERROR: " + error + ": " + code);
+			});
 			stream.on('end', function (response) { // Handle a disconnection
-				console.log("============ TWITTER STREAM DISCONNECTED");
+				console.log("TWITTER STREAM DISCONNECTED");
 				console.log(response);
 			});
 		}

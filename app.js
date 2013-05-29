@@ -1,6 +1,7 @@
 /////////////////////////////////////////////////////////////////////
 var params = require("./myparams.js");
 console.log("\n\n==================================== Event Channel : "+params.eventSourceChannel);
+console.log("consumerKey : "+params.consumer_key);
 //console.log(JSON.stringify(params,null,4));
 
 /////////////////////////////////////////////////////////////////////
