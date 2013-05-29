@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>paris ménage</title>
+	
+	<script src="lib/jquery.js"></script>
+	<script src="lib/bootstrap.min.js"></script>
+	
+	<script src="lib/moment.min.js"></script>
+	<script src="lib/minutils.js"></script>
+		
+	<link href='http://fonts.googleapis.com/css?family=Clicker+Script|Oleo+Script+Swash+Caps|Cantora+One|Text+Me+One|Merienda|Roboto' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+
+	<link rel="stylesheet" href="css/manage.css" type="text/css" />
+	
+	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+<script type="text/javascript">
+var doPostAction = function(action) {
+	action['pass']="{{password}}";
+	$.post("/update",action,function(data, textStatus, jqXHR){
+		console.log("POST done");
+		$("#tw_"+id).remove();
+		$("#ev_"+id).remove();
+	});
+}
+</script>
+<div id="container">
+<! ------------------------------------------------------------ -->
+<div id="events">
+	<h3>{{events.length}} Events</h3>
+	<table class="events">
+		<thead>
+			<td>idx</td>
+			<td>id</td>
+			<td>evtype</td>
+			<td>name</td>
+			<td>place</td>
+			<td>adress</td>
+			<td>occurences</td>
+			<td>action</td>
+		</thead>
+	{{#events}}
+		<tr class="event" id="ev_{{_id}}">
+			<td>{{idx}}</td>
+			<td>{{idactivites}}</td>
+			<td>{{evtype}}</td>
+			<td>{{{nom}}}</td>
+			<td>{{{lieu}}}</td>
+			<td><a href="https://maps.google.com/maps?q={{lat}},{{lon}}" target="_blank">{{adresse}}</a> {{zipcode}} {{city}}</td>
+			<td>{{occurences}}</td>
+			<td><a href="#" onclick='doPostAction({action:"delete",what:"event",id:"{{_id}}"});'>del</a></td>
+		</tr>
+	{{/events}}
+	</table>
+</div>
+<! ------------------------------------------------------------ -->
+<div id="tweets">
+	<h3>{{tweets.length}} Tweets</h3>
+	<table class="tweets">
+		<thead>
+			<td>session</td>
+			<td>type</td>
+			<td>longest</td>
+			<td>date</td>
+			<td>from</td>
+			<td>tweet</td>
+			<td>place</td>
+			<td>action</td>
+		</thead>
+	{{#tweets}}
+		<tr class="tweet {{geo.geotype}}" id="tw_{{id_str}}">
+			<!--<td>{{_id}}</td>-->
+			<!--<td>{{id_str}}</td>-->
+			<td>{{session}}</td>
+			<td>{{twtype}}</td>
+			<td>{{word}}</td>
+			<!--<td class="photo"><img src="{{photo.media_url}}"></td>-->
+			<td><script type="text/javascript">document.write(formatDate("{{created_at}}",'HH[h]mm'));</script></td>
+			<td><a href="https://twitter.com/{{user.screen_name}}" target="_blank">@{{user.screen_name}}</a></td>
+			<td class="text"><script type="text/javascript">document.write(formatTweet('{{{text}}}'));</script></td>
+			<td class="{{geo.geotype}}"><a {{#place.full_name}}title="{{place.full_name}}"{{/place.full_name}} href="https://maps.google.com/maps?q={{geo.coordinates}}" target="_blank">{{geo.geotype}}</a></td>
+			<td><a href="#" onclick='doPostAction({action:"delete",what:"tweet",id:"{{id_str}}"});'>del</a></td>
+		</tr>
+	{{/tweets}}
+	</table>
+</div>
+<! ------------------------------------------------------------ -->
+<div id="users">
+	<h3>{{users.length}} Users</h3>
+	<table>
+	{{#users}}
+		<tr>
+			<!--<td>{{_id}}</td>-->
+			<!--<td>{{id_str}}</td>-->
+			<td>{{idx}}</td>
+			<!--<td>{{session}}</td>-->
+			<td id="{{id_str}}">{{name}}</td>
+			<td><a href="https://twitter.com/{{screen_name}}" target="_blank">@{{screen_name}}</a></td>
+			<td class="count">{{statuses_count}}</td>
+			<td>{{map_count}}</td>
+			<td class="square"><script type="text/javascript">document.write( unescape(formatSquare({{map_square}})) );</script></td>
+		</tr>
+	{{/users}}
+	</table>
+</div>
+<! ------------------------------------------------------------ -->
+</div>
+</body>
+</html>

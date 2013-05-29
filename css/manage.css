@@ -1,0 +1,43 @@
+html, body, div#container {
+	width:100%;
+	margin:1px;
+}
+
+
+div#users {
+	max-width:20%;
+	display: inline-block;
+}
+div#tweets {
+	max-width:70%;
+	display: inline-block;
+}
+div#events {
+
+}
+
+
+table tr:nth-child(odd) {
+	background-color: #f5f5f5;
+}
+table td {
+	padding:1px 5px 0px 1px;
+	border:1px solid lightgray;
+	font-size: 0.8em;
+}
+table td.text {
+	font-size: 0.8em;
+}
+table td.square, table td.count {
+	text-align: right;
+}
+table td.RndPt {
+	background:#e9b242;
+}
+table td.OutPt {
+	background:#5faacd;
+}
+table td.photo img {
+	width:100px;
+	height:100px;
+}

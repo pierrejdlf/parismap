@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>paris m'appartient</title>
+
+	<meta name="google-site-verification" content="FaSBxXfO-6eLZRYWZDHh3C2CyXB1io2oISRhaJSg9Bs" />
+	
+	<meta name="description" content="Carte interactive des tweets #parismap. Réseau ouvert de proximité à Paris. Tweeter, Explorer, rencontrer.">
+	<meta name="author" content="Pierre JdlF">
+	<meta name="Copyright" content="Parismap">
+	<meta name="DC.title" content="Paris m'appartient, Paris vous appartient">
+	<meta name="DC.subject" content="Réseau social de proximité à Paris. Paris vous appartient. Socialiser, Tweeter, Explorer, rencontrer, découvrir, étonner.">
+	<meta name="DC.description" content="Paris m'appartient #parismap. Carte interactive des tweets géolocalisés parismap. Création de lien social de proximité.">
+	<meta name="DC.creator" content="Pierre JdlF">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+	<script src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+	<script src='http://d3js.org/d3.v3.min.js' charset="utf-8"></script>
+	<!--<script src="lib/d3.v3.min.js"></script>-->
+	
+	<script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.js'></script>
+	<link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.css' rel='stylesheet' />
+	
+	<script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap-scroll-modal.js"></script>
+	
+	<script type="text/javascript" src="lib/mytooltip.js"></script>
+	
+	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+	<link rel="stylesheet" href="css/bootstrap-scroll-modal.css" type="text/css" />
+	
+	<script src="lib/moment.min.js"></script>
+	<script src="lib/minutils.js"></script>
+	<link rel="stylesheet" href="css/tmap.css" type="text/css"/>
+	
+	<script type="text/javascript">
+		var jsonUrl = null;
+		var getURLParameter = function(name) { return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;}
+		
+		var isMobile = ({{forceMobile}} || screen.width <= 800);
+		
+		if(isMobile) {
+			console.log(" ... loading mobile");
+			jsonUrl = "/tweets.json?m";
+			document.write('<script src="lib/tmap-mobile.js"></'+'script>');
+		} else {
+			console.log(" ... loading desktop");
+			if({{forceNgJson}}) jsonUrl = "/tweets.json?m";
+			else jsonUrl = "/tweets.json";
+			document.write('<script src="lib/tmap.js"></'+'script>');
+			//document.write('<script src="http://app.eventsourcehq.com/es.js"></'+'script>');
+			document.write('<script>(function(){var uv=document.createElement("script");uv.type="text/javascript";uv.async=true;uv.src="//widget.uservoice.com/zSsRUcH6Eh25xWciW9fRNg.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(uv,s)})(); UserVoice = window.UserVoice || []; UserVoice.push(["showTab", "classic_widget", { mode: "full", primary_color: "#cc6d00", link_color: "#007dbf", default_mode: "support", forum_id: 203857,support_tab_name: "Notifier un problème",feedback_tab_name: "Proposer une idée", tab_label: "une idée ?", tab_color: "#3D403D", tab_position: "middle-right", tab_inverted: false}]);</'+'script>');
+		}
+	</script>
+	
+	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
+	
+</head>
+<body>
+<div class="page-container">
+	<a id="helpButton" class="btn btn-small" href="http://www.parismappartient.fr" target="_blank"><i class="icon-question-sign"></i></a>
+	<a id="locButton" class="btn btn-small" onclick="goToMyPosition();"><i class="icon-screenshot"></i></a>
+	<a id="userButton" class="btn btn-info btn-small" href="/qui" target="_blank"><i class="icon-list"></i></a>
+	<label id="toggleVoronoi" class="checkbox"><input type="checkbox">zones</label>
+	<! ------------------------------------------------------------ -->
+	<div id="map"></div>
+	<!--<div id="panel"></div>-->
+	<! ------------------------------------------------------------ -->
+</div>
+<! ------------------------------------------------------------ -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		var pos = [48.862908,2.346611];
+		var zoom = 12;
+		if(isMobile) zoom = 9;
+		if(getURLParameter('p')) {
+			pos = getURLParameter('p').split(",");
+			zoom = 14;
+		}
+		init_map("map","{{eventSourceChannel}}",[{{#shapeMask}}[{{.}}],{{/shapeMask}}],jsonUrl,pos,zoom);
+		
+	});
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20765639-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>
+</html>

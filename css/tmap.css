@@ -1,0 +1,377 @@
+body, html {
+	margin:0;
+	padding:0;
+	width:100%;
+	height:100%;
+	background:white;
+	overflow:hidden;
+}
+
+#toggleVoronoi { display:none; }
+@media (max-width:800px) {
+	#panel { display:none; }
+	#toggleVoronoi { display:block; }
+	.modal-header { display:none; }
+	.modal-body { font-size: 0.7em; }
+	.modal-footer p { font-size: 0.6em; }
+}
+
+/* ------------------------------------------------------------------------ */
+/* css hack to hide if Opera (other browser will ignore the rule) */
+x:-o-prefocus, #svgmapmask {
+	display: none;
+}
+#map {
+	position:absolute;
+	top:0;
+	bottom:0;
+	width:100%;
+	overflow:hidden;
+}
+#overmap {
+	position:absolute;
+	top:0;
+	bottom:0;
+	width:100%;
+}
+/* MAP MASK */
+#svgmapmask {
+	pointer-events: none;
+	position:absolute;
+	width:100%;
+	height:100%;
+	left:0;
+	top:0;
+	overflow:hidden;
+}
+#svgmapmask path {
+	pointer-events: fill;
+	stroke:none;
+	fill:black;
+	fill-opacity:0.6;
+}
+
+/* ONLY FOR MOBILE */
+#nsvgdiv {
+	position:absolute;
+	top:0;
+	bottom:0;
+	width:100%;
+	z-index:99;
+}
+
+
+/* ------------------------------------------------------------------------ */
+/* HELP BUTTON */
+#helpButton, #userButton, #locButton {
+	position:absolute;
+	margin:10px;
+	top:0;
+	right:0;
+	z-index: 200;
+}
+#locButton {
+	margin-right:50px;
+}
+#userButton {
+	margin-top:40px;
+}
+#toggleVoronoi {
+	position:absolute;
+	margin:10px;
+	top:0;
+	left:0;
+	z-index: 200;
+	background: white;
+	border: 4px solid white;
+	border-radius: 5px;
+}
+/* ------------------------------------------------------------------------ */
+/* CONTOUR */
+.contour {
+	stroke-opacity:0;
+	stroke:#6d6d6d;
+	stroke-width:2px;
+	fill:none;
+}
+
+/* ------------------------------------------------------------------------ */
+/* TWEETS */
+.clictweets.svg {
+	/* invisible clic zone */
+	fill:white;
+	fill-opacity:0.01;
+}
+.tweets.svg, .ngtweets.svg {
+	stroke-opacity:1;
+	stroke:white;
+	stroke-width: 1.5px;
+}
+/* non geo tweets moving */
+.ngtweets.svg {
+	fill-opacity:0.25;
+}
+
+/* ------------------------------------------------------------------------ */
+/* non svg TWEETS */
+.clictweets.nosvg {
+	position:absolute;
+	width:28px;
+	height:28px;
+	border-radius:20px;
+	-moz-border-radius:20px;
+	-webkit-border-radius:20px;
+	background:none;
+}
+.tweets.nosvg {
+	position:absolute;
+	width:8px;
+	height:8px;
+	border:white solid 2px;
+	border-radius:20px;
+	-moz-border-radius:20px;
+	-webkit-border-radius:20px;
+}
+
+.voropaths {}
+.voropaths:hover {}
+
+/* ------------------------------------------------------------------------ */
+/* SPERM */
+/*
+.gsperm ellipse {
+	fill: #fff;
+}
+.gsperm path {
+	fill: none;
+	stroke: #fff;
+	stroke-linecap: round;
+}
+.gsperm .mid {
+	stroke-width: 4px;
+}
+.gsperm .tail {
+	stroke-width: 2px;
+}
+*/
+
+/* ------------------------------------------------------------------------ */
+/* MODAL BOOTSTRAP */
+.modal-header {
+	height:6em;
+	border-radius:6px 6px 0px 0px;
+	-moz-border-radius:6px 6px 0px 0px;
+	-webkit-border-radius:6px 6px 0px 0px;
+	padding:0;
+	overflow: hidden;
+}
+.modal-header img {
+	width: 100%;
+}
+.modal-body a, .modal-footer a {
+	color:#6492c6;
+}
+.modal-body {
+	font-family: 'Roboto', sans-serif;
+	text-align: center;
+}
+.modal-body h2 {
+	font-size: 2.5em;
+	margin: 0.3em;
+	line-height: 1.2em;
+	/*margin-top:0.05em;*/
+}
+.modal-body h2 .beta {
+	font-size: 0.4em;
+	display: inline-block;
+	position: relative;
+	top: -1em;
+}
+.modal-body h3 {
+	margin:0.2em;
+	font-size: 1em;
+	color:#747474;
+	line-height: 1.3em;
+}
+.modal-body h3 b {
+	color:black;
+}
+.modal-footer {
+	padding: 15px 10px 10px;
+}
+.modal-footer p {
+	font-family: 'Roboto', sans-serif;
+	color: gray;
+	font-style: italic;
+	font-size: 0.8em;
+	text-align: center;
+	line-height: 1.3em;
+}
+.modal-footer p.note {
+	text-align:left;
+	color:#af6a6a;
+	font-size: 0.7em;
+}
+
+/* ------------------------------------------------------------------------ */
+/* LEAFLET override ZOOM CONTROL */
+.leaflet-control-zoom a {
+	text-decoration: none;
+}
+
+/* ------------------------------------------------------------------------ */
+/* TOP USERS PANEL */
+/*#panel {
+	position:absolute;
+	left:0;
+	top:0;
+	max-width: 400px;
+	height:100%;
+	padding:0px;
+	pointer-events:none;
+	overflow-y:scroll;
+	overflow-x:hidden;
+	box-shadow: 2px 0px 5px #878787 outset;
+	-moz-box-shadow: 2px 0px 5px #878787 outset;
+	-webkit-box-shadow: 2px 0px 5px #878787 outset;
+	background: whitesmoke;
+}
+
+table {
+	max-width: 400px;
+	border-spacing: 0;
+	border-collapse:separate;
+	padding:0px;
+	pointer-events:all;
+	font-family: 'Roboto', sans-serif;
+}
+table tr {
+	max-width: 250px;
+	cursor: pointer;
+	background: rgba(255,255,255,0.95);
+}
+table tr:nth-child(even) {
+	background: rgba(249,249,249,0.95);
+}
+table tr:hover {
+}
+table td {
+	text-align: left;
+	padding:10px 10px 10px 8px;
+	font-size: 0.85em;
+}
+table td.rank {
+	text-align: right;
+}
+table td.rank div {
+	display: inline-block;
+	width:17px;
+	font-size:0.7em;
+	padding:1px;
+	text-align: center;
+	color:lightgray;
+}
+table td.content {
+	max-width: inherit;
+	overflow: hidden;
+}
+table td.content div a.name {
+	color:#6492c6;
+}
+table td.content div .date {
+	display: inline-block;
+	color:lightgray;
+	font-size: 0.8em;
+	margin-left:5px;
+}
+table td.content .text a {
+	color:#6a6a6a;
+}
+table td.color {
+	text-align: center;
+	font-size: 0.6em;
+	padding:3px;
+	vertical-align: top;
+	color:gray;
+}
+table .square {
+	font-size: 0.8em;
+	float:right;
+	color:gray;
+}
+*/
+
+/* ------------------------------------------------------------------------ */
+/* TOOLTIPS */
+.mytooltip {
+	color: #f1f1f1;
+	background: rgba(44,44,44,1);
+	position: absolute;
+	z-index: 100;
+	padding: 8px;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+}
+.mytooltip.tweet { }
+.mytooltip.event { background: rgba(45,30,30,1); }
+
+.mytooltip a {
+	color:#83bafd;
+}
+.mytooltip div {
+	color:white;
+	text-align: left;
+	font-size: 0.85em;
+	font-family: 'Roboto', sans-serif;
+}
+.mytooltip .toolt_head {
+	border-bottom: 1px solid rgba(75,73,73,0.4);
+	color:gray;
+	padding-bottom:1px;
+}
+.mytooltip .toolt_footer {
+	border-top: 1px solid rgba(75,73,73,0.4);
+	color:gray;
+	padding-top:4px;
+	line-height: 1.2em;
+}
+.mytooltip .toolt_body {
+	margin-top:5px;
+	margin-bottom:5px;
+	line-height: 1.5em;
+	overflow: hidden;
+}
+.mytooltip .toolt_body a {
+	color:#c9c9c9;
+}
+.mytooltip:after { /* triangle decoration */
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 10px solid rgba(44,44,44,1);
+	content: '';
+	position: absolute;
+	left: 50%;
+	bottom: -10px;
+	margin-left: -10px;
+}
+
+.mytooltip.top:after {
+	border-top-color: transparent;
+	border-bottom: 10px solid rgba(44,44,44,1);
+	top: -20px;
+	bottom: auto;
+}
+
+.mytooltip.left:after {
+	left: 10px;
+	margin: 0;
+}
+
+.mytooltip.right:after {
+	right: 10px;
+	left: auto;
+	margin: 0;
+}

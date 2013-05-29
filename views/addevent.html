@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>add event</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	
+	<script src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+	
+	<script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+		
+	<script type="text/javascript" src="lib/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+	<link rel="stylesheet" href="css/datetimepicker.css" type="text/css" />
+	
+	<script src="lib/moment.min.js"></script>
+	<script src="lib/minutils.js"></script>
+	
+	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
+	
+</head>
+<body>
+<div class="page-container">
+	<form class="form-horizontal" action="/addevent" method="post">		
+		<div class="control-group">
+			<div class="controls">
+			<h3>ajouter un événement</h3>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">nom</label>
+			<div class="controls">
+			<input name="event[name]" class="input-xlarge" type="text" id="inputName" placeholder="Concert Jazz Manouche - Les glanneurs" required>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">adresse</label>
+			<div class="controls">
+			<input name="event[place]" class="input-medium" type="text" id="inputPlace" placeholder="Bar du coin" required>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+			<input name="event[address]" class="input-xlarge" type="text" id="inputAddress" placeholder="54 rue du Gange, 75013 Paris" required>
+			<!--<input name="event[zipcode]" class="input-mini" type="text" id="inputAddress" placeholder="75013" required>-->
+			<!--<input name="event[city]" class="input-mini" type="text" id="inputAddress" placeholder="Paris" required>-->
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">début</label>
+			<div class="controls">
+			<div class="input-append date form_datetime" id="start">
+				<input name="event[start]" size="16" type="text" value="" required>
+				<span class="add-on"><i class="icon-th"></i></span>
+			</div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">fin</label>
+			<div class="controls">
+			<div class="input-append date form_datetime" id="end">
+				<input name="event[end]" size="16" type="text" value="" required>
+				<span class="add-on"><i class="icon-th"></i></span>
+			</div>	
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">lien vers infos</label>
+			<div class="controls">
+			<input name="event[link]" type="text" id="inputLink" placeholder="http://myspace.com/etc.." required>
+			</div>
+		</div>
+						
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">contact</label>
+			<div class="controls">
+			<input name="event[email]" type="email" id="inputEmail" placeholder="email@contact.com" required>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn btn-info">Ajouter</button>
+			</div>
+		</div>
+		
+		<div class="control-group" id="status" display="none">
+		<div class="controls">
+			<div class="alert">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>Youpi !</strong> Votre événement a été ajouté
+			</div>
+		</div>
+		</div>
+	</form>
+</div>
+<! ------------------------------------------------------------ -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#status").hide();
+		
+		var sPicker = $(".form_datetime#start").datetimepicker({
+			language: 'fr',
+			weekStart: 1,
+			format: "dd MM yyyy - hh:ii",
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
+		sPicker.on('changeDate', function(ev){
+			//todo: update lower/upper limits based on selection ?
+			//console.log("start picked"+ev.date.valueOf());
+			//console.log("start picked"+ev.date);
+			//$('.form_datetime#end').datetimepicker('setStartDate', ev.date.valueOf());
+		});
+		
+	   
+		$(".form_datetime#end").datetimepicker({
+			language: 'fr',
+			weekStart: 1,
+			format: "dd MM yyyy - hh:ii",
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
+		
+		$('form').submit(function(){
+			$.post($(this).attr('action'), $(this).serialize(), function(json) {
+				console.log(json);
+				if(json.status=='ok') $("#status").show();
+			},'json');
+			return false;
+		});
+		
+	});
+</script>
+</body>
+</html>
