@@ -4,7 +4,7 @@ var params = {
 	twittername:			'parismap',
 	consumer_key: 			process.env.PMCK,
 	consumer_secret: 		process.env.PMCS,
-	access_token_key: 		process.env.PMATK,
+	access_token_key: 		process.env.PMAT,
 	access_token_secret: 	process.env.PMATS,
 
  	adminKey:		process.env.PMAK, // lowcost secure admin
@@ -20,7 +20,7 @@ var params = {
 	eventSourceChannel:	"prodMessagChan",
 
 	/////////////// node web server port
-	port:			process.env.PORT || 8080 ,
+	port:			process.env.PORT ,
 	
 	/////////////// DB
 	mongdb:			process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/devdevdev',
