@@ -23,9 +23,9 @@
 var doPostAction = function(action) {
 	action['pass']="{{password}}";
 	$.post("/update",action,function(data, textStatus, jqXHR){
-		console.log("POST done");
-		$("#tw_"+id).remove();
-		$("#ev_"+id).remove();
+		console.log("POST result: "+data.status);
+		$("#tw_"+action.id).remove();
+		$("#ev_"+action.id).remove();
 	});
 }
 </script>
@@ -36,6 +36,7 @@ var doPostAction = function(action) {
 	<table class="events">
 		<thead>
 			<td>idx</td>
+			<td>created</td>
 			<td>id</td>
 			<td>evtype</td>
 			<td>name</td>
@@ -47,6 +48,7 @@ var doPostAction = function(action) {
 	{{#events}}
 		<tr class="event" id="ev_{{_id}}">
 			<td>{{idx}}</td>
+			<td><script type="text/javascript">document.write(formatDate("{{created}}",'DDMMM_HH[h]mm'));</script></td>
 			<td>{{idactivites}}</td>
 			<td>{{evtype}}</td>
 			<td>{{{nom}}}</td>

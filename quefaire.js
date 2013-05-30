@@ -34,6 +34,7 @@ var storeEvent = function(event) {
 					event.occurences = nOccs;
 				}
 				event.evtype = "quefaire";
+				event.contact = "quefaire@paris.fr";
 				event.created = Date();
 				event.modified = Date();
 				var newevent = new models.Event(event);
@@ -44,7 +45,7 @@ var storeEvent = function(event) {
 				});
 			} else {
 				console.log("QueFaireAPI EXISTING event = "+event.nom);
-				// todo: update event properties (in case of same id but updated data) ?
+				// todo: update event properties (in case of same id but updated data ?) ?
 			}
 		}
 	});
@@ -70,7 +71,7 @@ var fetchFrom = function(from) {
 					storeEvent(elem);
 				});
 				console.log("- ... QueFaireAPI ... - stored from="+from);
-				if(from<=5000) fetchFrom(from+99);
+				if(from<=5000) fetchFrom(from+100);
 				else { console.log("- QueFaireAPI DONE -"); }
 			}
 		} else {

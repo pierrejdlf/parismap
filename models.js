@@ -60,12 +60,14 @@ var tweetSchema = new mongoose.Schema({
 
 //////////////////////////////////////////////////////////// Events from Quefaire API
 var eventSchema = new mongoose.Schema({
-	// type is either "quefaire", "added"
+	// type is either "quefaire" / "manual"
 	evtype:			String,
 	created:		Date,
 	modified:		Date,
+	contact:		String,
+	link:			String,
 	
-	// following is same as in QueFaireAPI
+	// following is same as in QueFaireAPI events
 	idactivites:	Number,
 	nom:			String,
 	description:	String,

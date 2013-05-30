@@ -122,14 +122,16 @@ app.post('/addevent', function(req, res) {
 	
 	// todo: secure tests to avoid spam ? + if not already added (people trying to add/add/add/add ..) ?
 	var event = {};
-	event.evtype = "added";
+	event.evtype = "manual";
 	event.created = Date();
 	
-	event.idactivites=	0;
+	event.idactivites =	0;
 	event.nom =			formEvent.name;
 	event.description =	"-";
 	event.lieu =		formEvent.place;
 	event.adresse =		formEvent.address;
+	event.contact =		formEvent.contact;
+	event.link = 		formEvent.link;
 	//event.zipcode =		formEvent.zipcode;
 	//event.city =		formEvent.city;
 	event.occurences = [{
@@ -273,6 +275,9 @@ app.post('/update', function(req, res) {
 					console.log("No event found");
 				}
 			});
+		res.json({'status':'done'});
+	} else {
+		res.json({'status':'not admin'});
 	}
 });
 ///////////////////////////////////////////////////////////////////// ADMIN PAGE
@@ -294,17 +299,25 @@ app.get('/menage', function(req, res) {
 */
 	var quer = {};
 	
+	// cheap secure
 	var password = 		req.param('pass') || '';
-	var wantedsession = req.param('s');
-	wantedsession==null ? console.log("MANAGE getting all sessions for manage") : quer['session']=wantedsession;
-	var wantedmanage = 	req.param('m'); // MANAGE tweets OR events
-	var wantedevtype = 	req.param('e');
-	wantedevtype==null ? console.log("MANAGE getting all events") : quer['evtype']=wantedevtype;
-	var wantedgeo = 	req.param('g');
-	wantedgeo==null ? console.log("MANAGE getting all geo+nongeo for manage") : quer['geo.geotype']=wantedgeo;
+	// update events from API(s)
 	var wantedupdate = 	req.param('update');
-	var wantedlimit = 	req.param('n') || 0;
-	var wantedfrom = 	req.param('i') || 0;
+
+	var wantedsession = req.param('session');
+	wantedsession==null ? console.log("MANAGE getting all sessions for manage") : quer['session']=wantedsession;
+	
+	// MANAGE tweets OR events
+	var wantedmanage = 	req.param('m') || 'tweets';
+	// events
+	var wantedevtype = 	req.param('evtype');
+	wantedevtype==null ? console.log("MANAGE getting all events") : quer['evtype']=wantedevtype;
+	// tweets
+	var wantedgeo = 	req.param('geotype');
+	wantedgeo==null ? console.log("MANAGE getting all geo+nongeo for manage") : quer['geo.geotype']=wantedgeo;
+	
+	var wantedfrom = 	req.param('offset') || 0;
+	var wantedlimit = 	req.param('limit') || 0;
 	
 	if(password==params.adminKey) {
 		// update quefaire events from paris.fr
@@ -320,7 +333,7 @@ app.get('/menage', function(req, res) {
 						if (err !== null) { console.log(err); }
 						else {
 							idx=1;
-							us.forEach(function(el){ el['idx']=idx++; });
+							udocs.forEach(function(el){ el['idx']=idx++; });
 							console.log("MANAGE fetched tweets: "+tw.length);
 							console.log("MANAGE fetched users: "+udocs.length);
 							res.locals = {
@@ -334,7 +347,7 @@ app.get('/menage', function(req, res) {
 				}
 			});
 		} else { /////////////////////////////////////////////////// EVENTS
-			models.Event.find(quer).exec(function(err, evts) {
+			models.Event.find(quer).skip(wantedfrom).limit(wantedlimit).lean().sort({created:-1}).exec(function(err, evts) {
 				if (err !== null) { console.log("Error fetching events"); }
 				else {
 					console.log("MANAGE fetched events: "+evts.length);
