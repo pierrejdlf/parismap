@@ -438,11 +438,12 @@ var worker = function() {
 		access_token_secret: params.access_token_secret
 	});
 	t.stream(
+		//NB:[sic] using location in twitter API will match -track- OR -fallswithinlocation-
 		'statuses/filter',{
 			//'language':en,
 			//'follow':["userId","userId","userId"],
 			'track':params.track,
-			'locations':params.rectParisBig.join(',')
+			'locations':params.rectParisBig.join(','),
 		},
 		function(stream) {
 			stream.on("data", function(tweet) {
