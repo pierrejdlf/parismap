@@ -75,7 +75,8 @@ var params = {
 	access_token_key: 		process.env.PMAT,
 	access_token_secret: 	process.env.PMATS,
 	
-	track:	["#parismap"],//["ton","a","il","on","se","au","y","c","moi","je","tu","sa","son","ton","ta","ne","pas","la","le","de","des","du","un","et","si","pour","rien","sur","avec","sans","ds","dans","à","ce","ces","est","eu","vu","va","#parismap"],
+	track:	dev ? ["#paris"] : ["#parismap"],
+	//["ton","a","il","on","se","au","y","c","moi","je","tu","sa","son","ton","ta","ne","pas","la","le","de","des","du","un","et","si","pour","rien","sur","avec","sans","ds","dans","à","ce","ces","est","eu","vu","va","#parismap"],
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// following big bounding box is used within twitter query
