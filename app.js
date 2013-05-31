@@ -112,7 +112,7 @@ app.get('/', function(req, res) {
 
 
 ///////////////////////////////////////////////////////////////////// ADD EVENT PAGE
-// home page rendered in index.html
+// add event manually
 app.get('/nouveau', function(req, res) {
 	return res.render('addevent');
 });
@@ -190,7 +190,7 @@ app.post('/addevent', function(req, res) {
 
 
 ///////////////////////////////////////////////////////////////////// Public list of tweets / events
-// simple list display (initially for mobile)
+// simple list display
 app.get('/qui', function(req, res) {
 	var quer = {'geo.geotype':'Point'};
 	params.showSession=='' ? console.log("getting all sessions-users for qui") : quer['session']=params.showSession;
@@ -280,6 +280,9 @@ app.post('/update', function(req, res) {
 		res.json({'status':'not admin'});
 	}
 });
+
+
+
 ///////////////////////////////////////////////////////////////////// ADMIN PAGE
 // users and tweets readable html table
 app.get('/menage', function(req, res) {
