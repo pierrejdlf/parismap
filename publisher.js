@@ -9,5 +9,8 @@ if (params.ESHQ_KEY) {
 
   console.log("ESHQ publisher client made");
 }
+else {
+  console.error('No ESHQ credentials provided.');
+}
 
 module.exports = publisherClient;
