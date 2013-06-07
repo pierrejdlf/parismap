@@ -16,10 +16,16 @@ var express = require("express"),
 	utils = require("./utils.js"),
 	moment = require("moment"),
 	models = require("./models.js"),
-	publisherClient = require("./publisher.js").listen(app),
 	twitterWorker = require("./twitter.js"),
 	quefaire = require("./quefaire.js"),
 	request = require('request');
+
+// setup publisher client
+publisherClient = require("./publisher.js");
+
+if (publisherClient) {
+  publisherClient.listen(app);
+}
 
 moment.lang('fr');
 	

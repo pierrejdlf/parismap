@@ -1,16 +1,16 @@
 var publisherClient = null;
-
 var params = require('./myparams.js');
-	
-var publisherClient = require('eshq-js')({
+
+if (params.ESHQ_KEY) {
+  publisherClient = require('eshq-js')({
 		key:	params.ESHQ_KEY,
 		secret: params.ESHQ_SECRET
 	});
 
+  console.log("ESHQ publisher client made");
+}
+
 module.exports = publisherClient;
-
-console.log("ESHQ publisher client made");
-
 
 
 
