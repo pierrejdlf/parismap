@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>paris m'appartient</title>
+	<title>qui</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 	<script src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
@@ -42,15 +42,13 @@ table {
 	border:none;
 }
 
-table tr.other:nth-child(odd) { 	background-color: #f5f5f5;}
-table tr.other:nth-child(even) { 	background-color: #ffffff;}
-table tr.parismap:nth-child(odd) { 	background-color: #EEE694;}
-table tr.parismap:nth-child(even) { background-color: #FFF7AE;}
+table tr:nth-child(odd) { 	background-color: #f5f5f5;}
+table tr:nth-child(even) { 	background-color: #ffffff;}
 
 table td {
 	padding:6px;
 }
-table td.rank {
+/*table td.rank {
 	text-align: right;
 }
 table td.rank div {
@@ -67,17 +65,17 @@ table td.rank div {
 	-moz-box-shadow: 0px 0px 10px rgb(185, 185, 185);
 	-webkit-box-shadow: 0px 0px 10px rgb(185, 185, 185);
 }
+.square {
+	float:right;
+	font-size: 0.7em;
+	color:gray;
+}*/
 .name {
 	display: inline-block;
 }
 .name a {
 	font-size: 0.9em;
 	text-decoration: underline;
-}
-.square {
-	float:right;
-	font-size: 0.7em;
-	color:gray;
 }
 .date {
 	display: inline-block;
@@ -139,9 +137,9 @@ table td.rank div {
 		<tr class="{{p_tweet.twtype}}">
 			<!--<td class="square"></td>
 			<td class="date"></td>-->
-			<td class="rank"><div>{{idx}}</div></td>
+			<!--<td class="rank"><div>{{idx}}</div></td>-->
 			<td class="meta">
-				<div class="square">{{value}}</div>
+				<!--<div class="square">{{value}}</div>-->
 				<div class="name"><a href="https://twitter.com/{{screen_name}}" target="_blank">{{name}}</a></div>
 				<div class="date"><script type="text/javascript">document.write( formatDateFromNow("{{p_tweet.created_at}}") );</script> <a href="/?p={{p_tweet.geo.coordinates}}" target="_blank">{{p_tweet.place.name}}</a></div>
 			</td>

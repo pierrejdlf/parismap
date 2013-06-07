@@ -54,24 +54,23 @@ var tweetSchema = new mongoose.Schema({
 	
 	hashtags: [String],
 	word: String,			// longest word
-	twtype: String, 		// parismap, other
+	twtype: String, 		// parisquoi(#parisquoi) | parismap(#parismap/#parisqui) | other(any tweet)
 	session: String			// in case you want to save/restore groups of listened tweets
 });
 
 //////////////////////////////////////////////////////////// Events from Quefaire API
 var eventSchema = new mongoose.Schema({
-	// type is either "quefaire" / "manual"
-	evtype:			String,
-	created:		Date,
-	modified:		Date,
+	evtype:			String,	// "quefaire"(from API) | "manual"(from Form)
+	modified:		Date,	// last modification OR fetched_date for 'quefaire' events
 	contact:		String,
 	link:			String,
 	
 	// following is same as in QueFaireAPI events
 	idactivites:	Number,
-	nom:			String,
+	created:		Date,	// = created_byParisStaff
+	nom:			String,	// ideally short >> tweet (aka. «concert Karambeyes»)
 	description:	String,
-	lieu:			String,
+	lieu:			String,	// ideally short >> tweet (aka. «Bar de l'impossible»)
 	adresse:		String,
 	zipcode:		String,
 	city:			String,

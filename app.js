@@ -86,7 +86,7 @@ app.get('/', function(req, res) {
 		'session':		params.showSession,
 		'twtype':		'other',
 	}).exec(function(er, goodtweets) {
-		if (er !== null) {console.log("no goodtweets");}
+		if (er !== null) {console.log("pb fetching tweets");}
 		else {
 			console.log("Removing old tweets: "+goodtweets.length);
 			goodtweets.map(function(d){
@@ -124,6 +124,7 @@ app.post('/addevent', function(req, res) {
 	var event = {};
 	event.evtype = "manual";
 	event.created = Date();
+	event.modified = Date();
 	
 	event.idactivites =	0;
 	event.nom =			formEvent.name;
@@ -190,7 +191,7 @@ app.post('/addevent', function(req, res) {
 
 
 ///////////////////////////////////////////////////////////////////// Public list of tweets / events
-// simple list display
+// tweeters display
 app.get('/qui', function(req, res) {
 	var quer = {'geo.geotype':'Point'};
 	params.showSession=='' ? console.log("getting all sessions-users for qui") : quer['session']=params.showSession;
@@ -200,17 +201,17 @@ app.get('/qui', function(req, res) {
 	//console.log(sortby);
 	// get list of geo+session tweets
 	models.Tweet.find(quer,{'_id':1}).exec(function(er, goodtweets) {
-		if (er !== null) {console.log("no goodtweets");}
+		if (er !== null) {console.log("pb fetching tweets");}
 		else {
 			// get associated users
 			models.User.find({p_tweet:{$in:goodtweets}}).sort({'map_square':-1}).exec(function(err, udocs) {
-				if (err !== null) { console.log("no user results");}
+				if (err !== null) { console.log("pb fetching users");}
 				else {
 					// populate users with last tweet
 					models.Tweet.populate(udocs, { path:'p_tweet' }, function (err, enrichedusers) {
-						if (err !== null) { console.log("no enriched users"); }
+						if (err !== null) { console.log("pb fetching user-tweets"); }
 						else {
-							var idx = 1;
+							var idx = 0;
 							enrichedusers.forEach(function(el){
 								el['idx']=idx++;
 								// we'll use handlebar to print {{{}}} using js
@@ -234,7 +235,7 @@ app.get('/qui', function(req, res) {
 								users:enrichedusers,
 							};
 							res.locals['sortby_'+sortby]='active';
-							return res.render('users');
+							return res.render('list_qui');
 						}
 					})
 				}
@@ -242,7 +243,56 @@ app.get('/qui', function(req, res) {
 		}
 	});
 });
+// events display
+app.get('/quoi', function(req, res) {
+	var sortby = req.param('sortby')||'date';
+	var lat = req.param('lat')||0;
+	var lng = req.param('lng')||0;
+	
+	var from = 	moment().toDate(),
+		to = 	moment().add('days',3).toDate();
+	// todo: maybe better query to directly get events with at least one occurence within [from,to]
+	models.Event.find({
+			'occurences.start':	{"$lt":to},
+			'occurences.end':	{"$gt":from},
+		}).limit(20).lean().exec(function(er, events) {
+		if (er !== null) {console.log("pb fetching events");}
+		else {
+			okevents = [];
+			console.log("fetched events: "+events.length);
+			events.forEach(function(e){ // only keep occurences within datetime interval
+				var goodOks = utils.getGoodEventOccurences(e,[from,to]);
+				// an element for each date occurence
+				if(goodOks.length>0) {
+					goodOks.forEach(function(go){
+						okevents.push({
+							nom:	e.nom,
+							description: e.description,
+							lieu:	e.lieu,
+							adresse:	e.adresse+" "+e.zipcode+" "+e.city,
+							start:	go.start,
+							end:	go.end,
+							dist:	(sortby=='distance') ? utils.distanceBetweenPoints([e.lat,e.lon,parseFloat(lat),parseFloat(lng)]) : 0,
+							link:	e.link,
+							lat:	e.lat,
+							lon:	e.lon,
+						});
+					});
+				}
+			});
+			console.log("fetched events splitted: "+okevents.length);		
+			
+			if(sortby=='distance')
+				okevents.sort(function(a,b){return a.dist-b.dist;});
+			if(sortby=='date')
+				okevents.sort(function(a,b){return a.start-b.start;});
 
+			res.locals = { events:okevents };
+			res.locals['sortby_'+sortby]='active';
+			return res.render('list_quoi');
+		}
+	});
+});
 
 
 
@@ -304,8 +354,9 @@ app.get('/menage', function(req, res) {
 	
 	// cheap secure
 	var password = 		req.param('pass') || '';
-	// update events from API(s)
-	var wantedupdate = 	req.param('update');
+	// update/clear events from API(s)
+	var wantedupdate = 		req.param('update'),
+		wantedclearevents = req.param('clearevents');
 
 	var wantedsession = req.param('session');
 	wantedsession==null ? console.log("MANAGE getting all sessions for manage") : quer['session']=wantedsession;
@@ -320,11 +371,12 @@ app.get('/menage', function(req, res) {
 	wantedgeo==null ? console.log("MANAGE getting all geo+nongeo for manage") : quer['geo.geotype']=wantedgeo;
 	
 	var wantedfrom = 	req.param('offset') || 0;
-	var wantedlimit = 	req.param('limit') || 0;
+	var wantedlimit = 	req.param('limit') || 20; // if you want all you need to put 0 explicitly
 	
 	if(password==params.adminKey) {
 		// update quefaire events from paris.fr
 		if(wantedupdate) quefaire.updateEvents();
+		if(wantedclearevents) quefaire.clearEvents();
 		
 		if(wantedmanage=='tweets') { ///////////////////////////////// TWEETS
 			models.Tweet.find(quer).skip(wantedfrom).limit(wantedlimit).sort({'created_at':-1}).exec(function(err, tdocs) {
@@ -378,10 +430,10 @@ app.get('/menage', function(req, res) {
 ///////////////////////////////////////////////////////////////////// JSON feed : tweets + users (with/without geoloc ?)
 app.get("/events.json", function(req, res) {
 	//var wantedFrom = req.param('from');
-	var wantedTo = req.param('to') || 24;
-	console.log("Fetching events from now to "+wantedTo+" hours");
+	var wantedTo = req.param('to') || 3;
+	console.log("Fetching events from now to "+wantedTo+" days");
 	var from = moment().toDate(); //.subtract('day',10).toDate();
-	var to = moment().add('hours',wantedTo).toDate();
+	var to = moment().add('days',wantedTo).toDate();
 	// todo: maybe better query to directly get events with at least one occurence within [from,to]
 	models.Event.find({
 			'occurences.start':	{"$lt":to},
@@ -392,26 +444,13 @@ app.get("/events.json", function(req, res) {
 		else {
 			okevents = [];
 			console.log("fetched events: "+events.length);
-			events.forEach(function(e){
-				if(!(e.lat=== undefined || e.lon === undefined || e.lat==null || e.lon==null)) {
-					var occs = e.occurences;
-					e.occurences = [];
-					//console.log("nOccs="+occs.length);
-					goodOks = [];
-					occs.forEach(function(e){					
-						var s = e.start,
-							e = e.end;
-						if(e>from && s<to) {
-							goodOks.push({
-								start: 	s,
-								end:	e
-							})
-						}
-					});
-					if(goodOks.length>0) {
-						e.occurences = goodOks;
-						okevents.push(e);
-					}
+			events.forEach(function(e){ // only keep occurences within datetime interval
+				//nb: all events in DB now have good lat/lng
+				//if(!(e.lat=== undefined || e.lon === undefined || e.lat==null || e.lon==null)) {
+				var goodOks = utils.getGoodEventOccurences(e,[from,to]);
+				if(goodOks.length>0) {
+					e.occurences = goodOks;
+					okevents.push(e);
 				}
 			});
 			console.log("fetched events reduced: "+okevents.length);

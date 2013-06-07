@@ -37,20 +37,20 @@ var doPostAction = function(action) {
 		<thead>
 			<td>idx</td>
 			<td>created</td>
-			<td>id</td>
+			<td>modified</td>
 			<td>evtype</td>
 			<td>name</td>
 			<td>place</td>
 			<td>adress</td>
-			<td>occurences</td>
+			<td>occs</td>
 			<td>action</td>
 		</thead>
 	{{#events}}
 		<tr class="event" id="ev_{{_id}}">
 			<td>{{idx}}</td>
-			<td><script type="text/javascript">document.write(formatDate("{{created}}",'DDMMM_HH[h]mm'));</script></td>
-			<td>{{idactivites}}</td>
-			<td>{{evtype}}</td>
+			<td><script type="text/javascript">document.write(formatDate("{{created}}",'DDMMMYYYY_HH[h]mm'));</script></td>
+			<td><script type="text/javascript">document.write(formatDate("{{modified}}",'DDMMMYYYY_HH[h]mm'));</script></td>
+			<td>{{evtype}}({{idactivites}})</td>
 			<td>{{{nom}}}</td>
 			<td>{{{lieu}}}</td>
 			<td><a href="https://maps.google.com/maps?q={{lat}},{{lon}}" target="_blank">{{adresse}}</a> {{zipcode}} {{city}}</td>

@@ -64,3 +64,24 @@ module.exports.getLongestWord = function(t) {
 	return maxw;
 };
 
+// only return event occurences included in datetime interval
+module.exports.getGoodEventOccurences = function(event,datetimeinterval) {
+	var from = 	datetimeinterval[0],
+		to = 	datetimeinterval[1];
+	var occs = event.occurences;
+	var goodOks = [];
+	occs.forEach(function(e){
+		var s = e.start,
+			e = e.end;
+		//console.log("    // "+s+" | "+e);
+		if(e>from && s<to) {
+			goodOks.push({
+				start: 	s,
+				end:	e
+			})
+		}
+	});
+	//console.log("event:"+event.idactivites+" ... kept "+goodOks.length+" occurences over "+occs.length);
+	return goodOks;
+};
+

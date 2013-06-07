@@ -76,60 +76,42 @@ var sendESHQevent = function(tweet,user) {
 	// we used to rather use redis ..
 	//publisherClient.publish( 'nouveautouit', JSON.stringify(newData) );
 };
-					
+
 /////////////////////////////////////////////////////////////////////
-var replyTweet = function(tweet,user,info,isNewUser) {
-	var iswithgps = (tweet.geo.geotype=='Point');
-	var message = null;
-	var gotReply = false;
-	var sourceParismap = (tweet.twtype=="parismap");
-	var targetParismap = false;
-	var linkToGeoNewTweet = "-";
-	if (iswithgps) linkToGeoNewTweet = "http://carte.parismappartient.fr/?p="+tweet.geo.coordinates.join(",");
-	
-	if(!iswithgps && isNewUser) {
-		gotReply = true;
-		// bienvenue - mais vous avez pas GEO !
-		message = params.FirstReplyTextNoGeo.replace('$1','@'+tweet.user.screen_name);
-	}
-	
-	var symbSource = sourceParismap ? '@' : '⦿' ;
-	
-	if(iswithgps) {
-		gotReply = true;
-		if((isNewUser && sourceParismap) || info.neighbors==null || info.neighbors.length!=2) {
-			// bienvenue à parismap !
-			message = params.FirstReplyText.replace('$1','@'+tweet.user.screen_name);
-		} else {
-			// normal double mention message (cf myparams.js)
-			if(info.neighbors[0].twtype=="parismap") targetParismap = true;
-			var symbTarget = targetParismap ? '@' : '⦿' ;
-			message = params.tweetReplyText[tweetSessionCount % params.tweetReplyText.length];
-			var tor = ['$1','$w1','$2','$3','$d2','$d3','$t2','$t3','$w2','$w3','$s','$r','$l'];
-			var sub = [	symbSource+tweet.user.screen_name,
-						tweet.word,
-						symbTarget+info.neighbors[0].screen_name,
-						symbTarget+info.neighbors[1].screen_name,
-						utils.formatMeter(info.neighbors[0].dist),
-						utils.formatMeter(info.neighbors[1].dist),
-						moment(info.neighbors[0].created_at).fromNow(),
-						moment(info.neighbors[1].created_at).fromNow(),
-						info.neighbors[0].word,
-						info.neighbors[1].word,
-						utils.formatSquare(info.square), info.rank,
-						linkToGeoNewTweet];
-			tor.forEach(function(e,i){ message = message.replace(e,sub[i]); });		
-		}
-	}
-	
-	if(!sourceParismap) {
-		gotReply = false;
-		console.log("-- Not replying cause not both #parismap: "+tweet.user.screen_name);
-	}
-	
-	if(gotReply && params.showReplyTweet) console.log("-- ReplyBuiltMessage ("+message.length+"): "+message);
-	
-	if(gotReply && params.sendReplyTweet) {
+// QUI : double mention message
+var formatReplyQui = function(tweet,info,linkToGeoNewTweet) {
+	var message = params.tweetReplyTextQui[tweetSessionCount % params.tweetReplyTextQui.length];
+	var tor = ['$1','$word1','$2','$dist2','$time2','$word2','$rank','$link'];
+	var sub = [	'@'+tweet.user.screen_name,
+				tweet.word,
+				'@'+info.neighbors[0].user.screen_name,
+				utils.formatMeter(info.neighbors[0].dist),
+				moment(info.neighbors[0].created_at).fromNow(),
+				info.neighbors[0].word,
+				//utils.formatSquare(info.square), info.rank,
+				linkToGeoNewTweet];
+	tor.forEach(function(e,i){ message = message.replace(e,sub[i]); });	
+	return message;	
+}
+
+// QUOI : format one event
+var formatReplyQuoi = function(tweet,event,linkToGeoNewTweet) {
+	var message = params.tweetReplyTextQuoi[tweetSessionCount % params.tweetReplyTextQuoi.length];
+	var tor = ['$1','$nom','$lieu','$dist','$start','$end','$link'];
+	var sub = [	'@'+tweet.user.screen_name,
+				event.nom,
+				event.lieu,
+				utils.formatMeter(event.dist),
+				moment(event.start).format("HH:mm"),
+				moment(event.end).format("HH:mm"),
+				linkToGeoNewTweet];
+	tor.forEach(function(e,i){ message = message.replace(e,sub[i]); });	
+	return message;	
+}
+
+var sendTweet = function(tweet,message) {
+	if(params.showReplyTweet) console.log("-- ReplyBuiltMessage ("+message.length+"): "+message);
+	if(params.sendReplyTweet) {
 		var body = { status:message, in_reply_to_status_id:tweet.id_str};
 		//console.log("-- ReplyingTweet: "+params.sendReplyTweet+"\n"+JSON.stringify(body,null,4));
 		twitterer.post("http://api.twitter.com/1/statuses/update.json",
@@ -141,6 +123,49 @@ var replyTweet = function(tweet,user,info,isNewUser) {
 				console.log('-- ReplyingTweet: success');
 			}
 		});
+	}
+}
+/////////////////////////////////////////////////////////////////////
+var replyTweet = function(tweet,user,info) {
+	var iswithgps = (tweet.geo.geotype=='Point');
+	var isNewUser = (user.map_count==1);
+	var message = null;
+	var gotReply = false;
+	/*// we could reply all using diff mention symbols ? ... 
+	var sourceParismap = (tweet.twtype=="parismap" || tweet.twtype=="parisquoi"),
+		targetParismap = false;
+	var symbSource = sourceParismap ? '@' : '⦿' ;*/
+	var linkToGeoNewTweet = "www.parismappartient.fr";
+	if (iswithgps) linkToGeoNewTweet = "http://carte.parismappartient.fr/?p="+tweet.geo.coordinates.join(",");
+	
+	if(!iswithgps && isNewUser) {
+		gotReply = true;
+		// bienvenue ... mais vous avez pas GEO !
+		message = params.FirstReplyTextNoGeo.replace('$1','@'+tweet.user.screen_name);
+	}
+	
+	isNewUser=false; //dev
+	if(iswithgps) {
+		if(isNewUser) {
+			// bienvenue à parismap !
+			message = params.FirstReplyText.replace('$1','@'+tweet.user.screen_name);
+			sendTweet(tweet,message);
+		} else {
+			if(tweet.twtype=="parismap") { // REPLY WITH TWITTERS AROUND
+				if(info.neighbors.length>0) {
+					message = formatReplyQui(tweet,info,linkToGeoNewTweet);
+					sendTweet(tweet,message);
+				} else { console.log("not enough neighbors !"); }
+			}
+			if(tweet.twtype=="parisquoi") { // REPLY WITH EVENTS AROUND
+				for(var k=0;k<params.nReplyQuoi;k++) {
+					if(info.events.length>k) {
+						message = formatReplyQuoi(tweet,info.events[k],linkToGeoNewTweet);
+						sendTweet(tweet,message);
+					} else { console.log("! not enough events to send k="+k); }
+				}
+			}
+		}
 	}
 };
 
@@ -157,13 +182,103 @@ var storeTweet = function(tweet,theuser,isNewUser) {
 			theuser.save( function(err,saveduser){
 				if(err) console.log("problem saving user");
 				else {
-					if(params.recomputeAreas) recomputeAreas(savedtweet,saveduser,isNewUser);
+					if(tweet.twtype=="parismap") getQuiThenReply(savedtweet,saveduser);
+					if(tweet.twtype=="parisquoi") getQuoiThenReply(savedtweet,saveduser);
 				}
 			});
 		}
 	});
 }
 
+
+/////////////////////////////////////////////////////////////////////
+// get nearest users and reply
+var getQuiThenReply = function(savedtweet,saveduser) {
+	var quer = {
+		'geo.geotype': 		'Point',
+		'user.screen_name':	{$nin:[savedtweet.user.screen_name]},
+	};
+	console.log(" ... getting all QUI ...");
+	models.Tweet.find(quer,{
+		'user.screen_name':1,
+		'user.id_str':1,
+		'p_user':1,
+		'geo.coordinates':1,
+		'created_at':1,
+		'text':1,
+		'word':1,
+		'twtype':1,
+	}).sort({'created_at':-1}).lean().exec(function(err, ftweets) {
+		if (err !== null) { console.log("pb getting QUI tweets"); }
+		else {
+			console.log(" ... fetched neighbors tweets: "+ftweets.length);
+			if(savedtweet.geo.geotype=='Point') {
+				var info = {};
+				//////////////////////////// sort all neighbors based on distance
+				var neighbArray = ftweets.map(function(e){
+					e['dist'] = utils.distanceBetweenPoints(savedtweet.geo.coordinates.concat(e.geo.coordinates));
+					return e;
+				});
+				info['neighbors'] = neighbArray.sort(function(a,b) {return (a.dist>b.dist) ? 1 : ((b.dist>a.dist) ? -1 : 0 ); });
+				
+				//console.log('user info computed:\n'+JSON.stringify(info));
+				// not recomputing colors anymore cause we changed our mind
+				//recomputeColors();
+				
+				//////////////////////////// reply tweet
+				if(params.showReplyTweet || params.sendReplyTweet) replyTweet(savedtweet,saveduser,info);
+				//sendESHQevent(savedtweet,saveduser);
+			} else {
+				console.log("(new tweet non incGeo)");
+			}
+
+		}
+	});
+};
+
+/////////////////////////////////////////////////////////////////////
+// get nearest events and reply
+var getQuoiThenReply = function(savedtweet,saveduser) {
+	var from = moment().toDate();
+	var to = moment().add('hours',24).toDate();
+	// todo: maybe better query to directly get events with at least one occurence within [from,to]
+	console.log(" ... getting all QUOI ...");
+	models.Event.find({
+		'occurences.start':	{"$lt":to},
+		'occurences.end':	{"$gt":from},
+	},{description:0}).lean().exec(function(er, events) {
+		if (er !== null) { console.log("pb getting QUOI events"); }
+		else {
+			console.log(" ... fetched neighbors events: "+events.length);
+			if(savedtweet.geo.geotype=='Point') {
+				var info = {};
+				var keptOccs=[];
+				//////////////////////////// sort all neighbors based on distance + update good occurence
+				events.forEach(function(e){
+					// find the good occurence within occs
+					var goodOccs = utils.getGoodEventOccurences(e,[from,to]);
+					if(goodOccs.length>0) {
+						e['dist'] = utils.distanceBetweenPoints(savedtweet.geo.coordinates.concat([e.lat,e.lon]));
+						e['start'] = goodOccs[0].start;
+						e['end'] = goodOccs[0].end;
+						keptOccs.push(e);
+					}
+				});
+				// mmmmh.. todo: sort based on clever algorithm (time/distance/duration/etc...)
+				info['events'] = keptOccs.sort(function(a,b) {return (a.dist>b.dist) ? 1 : ((b.dist>a.dist) ? -1 : 0 ); });
+				
+				//////////////////////////// reply tweet
+				if(params.showReplyTweet || params.sendReplyTweet) replyTweet(savedtweet,saveduser,info);
+				//sendESHQevent(savedtweet,saveduser);
+			} else {
+				console.log("(new tweet non incGeo)");
+			}
+		}
+	});
+};
+
+
+/*
 /////////////////////////////////////////////////////////////////////
 // recompute color palette for users
 var recomputeColors = function() {
@@ -213,10 +328,151 @@ var recomputeColors = function() {
 		}
 	});
 };
+*/
 
 /////////////////////////////////////////////////////////////////////
-// recompute areas after new tweet, and return info about surface/ranking/nearesttweet of this particular new tweet
-var recomputeAreas = function(savedtweet,saveduser,isNewUser) {
+// process received tweet
+var processAndStoreTweet = function(tweet) {
+	var whoto = tweet.user.screen_name;
+	var whotoid = tweet.id_str;
+	
+	// create or update user
+	models.User.findOneAndUpdate({ id_str:tweet.user.id_str }, {}, function(err,founduser) {
+		if (err) { console.log("error find-updating user"); }
+		else {
+			if(!founduser) {
+				console.log(" ... NEW USER = "+tweet.user.screen_name);
+				var newuser = new models.User(tweet.user);
+				newuser.session = tweet.session;
+				newuser.map_count = 1;
+				newuser.map_square = 0;
+				newuser.save( function (err, theuser) {
+					if (err) console.log("pb saving user");
+					else { storeTweet(tweet,theuser,true); }
+				});
+			} else {
+				console.log(" ... EXISTING USER = "+founduser.screen_name);
+				founduser.session = tweet.session;
+				founduser.name = tweet.user.name;
+				founduser.map_count = founduser.map_count + 1;
+				founduser.map_square = 0;
+				founduser.save( function (err, theuser) {
+					if (err) console.log("pb saving user");
+					else { storeTweet(tweet,theuser,false); }
+				});
+			}
+		}
+	});
+};
+		
+/////////////////////////////////////////////////////////////////////
+// twitter listener
+var worker = function() {
+	var twitter = require("ntwitter");
+	var t = new twitter({
+		consumer_key: params.consumer_key,
+		consumer_secret: params.consumer_secret,
+		access_token_key: params.access_token_key,
+		access_token_secret: params.access_token_secret
+	});
+	t.stream(
+		//NB:[sic] using location in twitter API will match -track- OR -fallswithinlocation-
+		'statuses/filter',{
+			//'language':en,
+			//'follow':["userId","userId","userId"],
+			'track':params.trackQuoi.concat(params.trackQui),
+			'locations':params.rectParisBig.join(','),
+		},
+		function(stream) {
+			stream.on("data", function(tweet) {
+				//console.log(".");
+				if(params.listenTwitter) {
+					var hasGeo = tweet.geo!=null;
+					var isInc = false;
+					if(hasGeo) isInc = utils.isPointInPoly(params.parisPolygon,tweet.geo.coordinates);
+					
+					// all geo tweets are showed
+					var shdlogtweet 	= isInc || (!hasGeo && (params.nonGeoLog||params.nonGeoStore)) || (!isInc && (params.nonIncLog||params.nonIncStore) );
+
+					// all geo incl tweets are stored
+					var shdstoretweet 	= isInc || (!hasGeo && params.nonGeoStore) || (!isInc && params.nonIncStore);
+					
+					if(shdlogtweet) {
+						console.log("\n\n==================================== TWEET RECEIVED "+(tweetSessionCount++));
+						console.log(tweet.created_at);
+						console.log("@"+tweet.user.screen_name);
+						console.log(tweet.text);
+						console.log("------------------------------------");
+						//console.log(JSON.stringify(tweet,null,4));
+						
+						// update user.geo based on type
+						if(hasGeo) {
+							tweet.geo.geotype = tweet.geo.type; // AAAAAAARHG: found out that 'type' is FORBIDDEN within mangoose/mangodb
+						} else {
+							tweet.geo = {
+								geotype: 'RndPt',
+								coordinates: (params.nonGeoPos==null) ? utils.getRandomPosInRect(params.rectParisSmall) : params.nonGeoPos ,
+							};
+						}
+						if(hasGeo && !isInc) tweet.geo.geotype = 'OutPt';
+						
+						var coord = tweet.geo.coordinates;
+						tweet.word = utils.getLongestWord(tweet.text);
+
+						// update type & hashtags
+						//console.log(JSON.stringify(tweet.entities.hashtags));
+						tweet.hashtags = tweet.entities.hashtags.map(function(e){return e.text.toLowerCase();});
+						var ttype =  "other";
+						tweet.hashtags.forEach(function(h){
+							if(params.trackQui.indexOf("#"+h)!=-1) ttype = "parismap";
+							if(params.trackQuoi.indexOf("#"+h)!=-1) ttype = "parisquoi";
+						});
+						tweet.twtype = ttype;
+						tweet.session = params.storeSession;
+						
+						console.log(" ... GEO="+hasGeo+" INCLUDED="+isInc+" ("+tweet.geo.geotype+":"+coord[0]+","+coord[1]+") STORE="+shdstoretweet);
+						console.log(" ... TYPE="+tweet.twtype+" LONGEST="+tweet.word+ " #="+tweet.hashtags);
+						
+						// manage & update media photo (keeping only one)
+						tweet['photo'] = {};
+						if(tweet.entities.hasOwnProperty('media')) {
+							tweet.entities.media.forEach(function(d,i){
+								if(d.type=='photo') {
+									tweet['photo'] = d;
+									//console.log(" ... GOT PHOTO: "+JSON.stringify(tweet['photo']));
+								}
+							})
+						}
+		
+						if(tweet.user.screen_name!=params.twittername) {
+							if(shdstoretweet) {
+								processAndStoreTweet(tweet);
+							}
+						} else {
+							console.log("Tweet from admin/API-account ignored: "+params.twittername);
+						}
+					}
+				}
+			});
+			stream.on('error', function(error, code) {
+				console.log("! TWITTER STREAM ERROR ! " + error + ": " + code);
+			});
+			stream.on('end', function (response) { // Handle a disconnection
+				console.log("! TWITTER STREAM DISCONNECTED !");
+				//console.log(response);
+			});
+		}
+	);
+};
+
+module.exports = worker;
+
+
+
+/*
+/////////////////////////////////////////////////////////////////////
+// if needed at some point: calculation of voronoi squares + ranking (temporarly deprecated)
+var recomputeAreas = function(savedtweet,saveduser) {
 	var quer = { 'geo.geotype': 'Point' };
 	params.showSession=='' ? console.log("getting all sessions-tweets for areas") : quer['session']=params.showSession;
 	// fetch all tweets
@@ -250,7 +506,6 @@ var recomputeAreas = function(savedtweet,saveduser,isNewUser) {
 					word:			d.word,
 					twtype:			d.twtype,
 				};});
-				
 				
 				//////////////////////////// keep only last one if same geoloc
 				var uniquePos = {}
@@ -310,7 +565,7 @@ var recomputeAreas = function(savedtweet,saveduser,isNewUser) {
 					});
 				});
 				
-				//////////////////////////// sort all users based on squares, keep ranking
+				//////////////////////////// sort all users based on squares, get each ranking and store in DB
 				userArray = userArray.sort(function(a,b) {return a.square<b.square;} );
 				userArray.forEach(function(e,i){
 					userDic[e.userid_tw].rank = i+1;
@@ -318,9 +573,9 @@ var recomputeAreas = function(savedtweet,saveduser,isNewUser) {
 				info['rank'] = -1;
 				if(userDic.hasOwnProperty(cur_userid_tw))
 					info['rank'] = userDic[cur_userid_tw].rank;
+				// todo: store in DB
 				
-				
-				//////////////////////////// sort all users based on distance, to get nearest
+				//////////////////////////// sort all neighbors based on distance
 				var distArray = mydataTweetsPosUnik.map(function(d){ return {
 					screen_name:	d.screen_name,
 					dist:			utils.distanceBetweenPoints(savedtweet.geo.coordinates.concat(d.geo)),
@@ -390,141 +645,4 @@ var recomputeAreas = function(savedtweet,saveduser,isNewUser) {
 		}
 	});
 };
-
-
-/////////////////////////////////////////////////////////////////////
-// process received tweet
-var processAndStoreTweet = function(tweet) {
-	var whoto = tweet.user.screen_name;
-	var whotoid = tweet.id_str;
-	
-	// create or update user
-	models.User.findOneAndUpdate({ id_str:tweet.user.id_str }, {}, function(err,founduser) {
-		if (err) { console.log("error find-updating user"); }
-		else {
-			if(!founduser) {
-				console.log("NEW USER = "+tweet.user.screen_name);
-				var newuser = new models.User(tweet.user);
-				newuser.session = tweet.session;
-				newuser.map_count = 1;
-				newuser.map_square = 0;
-				newuser.save( function (err, theuser) {
-					if (err) console.log("pb saving user");
-					else { storeTweet(tweet,theuser,true); }
-				});
-			} else {
-				console.log("EXISTING USER = "+founduser.screen_name);
-				founduser.session = tweet.session;
-				founduser.name = tweet.user.name;
-				founduser.map_count = founduser.map_count + 1;
-				founduser.map_square = 0;
-				founduser.save( function (err, theuser) {
-					if (err) console.log("pb saving user");
-					else { storeTweet(tweet,theuser,false); }
-				});
-			}
-		}
-	});
-};
-		
-/////////////////////////////////////////////////////////////////////
-// twitter listener
-var worker = function() {
-	var twitter = require("ntwitter");
-	var t = new twitter({
-		consumer_key: params.consumer_key,
-		consumer_secret: params.consumer_secret,
-		access_token_key: params.access_token_key,
-		access_token_secret: params.access_token_secret
-	});
-	t.stream(
-		//NB:[sic] using location in twitter API will match -track- OR -fallswithinlocation-
-		'statuses/filter',{
-			//'language':en,
-			//'follow':["userId","userId","userId"],
-			'track':params.track,
-			'locations':params.rectParisBig.join(','),
-		},
-		function(stream) {
-			stream.on("data", function(tweet) {
-				//console.log(".");
-				if(params.listenTwitter) {
-					var hasGeo = tweet.geo!=null;
-					var isInc = false;
-					if(hasGeo) isInc = utils.isPointInPoly(params.parisPolygon,tweet.geo.coordinates);
-					
-					// all geo tweets are showed
-					var shdlogtweet 	= isInc || (!hasGeo && (params.nonGeoLog||params.nonGeoStore)) || (!isInc && (params.nonIncLog||params.nonIncStore) );
-
-					// all geo incl tweets are stored
-					var shdstoretweet 	= isInc || (!hasGeo && params.nonGeoStore) || (!isInc && params.nonIncStore);
-					
-					if(shdlogtweet) {
-						console.log("\n\n==================================== TWEET RECEIVED "+(tweetSessionCount++));
-						console.log(tweet.created_at);
-						console.log("@"+tweet.user.screen_name);
-						console.log(tweet.text);
-						console.log("------------------------------------");
-						//console.log(JSON.stringify(tweet,null,4));
-						
-						// update user.geo based on type
-						if(hasGeo) {
-							tweet.geo.geotype = tweet.geo.type; // AAAAAAARHG: found out that 'type' is FORBIDDEN within mangoose/mangodb
-						} else {
-							tweet.geo = {
-								geotype: 'RndPt',
-								coordinates: (params.nonGeoPos==null) ? utils.getRandomPosInRect(params.rectParisSmall) : params.nonGeoPos ,
-							};
-						}
-						if(hasGeo && !isInc) tweet.geo.geotype = 'OutPt';
-						
-						var coord = tweet.geo.coordinates;
-						tweet.word = utils.getLongestWord(tweet.text);
-
-						// update type & hashtags
-						//console.log(JSON.stringify(tweet.entities.hashtags));
-						tweet.hashtags = tweet.entities.hashtags.map(function(e){return e.text;});
-						//console.log(JSON.stringify(tweet.hashtags));
-						var ttype =  "other";
-						// IF TEST DEV DEBUG !! //if(tweet.entities.hashtags.length>0) ttype="parismap";
-						if(tweet.hashtags.indexOf("parismap")!=-1) ttype = "parismap";
-						tweet.twtype = ttype;
-						
-						console.log(" ... GEO="+hasGeo+" INCLUDED="+isInc+" ("+tweet.geo.geotype+":"+coord[0]+","+coord[1]+") STORE="+shdstoretweet);
-						console.log(" ... TYPE="+tweet.twtype+" LONGEST="+tweet.word+ " #="+tweet.hashtags);
-						
-						// manage & update media photo (keeping only one)
-						tweet['photo'] = {};
-						if(tweet.entities.hasOwnProperty('media')) {
-							tweet.entities.media.forEach(function(d,i){
-								if(d.type=='photo') {
-									tweet['photo'] = d;
-									console.log(" ... GOT PHOTO: "+JSON.stringify(tweet['photo']));
-								}
-							})
-						}
-		
-						if(tweet.user.screen_name!=params.twittername) {
-							if(shdstoretweet) {
-
-								tweet.session = params.storeSession;
-								processAndStoreTweet(tweet);
-							}
-						} else {
-							console.log("Tweet from admin/API-account ignored: "+params.twittername);
-						}
-					}
-				}
-			});
-			stream.on('error', function(error, code) {
-				console.log("TWITTER STREAM ERROR: " + error + ": " + code);
-			});
-			stream.on('end', function (response) { // Handle a disconnection
-				console.log("TWITTER STREAM DISCONNECTED");
-				console.log(response);
-			});
-		}
-	);
-};
-
-module.exports = worker;
+*/

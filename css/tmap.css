@@ -63,7 +63,7 @@ x:-o-prefocus, #svgmapmask {
 
 /* ------------------------------------------------------------------------ */
 /* HELP BUTTON */
-#helpButton, #userButton, #locButton {
+#helpButton, #locButton, #eventButton, #userButton {
 	position:absolute;
 	margin:10px;
 	top:0;
@@ -75,6 +75,9 @@ x:-o-prefocus, #svgmapmask {
 }
 #userButton {
 	margin-top:40px;
+}
+#eventButton {
+	margin-top:70px;
 }
 #toggleVoronoi {
 	position:absolute;
@@ -104,8 +107,8 @@ x:-o-prefocus, #svgmapmask {
 }
 .tweets.svg, .ngtweets.svg {
 	stroke-opacity:1;
-	stroke:white;
-	stroke-width: 1.5px;
+	stroke:none;
+	/*stroke-width: 1px;*/
 }
 /* non geo tweets moving */
 .ngtweets.svg {

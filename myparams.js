@@ -17,37 +17,23 @@ var params = {
 	port:			process.env.PORT ,
 	mongdb:			process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/devdevdev',
 	
-	/////////////// sessions are used to store/show groups of tweets
-	showSession:	dev ? 'paris16mai' : 'ville', // !! WARNING !! '' means all and may cause bugs
+	/////////////// sessions are used (supposed) to store/show groups of tweets (please check code carefully before using sessions ;)
+	showSession:	dev ? 'paris16mai' : 'ville',
 	storeSession:	dev ? 'paris16mai' : 'ville',
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	listenTwitter:	true, 	// if you need to only show saved map (will mute twitter stream)
-	recomputeAreas:	true, 	// NEEDED TO RECOMPUTE COLORS, AND TO REPLY TWEETS !
 	showReplyTweet: dev ? true : true,
 	sendReplyTweet:	dev ? false : true,
 	
-	///////////////	$1 arriving ( $s=square  $r=rank ) near $2/$3/$4 ( $d2=dist $t2=time $w2=maxword ) $l=http://carte/p=32,43
+	///////////////////////	$1 username arriving
 	FirstReplyText: 		'$1 bienvenue à #parismap ! parismappartient.fr',
 	FirstReplyTextNoGeo:	'$1 bienvenue à #parismap ! (géoloc non activée)',
 	
-	/////////////// will rotate sequentially between following list of templates		,
-	tweetReplyText:			['$1 «$w1» à $d2 de $2 «$w2» ($t2) www.parismappartient.fr'],
-/*
-					[	'$1 à $d2 de $2 ($t2)',
-						'$1 «$w1» à $d2 de $2 «$w2» ($t2) $l',
-						'$1 a investi le quartier $2 ($d2 $t2)',
-						'$1 ($re avec $s) tweete vers $2 ($d2 $t2)',
-						'$1 est à $d2 de $2 ($t2)',
-						'$1 ($re avec $s) est près de $2 ($d2 $t2)',
-						'$1 et $2 à $d2 ($t2)',
-						'$1 flâne dans le quartier $2 ($d2 $t2) $3 ($d3 $t3)',
-						'$1 ($re avec $s). à $d2, $t2: $2',
-						'$1 à coté de $2 ($d2 $t2)',
-						"$1 n'est pas loin de $2 ($d2 $t2)",
-						'$1 en promenade dans le coin $2 ($d2 $t2)',
-					],
-*/
+	/////////////////////// will rotate sequentially between following list of templates cf formatReplyQui/formatReplyQuoi
+	tweetReplyTextQui:		['$1 «$word1» à $dist2 de $2 «$word2» ($time2) www.parismappartient.fr'],
+	tweetReplyTextQuoi:		['$1 $nom @ $lieu ($dist) [$start à $end] $link'],
+	nReplyQuoi:				2,
 	
 	/////////////// geo/non-geo filter
 	nonGeoLog:		false,	// true to log 		also non-geo tweets
@@ -65,8 +51,9 @@ var params = {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	/////////////// API QUEFAIRE.PARIS.FR
-	quefaireUrl:	'https://api.paris.fr:3000/data/1.0/QueFaire/get_activities/',
+	quefaireUrl:	'https://api.paris.fr:3000/data/1.1/QueFaire/get_activities/',
  	quefaireToken:	process.env.PMQFT,
+ 	quefaireDelay:	10000, // (ms) between 2 /get_activities calls when updating
  	
 	/////////////// API WITTER STREAM, see https://dev.twitter.com/docs/streaming-apis/parameters
 	twittername:			dev ? 'parlaparci' : 'parismap', // his tweets will be ignored !
@@ -75,7 +62,11 @@ var params = {
 	access_token_key: 		process.env.PMAT,
 	access_token_secret: 	process.env.PMATS,
 	
-	track:	dev ? ["#paris"] : ["#parismap"],
+	//track:		dev ? ["#paris"] : ["#parismap"], // twitter track will be [trackQuoi]+[trackQui]
+	// NB: both NEED to be #hastags & lowercase, see twitter.js
+	trackQui:	dev ? ["#paris"] : ["#parismap","#parisqui"],
+	trackQuoi:	dev ? ["#fillon"] : ["#parisquoi"],
+	
 	//["ton","a","il","on","se","au","y","c","moi","je","tu","sa","son","ton","ta","ne","pas","la","le","de","des","du","un","et","si","pour","rien","sur","avec","sans","ds","dans","à","ce","ces","est","eu","vu","va","#parismap"],
 	
 	//////////////////////////////////////////////////////////////////////////////////////////

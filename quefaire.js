@@ -1,11 +1,12 @@
 var params = require('./myparams.js'),
 	models = require("./models.js"),
-	request = require('request');
+	request = require('request'),
+	moment = require("moment");
 
-var areVars = function(arr) {
+var areOkVars = function(arr) {
 	var res = true;
 	arr.forEach(function(e) {
-		res = res && !(e===undefined || e==null);
+		res = res && !(e===undefined || e==null || e==0);
 	})
 	return res;
 };
@@ -17,34 +18,43 @@ var storeEvent = function(event) {
 		if (err) { console.log("error find-updating event"); }
 		else {
 			if(!found) {
-				// todo: if undefined, set lat/lon to 0,0
-				
-				// first make better date occurences
-				if(event.occurences===undefined) {
-					event.occurences=[];
+				if(!areOkVars([event.lat,event.lon])) {
+					//console.log("not storing non geoloc event "+event.idactivites+" (lat/lng: "+event.lat+" | "+event.lon+")");
 				} else {
-					var nOccs = [];
-					event.occurences.forEach(function(e){
-						if(areVars([e.jour,e.hour_start,e.hour_end]))
-							nOccs.push({
-								start:	e.jour.split('T')[0]+"T"+e.hour_start+".000Z",
-								end:	e.jour.split('T')[0]+"T"+e.hour_end+".000Z",
-							});
+					// first make better date occurences
+					if(event.occurences===undefined) {
+						event.occurences=[];
+					} else {
+						var nOccs = [];
+						event.occurences.forEach(function(e){
+							if(areOkVars([e.jour,e.hour_start,e.hour_end])) {
+								// warning with "2012-11-20T24:00:00.000Z" Date cast failure (moment(..).toDate() fix it)
+								nOccs.push({
+									start:	moment(e.jour.split('T')[0]+"T"+e.hour_start+".000Z").toDate(),
+									end:	moment(e.jour.split('T')[0]+"T"+e.hour_end+".000Z").toDate(),
+								});
+							}
+						});
+						event.occurences = nOccs;
+					}
+					event.evtype = "quefaire";
+					event.contact = "quefaire@paris.fr";
+					event.link = "http://quefaire.paris.fr/fiche/"+event.idactivites;
+					//event.created is when created_byParisStaff
+					event.modified = Date();
+					
+					// todo: fetch more details of this event using API /get_activity
+					
+					var newevent = new models.Event(event);
+					newevent.save( function (err, savedevent) { // on save, update user with last tweet
+						if (err) { console.log("pb saving: "+err); }
+						else { 
+							//console.log("QueFaireAPI NEW event saved = "+savedevent.nom);
+						}
 					});
-					event.occurences = nOccs;
 				}
-				event.evtype = "quefaire";
-				event.contact = "quefaire@paris.fr";
-				event.created = Date();
-				event.modified = Date();
-				var newevent = new models.Event(event);
-				newevent.save( function (err, savedevent) { // on save, update user with last tweet
-					if (err) { console.log("pb saving: "+err); }
-					else { console.log("QueFaireAPI NEW event saved = "+savedevent.nom); }
-					// todo: fetch more details of this event using API...
-				});
 			} else {
-				console.log("QueFaireAPI EXISTING event = "+event.nom);
+				//console.log("QueFaireAPI EXISTING event = "+event.nom);
 				// todo: update event properties (in case of same id but updated data ?) ?
 			}
 		}
@@ -52,10 +62,11 @@ var storeEvent = function(event) {
 };
 
 //////////////////////////////////////////////// Recursively fetch events
-var fetchFrom = function(from) {
+var fetchFrom = function(createdFrom,from) {
 	var opts = {
 		uri: params.quefaireUrl,
 		qs:	{
+			created:	createdFrom.getTime()/1000, // timestamp
 			token:		params.quefaireToken,
 			offset:		from,
 			limit:		100,	
@@ -66,18 +77,19 @@ var fetchFrom = function(from) {
 			var obj = JSON.parse(body);
 			if(obj.status=='error') {
 				console.log("QueFaireAPI Error: "+obj.message);
+				console.log(" ... at "+JSON.stringify(opts));
 			} else {
 				obj.data.forEach(function(elem){
 					storeEvent(elem);
 				});
-				console.log("- ... QueFaireAPI ... - stored from="+from);
-				if(from<=5000) fetchFrom(from+100);
+				console.log("- ... QueFaireAPI ... - got from = "+from);
+				if(obj.data.length>0) setTimeout(function(){fetchFrom(createdFrom,from+100);}, params.quefaireDelay) ;
 				else { console.log("- QueFaireAPI DONE -"); }
 			}
 		} else {
 			console.log("QueFaireAPI Error !");
 			console.log("QueFaireAPI Error ! "+error);
-			console.log(response);
+			console.log(" ... at "+JSON.stringify(opts));
 		}
 	});	
 };
@@ -85,7 +97,30 @@ var fetchFrom = function(from) {
 var quefaire = {
 	updateEvents : function() {
 		console.log("Updating Events from QueFaireAPI");
-		fetchFrom(0);
+		// getting last created event from quefaire
+		models.Event.findOne({evtype:'quefaire'}).sort({created:-1}).exec(function(err, doc) {
+			var createdFrom = moment("01/01/2000").toDate();
+			if(!doc) {
+				console.log("no quefaire events in DB. fetching from past: années 2000 années du futur");
+			} else {
+				createdFrom = doc.created;
+				console.log("last quefaire created event date: "+createdFrom);
+			}
+			console.log("Fetching events from timestamp = "+createdFrom.getTime()/1000);
+			fetchFrom(createdFrom,0);
+		});
+	},
+	clearEvents : function() {
+		console.log("Clearing all Events from QueFaireAPI");
+		models.Event.find({'evtype':'quefaire'}).exec(function(er, events) {
+			if (er !== null) {console.log("pb fetching events");}
+			else {
+				console.log("Removing que faire events: "+events.length);
+				events.map(function(d){
+					d.remove();
+				});
+			}
+		});
 	}
 };
 
