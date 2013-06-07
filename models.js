@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 //////////////////////////////////////////////////////////// Tweet Users
 var userSchema = new mongoose.Schema({
-	p_tweet: mongoose.Schema.Types.ObjectId, 	// sytore last tweet ! ref for Mongoose populate ?
+	p_tweet: mongoose.Schema.Types.ObjectId, 	// store last tweet ! ref for Mongoose populate ?
 	id_str: String,		// twitter id
 	tid: String,		// twitter id of the tweet
 	

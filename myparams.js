@@ -27,7 +27,7 @@ var params = {
 	showReplyTweet: dev ? true : true,
 	sendReplyTweet:	dev ? false : true,
 	
-	///////////////	$1 arriving ( $s=square  $r=rank ) near $2/$3 ( $d2=dist $t2=time $w2=maxword ) $l=http://carte/p=32,43
+	///////////////	$1 arriving ( $s=square  $r=rank ) near $2/$3/$4 ( $d2=dist $t2=time $w2=maxword ) $l=http://carte/p=32,43
 	FirstReplyText: 		'$1 bienvenue à #parismap ! parismappartient.fr',
 	FirstReplyTextNoGeo:	'$1 bienvenue à #parismap ! (géoloc non activée)',
 	
@@ -41,7 +41,7 @@ var params = {
 						'$1 est à $d2 de $2 ($t2)',
 						'$1 ($re avec $s) est près de $2 ($d2 $t2)',
 						'$1 et $2 à $d2 ($t2)',
-						'$1 flâne dans le quartier $2 ($d2 $t2)',
+						'$1 flâne dans le quartier $2 ($d2 $t2) $3 ($d3 $t3)',
 						'$1 ($re avec $s). à $d2, $t2: $2',
 						'$1 à coté de $2 ($d2 $t2)',
 						"$1 n'est pas loin de $2 ($d2 $t2)",
