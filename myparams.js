@@ -5,7 +5,10 @@ var params = {
 
 	//////////////////////////////////////////////////////////////////////////////////////////
  	adminKey:		process.env.PMAK, // lowcost secure admin
- 			
+ 	
+	START_ESHQ:     process.env.START_ESHQ,
+	START_TWITTER:  process.env.START_TWITTER,
+  
 	ESHQ_KEY:		process.env.ESHQ_KEY,
 	ESHQ_SECRET:	process.env.ESHQ_SECRET,
 	ESHQ_URL:		process.env.ESHQ_URL,

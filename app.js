@@ -1,30 +1,14 @@
-/////////////////////////////////////////////////////////////////////
-var params = require("./myparams.js");
-console.log("\n\n==================================== Event Channel : "+params.eventSourceChannel);
-console.log("consumerKey : "+params.consumer_key);
-//console.log(JSON.stringify(params,null,4));
 
 /////////////////////////////////////////////////////////////////////
 // We need to 'require' the following modules
 var express = require("express"),
 	http = require("http"),
-	https = require('https'),
 	path = require("path"),
 	app = express(),
 	mongoose = require('mongoose'),
-	//redis	 = require('redis'),
-	utils = require("./utils.js"),
 	moment = require("moment"),
-	//models = require("./models.js"),
-	twitterWorker = require("./twitter.js"),
-	quefaire = require("./quefaire.js");
-
-// setup publisher client
-publisherClient = require("./publisher.js");
-
-if (publisherClient) {
-  publisherClient.listen(app);
-}
+    params = require("./myparams.js");
+	//quefaire = require("./quefaire.js");
 
 moment.lang('fr');
 	
@@ -69,8 +53,9 @@ db.once('open', function callback () {
 });
 
 /////////////////////////////////////////////////////////////////////
-// Twitter Stream API worker
-//twitterWorker();
+// Worker
+require('./worker');
+
 
 /////////////////////////////////////////////////////////////////////
 // Create the http server on the specified port
