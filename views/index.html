@@ -16,7 +16,29 @@
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-	<script src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+	
+	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+	<link rel="stylesheet" href="css/bootstrap-scroll-modal.css" type="text/css" />
+	
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
+	
+</head>
+<body>
+<div class="page-container">
+	<a id="helpButton" class="btn btn-small" href="http://www.parismappartient.fr" target="_blank"><i class="icon-question-sign"></i></a>
+	<a id="locButton" class="btn btn-small" onclick="goToMyPosition();"><i class="icon-screenshot"></i></a>
+	<a id="userButton" class="btn btn-info btn-small" href="/qui" target="_blank"><i class="icon-user"></i></a>
+	<a id="eventButton" class="btn btn-info btn-small" href="/quoi" target="_blank"><i class="icon-calendar"></i></a>
+	<label id="toggleVoronoi" class="checkbox"><input type="checkbox">zones</label>
+	<! ------------------------------------------------------------ -->
+	<div id="map"></div>
+	<!--<div id="panel"></div>-->
+	<! ------------------------------------------------------------ -->
+</div>
+<! ------------------------------------------------------------ -->
+  <script src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
 	<script src='http://d3js.org/d3.v3.min.js' charset="utf-8"></script>
 	<!--<script src="lib/d3.v3.min.js"></script>-->
 	
@@ -27,11 +49,6 @@
 	<script type="text/javascript" src="lib/bootstrap-scroll-modal.js"></script>
 	
 	<script type="text/javascript" src="lib/mytooltip.js"></script>
-	
-	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
-	<link rel="stylesheet" href="css/bootstrap-scroll-modal.css" type="text/css" />
-	
 	<script src="lib/moment.min.js"></script>
 	<script src="lib/minutils.js"></script>
 	<link rel="stylesheet" href="css/tmap.css" type="text/css"/>
@@ -55,24 +72,6 @@
 			document.write('<script>(function(){var uv=document.createElement("script");uv.type="text/javascript";uv.async=true;uv.src="//widget.uservoice.com/zSsRUcH6Eh25xWciW9fRNg.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(uv,s)})(); UserVoice = window.UserVoice || []; UserVoice.push(["showTab", "classic_widget", { mode: "full", primary_color: "#cc6d00", link_color: "#007dbf", default_mode: "support", forum_id: 203857,support_tab_name: "Notifier un problème",feedback_tab_name: "Proposer une idée", tab_label: "une idée ?", tab_color: "#3D403D", tab_position: "middle-right", tab_inverted: false}]);</'+'script>');
 		}
 	</script>
-	
-	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
-	
-</head>
-<body>
-<div class="page-container">
-	<a id="helpButton" class="btn btn-small" href="http://www.parismappartient.fr" target="_blank"><i class="icon-question-sign"></i></a>
-	<a id="locButton" class="btn btn-small" onclick="goToMyPosition();"><i class="icon-screenshot"></i></a>
-	<a id="userButton" class="btn btn-info btn-small" href="/qui" target="_blank"><i class="icon-user"></i></a>
-	<a id="eventButton" class="btn btn-info btn-small" href="/quoi" target="_blank"><i class="icon-calendar"></i></a>
-	<label id="toggleVoronoi" class="checkbox"><input type="checkbox">zones</label>
-	<! ------------------------------------------------------------ -->
-	<div id="map"></div>
-	<!--<div id="panel"></div>-->
-	<! ------------------------------------------------------------ -->
-</div>
-<! ------------------------------------------------------------ -->
 <script type="text/javascript">
 	$(document).ready(function(){
 		
