@@ -66,7 +66,7 @@ function Ploufmap() {
 
     //////////////////////////////////////////////////////
     plo.log = function(str) {
-      plo.config.dev && console.log(str);
+      if(plo.config.dev) console.log(str);
     };
 
     //////////////////////////////////////////////////////
