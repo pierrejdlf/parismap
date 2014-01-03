@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="ngBoilerplate" ng-controller="AppCtrl">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    
+    <!-- <title ng-bind="pageTitle"></title> -->
+
+    <!-- social media tags -->
+<!--     <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@joshdmiller">
+    <meta name="twitter:title" content="ngBoilerplate">
+    <meta name="twitter:description" content="Non-Trivial AngularJS Made Easy: Everything you need to kickstart AngularJS projects: a best-practice directory structure, an intelligent build system, and the best web design libraries around.">
+    <meta name="twitter:creator" content="@joshdmiller">
+    <meta name="twitter:image:src" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846">
+    <meta property="og:title" content="ngBoilerplate" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://bit.ly/ngBoilerplate" />
+    <meta property="og:image" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846" />
+    <meta property="og:description" content="3 sentences description of project"> -->
+
+    <script src="http://app.eventsourcehq.com/es.js"></script>
+
+  
+    <script type="text/javascript" src="./js/parismap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
+
+    </head>
+
+    <body>
+      <div id="locateMask">
+        <div>please allow browser geoloc</div>
+        <i class="fa fa-spinner fa-spin fa-2x fa-inverse"></i>
+      </div>
+
+      <!-- <div id="menu"></div> -->
+
+      <div id="map"></div>
+      <div id="swiper" class="swiper-container">
+        <div class="swiper-wrapper"></div>
+      </div>
+    </body>
+
+
+
+    <!-- Handlebars templates -->
+    <script id="menu-template" type="text/x-handlebars-template">
+    //   <nav class="nav-collapse">
+    //       <ul>
+    //       {{#categories}}
+    //         <li><a href="#{{name}}">{{name}}</a></li>
+    //       {{/categories}}
+    //       </ul>
+    //   </nav>
+    </script>
+
+    <script id="plouf-template" type="text/x-handlebars-template">
+      <div class="plouf-container {{type}}">
+        
+        <div class="arrow"></div>
+
+        <div class="content">
+          {{#if istweet}}
+            <div class="meta">
+              <div class="date">{{formatdate date}}</div>
+              <a class="link" href="http://twitter.com/{{user.id}}" target="_blank">@{{user.name}}</a>
+            </div>
+          {{else}}
+            {{#if isevent}}
+              <div class="meta">
+                <div class="date">{{formatdate date}}</div>
+                <a class="link" href="{{link}}" target="_blank">info {{splitype ptype}}</a>
+              </div>
+              <div class="address">{{place}} | {{address}}</div>
+            {{/if}}
+          {{/if}}
+
+          {{#if isevent}} 
+            <div class="title">- {{title}} -</div>
+            <div class="text">{{{text}}}</div>
+          {{else}}
+            <div class="text">{{{text}}}</div>
+          {{/if}}
+        </div>
+
+      </div>
+    </script>
+
+
+    <!-- script -->
+    <script>
+    $(function(){
+        var p = Ploufmap();
+    });
+    </script>
+
+</html>
