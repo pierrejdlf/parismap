@@ -1,0 +1,162 @@
+body {
+  overflow: hidden;
+}
+
+/* general */
+#locateMask, #map {
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+#locateMask {
+  background: black;
+  z-index: 200;
+  text-align: center;
+  padding-top: 35%;
+  opacity: 0.8;
+  transition: opacity 0.5s linear;
+}
+#locateMask.invisible {
+  opacity: 0;
+}
+#locateMask.invisible.hidden {
+  display: none;
+}
+
+
+/* swiper */
+
+.swiper-container {
+  overflow: visible;
+}
+
+#swiper {
+  position:absolute;
+  left:0px;
+  bottom:0px;
+  width:100%;
+  height:40%;
+  background: white;
+  transition: bottom 200ms;
+  -webkit-transition: bottom 200ms; /* Safari */
+}
+#swiper[show=on] {
+    bottom: 0%;
+}
+#swiper[show=off] {
+    bottom: -40%;
+}
+
+
+
+
+/* layers groups */
+
+.leaflet-control-layers-group-name {
+  font-weight: bold;
+  margin-bottom: .2em;
+  display: block;
+}
+
+.leaflet-control-layers-group {
+  margin-bottom: .5em;
+}
+
+.leaflet-control-layers-group label {
+  padding-left: .5em;
+}
+
+
+/* markers */
+
+.leaflet-div-icon {
+  border:none;
+  background: none;
+}
+
+.leaflet-div-icon .tweet {
+  text-align: center;
+  font-size: 1.1em;
+  font-family: georgia, serif;
+  line-height: 1.1em;
+  text-transform: lowercase;
+  font-style: italic;
+  text-shadow: 2px 2px 2px rgba(255, 255, 255, 0.82);
+}
+
+.leaflet-div-icon .event {
+  -moz-border-radius:8px;
+  border-radius:8px;
+  padding:6px;
+  text-align: left;
+  color:white;
+  font-size: 1.1em;
+  font-family: georgia, serif;
+  line-height: 1.1em;
+  text-transform: lowercase;
+  font-style: italic;
+  background: rgba(0, 0, 0, 0.63);
+
+  /*transition: background 0.1s linear;*/
+}
+.leaflet-div-icon.focused .event {
+  background: rgba(141, 44, 44, 0.63);
+}
+
+.leaflet-div-icon .event span {
+  margin-left:7px;
+}
+
+
+/* slides */
+
+.arrow {
+  position: relative;
+  height: 0;
+}
+.arrow:after {
+  content: '';
+  position: relative;
+  border-style: solid;
+  border-width: 0 30px 30px;
+  display: block;
+  width: 0;
+  z-index: 9999;
+  margin-left: -30px;
+  top: -30px;
+  left: 50%;
+}
+.tweet .arrow:after { border-color: #FFFFFF transparent; }
+.event .arrow:after { border-color: #F8EDD6 transparent; }
+
+.plouf-container {
+  height: 100%;
+}
+
+.plouf-container .content {
+  padding: 15px 15% 15px 15%;
+  text-align: center;
+}
+
+.plouf-container.event {
+  background: #F8EDD6;
+}
+.plouf-container .content .meta {
+
+}
+.plouf-container .content .date {
+ display: inline-block;
+}
+.plouf-container .content .text {
+  text-align: center;
+  font-size: 1.4em;
+  font-family: georgia, serif;
+  //font-style: italic;
+}
+.plouf-container .content .word {
+  text-align: center;
+  font-size: 1em;
+}
