@@ -48,7 +48,7 @@ function Ploufmap() {
     plo.anchor = null; // first clicked marker, to be able to loop around based on distance to anchor
 
     plo.w = $("body").width();
-    console.log("width:"+plo.w);
+    plo.log("width:"+plo.w);
 
     plo.ploufTemplate = Handlebars.compile($("#plouf-template").html());
 
@@ -65,10 +65,15 @@ function Ploufmap() {
     });
 
     //////////////////////////////////////////////////////
+    plo.log = function(str) {
+      plo.config.dev && console.log(str);
+    };
+
+    //////////////////////////////////////////////////////
     plo.init = function() {
-      console.log("Init all.");
+      plo.log("Init all.");
       plo.initConfig(function(conf) {
-        console.log("config: ",conf);
+        plo.log("config: ",conf);
 
         plo.initMap();
         plo.throttleFetch();
@@ -116,15 +121,15 @@ function Ploufmap() {
             initialSlide: 0,
             onSlideChangeStart: function(swiper,direction) {
                 var i = plo.swiper.activeIndex;
-                console.log("now looking at: "+i);
+                plo.log("now looking at: "+i);
                 if(direction=='prev') {
-                  //console.log("panning to:"+plo.slides[i].options.text+plo.slides[i].options.lat);
+                  //plo.log("panning to:"+plo.slides[i].options.text+plo.slides[i].options.lat);
                   plo.map.panTo(plo.slides[i].options);
                 } else {
-                  //console.log("panning to:"+plo.next.options.text+plo.next.options.lat);
+                  //plo.log("panning to:"+plo.next.options.text+plo.next.options.lat);
                   plo.map.panTo(plo.next.options);
                   if(i==plo.slides.length-1) {
-                    console.log("! need to load next slide");
+                    plo.log("! need to load next slide");
                     plo.swiperLoadNext();
                   }
                 }
@@ -158,13 +163,13 @@ function Ploufmap() {
     // if you want to try to move map interpolated based on swipe
     plo.swiperInterpolate = function(sw,p) {
         var k = -p.x/plo.w;
-        //console.log(k,p);
+        //plo.log(k,p);
         var a = plo.current.options;
         var b = plo.next.options;
         var lat = (a.lat*k + b.lat*(1-k));
         var lng = (a.lng*k + b.lng*(1-k));
         var tp = [lat,lng];
-        //console.log(tp)
+        //plo.log(tp)
         //plo.map.panTo(tp);
     };
     plo.swiperToggle = function(show) {
@@ -187,10 +192,10 @@ function Ploufmap() {
         var html = plo.ploufTemplate(data);
         var newSlide = plo.swiper.createSlide(html);
         newSlide.append();
-        //console.log("Swiper appended: "+data.pid);
+        //plo.log("Swiper appended: "+data.pid);
     };
     plo.swiperReloadWith = function(list) {
-        console.log("reload swiper");
+        plo.log("reload swiper");
         plo.swiper.reInit();
         plo.swiper.removeAllSlides();
         // let's load 2 at start
@@ -225,15 +230,15 @@ function Ploufmap() {
       };
       $.post( plo.config.baseUrl+"/p/vote", data, function(response) {
           //var res = JSON.parse(response);
-          console.log(response);
+          plo.log(response);
       });
       plo.swiper.swipeNext();
     };
 
     //////////////////////////////////////////////////////
     plo.clickMarker = function(event) {
-        console.log("marker clicked");
-        console.log(event);
+        plo.log("marker clicked");
+        plo.log(event);
         var marker = event.target;
         
         plo.current = marker;
@@ -251,13 +256,13 @@ function Ploufmap() {
         plo.current.seen = "loaded";
         plo.next = plo.getNext();
         plo.swiperReloadWith([plo.current,plo.next]);
-        //console.log("current index: "+plo.swiper.activeIndex);
+        //plo.log("current index: "+plo.swiper.activeIndex);
         plo.swiper.swipeTo(0);
         plo.swiperToggle(true);
         plo.map.panTo(plo.current.options);
     };
     plo.clickMap = function(event) {
-        console.log("map clicked");
+        plo.log("map clicked");
         plo.swiperToggle(false);
     };
 
@@ -271,7 +276,7 @@ function Ploufmap() {
 
     //////////////////////////////////////////////////////
     plo.markerLayer = function(plouf) {
-      //console.log("request api layer:"+plouf.papi);
+      //plo.log("request api layer:"+plouf.papi);
       return plo.layers[plouf.papi];
     };
 
@@ -322,7 +327,7 @@ function Ploufmap() {
         var groupedOverlays = {};
         plo.layers = {};
         _.each(plo.config.apis, function(apis,apitype) {
-          //console.log(k,v);
+          //plo.log(k,v);
           groupedOverlays[apitype] = {};
           _.each(apis, function(api,key) {
             //var marks = [ L.marker(plo.options.defaultCenter) ];
@@ -333,8 +338,8 @@ function Ploufmap() {
             //markGroup.on('click', plo.clickMarker);
           });
         });
-        //console.log("api layers:",plo.layers);
-        //console.log("groupedOverlays:",groupedOverlays);
+        //plo.log("api layers:",plo.layers);
+        //plo.log("groupedOverlays:",groupedOverlays);
 
         plo.map = L.map('map', {
             keyboard: false,
@@ -432,7 +437,7 @@ function Ploufmap() {
             newM.on('click', plo.clickMarker);
             newM.addTo(markLayer);
         } else {
-            //console.log("already here");
+            //plo.log("already here");
         }
     };
 
@@ -446,11 +451,11 @@ function Ploufmap() {
             bounds: [[bounds._southWest.lat,bounds._southWest.lng] , [bounds._northEast.lat,bounds._northEast.lng]]
         };
 
-        //console.log(data);
+        //plo.log(data);
         $.post( plo.config.baseUrl+"/p/get", data, function(response) {
             var data = JSON.parse(response);
-            console.log(Object.keys(data).length+" ploufs received !");
-            //console.log(data);
+            plo.log(Object.keys(data).length+" ploufs received !");
+            //plo.log(data);
             _.each(data,function(p) {
                 plo.addPlouf(p);  
             });
@@ -461,10 +466,10 @@ function Ploufmap() {
     plo.initEventSource = function() {
         var source = new EventSource(plo.config.baseUrl+'/riviere-de-ploufs');
         source.onopen = function() {
-            console.log("Event Source connected");
+            plo.log("Event Source connected");
         };
         source.onerror = function(err) {
-            console.log("Event Source error ! ",err);
+            plo.log("Event Source error ! ",err);
         };
 
         //source.addEventListener('connections', updateConnections, false);
@@ -474,10 +479,10 @@ function Ploufmap() {
         source.onmessage = function(event) {
             //try {
                 var newPlouf = JSON.parse(event.data);
-                //console.log("es-plouf", newPlouf);
+                //plo.log("es-plouf", newPlouf);
                 plo.addPlouf(newPlouf);
             // } catch(er) {
-            //     console.log("event source message error: "+er);
+            //     plo.log("event source message error: "+er);
             // }
         };
     };
@@ -488,30 +493,30 @@ function Ploufmap() {
       var source = new ESHQ(plo.config.esChannel,{auth_url: plo.config.baseUrl+'/riviere-de-ploufs-hq'});
       
       source.onopen = function(e) {
-        console.log(" ... ESHQ connexion ok");
+        plo.log(" ... ESHQ connexion ok");
         // callback called when the connection is made
       };
       source.onmessage = function(e) {
         // callback called when a new message has been received
-        console.log("Message type: %s, message data: %s", e.type, e.data);
+        plo.log("Message type: %s, message data: %s", e.type, e.data);
       };
       source.onerror = function(e) {
         // callback called on errror
-        console.log(" ... ESHQ connexion error");
-        console.log(e);
+        plo.log(" ... ESHQ connexion error");
+        plo.log(e);
       };
 
       source.addEventListener('newploufpublication', function(e) {
         var newdata = e;
         //var newdata = eval("("+e.data+")");
-        console.log("ES:",newdata);
+        plo.log("ES:",newdata);
         plo.addPlouf(newdata);
       });
     };
     
     //////////////////////////////////////////////////////
     plo.sendForm = function() {
-        console.log("Got form fields");
+        plo.log("Got form fields");
         var form = $("#form");
         form.submit(function() {
             // submit
@@ -520,9 +525,9 @@ function Ploufmap() {
                 title:      f.messform.title,
                 message:    f.messform.message
             };
-            console.log(newPlouf);
+            plo.log(newPlouf);
             $.post( plo.config.baseUrl+"/p/new", newPlouf,function(response) {
-                console.log("form response ok");
+                plo.log("form response ok");
             });
         });
     };
