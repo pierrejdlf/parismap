@@ -12,8 +12,11 @@ function Ploufmap() {
 
     plo = {};
 
+    var dev = window.location.hostname == "localhost";
+
     plo.config = {
-        baseUrl:        "http://localhost:8080",
+        dev: dev,
+        baseUrl:        dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
         throttleDelay:  2000,
         defaultCenter:  L.latLng(48.87,2.347),
         // http://fortawesome.github.io/Font-Awesome/icons/
