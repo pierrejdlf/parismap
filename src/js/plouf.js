@@ -71,7 +71,7 @@ function Ploufmap() {
         plo.throttleFetch();
         plo.swiperToggle(false);
         plo.swiperInit();
-        plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;
+        var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;
         plo.fadeOutMask();         
       });
     };
@@ -482,7 +482,7 @@ function Ploufmap() {
     //////////////////////////////////////////////////////
     // special if heroku server
     plo.initEventSourceHQ = function() {
-      var source = new ESHQ(plo.config.esChannel);//,{auth_url: "/"+streamAddress});
+      var source = new ESHQ(plo.config.esChannel,{auth_url: plo.config.baseUrl+'/riviere-de-ploufs-hq'});
       
       source.onopen = function(e) {
         console.log(" ... ESHQ connexion ok");
@@ -499,11 +499,13 @@ function Ploufmap() {
       };
 
       source.addEventListener('newploufpublication', function(e) {
-        var newdata = eval("("+e.data+")");
+        var newdata = e;
+        //var newdata = eval("("+e.data+")");
         console.log("ES:",newdata);
         plo.addPlouf(newdata);
       });
-
+    };
+    
     //////////////////////////////////////////////////////
     plo.sendForm = function() {
         console.log("Got form fields");
