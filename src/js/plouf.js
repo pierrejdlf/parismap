@@ -11,6 +11,7 @@ Handlebars.registerHelper('splitype', function(type) {
 function Ploufmap() {
 
     plo = {};
+    plo.log = function(str) { if(plo.config.dev) console.log(str); };
 
     var dev = window.location.hostname == "localhost";
 
@@ -63,11 +64,6 @@ function Ploufmap() {
             bounceOnAddHeight: 40
         }
     });
-
-    //////////////////////////////////////////////////////
-    plo.log = function(str) {
-      if(plo.config.dev) console.log(str);
-    };
 
     //////////////////////////////////////////////////////
     plo.init = function() {
@@ -344,8 +340,9 @@ function Ploufmap() {
         plo.map = L.map('map', {
             keyboard: false,
             center: plo.config.defaultCenter,
-            zoom: 13,
+            zoom: 14,
             maxZoom: 17,
+            minZoom: 13,
             icons: plo.icons,
             layers: [baseLayers.minimal].concat(_.values(plo.layers))
         });
