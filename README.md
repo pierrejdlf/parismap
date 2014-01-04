@@ -1,7 +1,9 @@
 # Parismap client
 ## Todo
 
-* css fo a good-looking swiper display (tweets & events)
+* bug active event marker red when swiping (reset whan map panned)
+* css: make a good-looking swiper display (msg & evt) !
+* css: unify metas (cdlm/twitter/events) ?
 * marker «vous-etes-ici» (add on click)
 * marker set icon/color based on last refresh (new messages are all red, even if map panned)
 * vote on key press during navigation

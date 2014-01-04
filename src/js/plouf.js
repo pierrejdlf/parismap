@@ -2,6 +2,13 @@ Handlebars.registerHelper('formatdate', function(date) {
   var datestr = moment(date.start).format("HH[h]mm");
   return new Handlebars.SafeString(datestr);
 });
+Handlebars.registerHelper('markertype', function(papi) {
+  if(plo.config.markers.msg.indexOf(papi)!=-1) {
+    return "msg";
+  } else if(plo.config.markers.evt.indexOf(papi)!=-1) {
+    return "evt";
+  } else return "none";
+});
 Handlebars.registerHelper('splitype', function(type) {
   return type.split("_")[1];
 });
@@ -35,7 +42,42 @@ function Ploufmap() {
           'event_cibul':          'flash_orange',
           'event_oneheart':       'globe_orange',
           'event_opendatasoft':   'gift_orange'
+        },
+        icons: {
+            // normal: L.icon({
+            //     iconUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-icon.png',
+            //     shadowUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-shadow.png',
+            //     iconSize: [25, 41],
+            //     iconAnchor: [12, 40],
+            //     popupAnchor: [0, -40],
+            //     shadowSize: [41, 41],
+            //     shadowAnchor: [12, 40]
+            // }),
+            type_msg: function(words) {
+              return L.divIcon({
+                iconSize: [60, 10],
+                html: "<div class='msg'>"+words.join(" ")+"</div>",
+                popupAnchor:  [0, 0]
+              });
+            },
+            type_evt: function(icon,time) {
+              return L.divIcon({
+                iconSize: [70, 10],
+                html: "<div class='evt'><i class='fa fa-"+icon+"'></i><span>"+time+"</span></div>",
+                popupAnchor:  [0, 0]
+              });
+            }
         }
+        // following could allow you to use font-awesome standard markers
+        // _.each(plo.config.iconTypes, function(value, key) {
+        //     plo.config.icons['type_'+key] = L.AwesomeMarkers.icon({
+        //         prefix:         'fa',
+        //         icon:           value.split("_")[0],
+        //         markerColor:    value.split("_")[1]
+        //         //iconColor:#BBBBBB,
+        //         //spin:true,
+        //     });
+        // });
     };
 
     plo.map = null;
@@ -85,6 +127,7 @@ function Ploufmap() {
       //var menuTemplate = Handlebars.compile($("#menu-template").html());
       $.get( plo.config.baseUrl+"/config", function(response) {
           // rather extend ?
+          plo.config.markers = response.markers;
           plo.config.apis = response.apis;
           plo.config.esHQ = response.esHQ;
           plo.config.esChannel = response.esChannel;
@@ -277,41 +320,6 @@ function Ploufmap() {
 
     //////////////////////////////////////////////////////
     plo.initMap = function() {
-
-        plo.icons = {
-            // normal: L.icon({
-            //     iconUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-icon.png',
-            //     shadowUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-shadow.png',
-            //     iconSize: [25, 41],
-            //     iconAnchor: [12, 40],
-            //     popupAnchor: [0, -40],
-            //     shadowSize: [41, 41],
-            //     shadowAnchor: [12, 40]
-            // }),
-            type_tweet: function(words) {
-              return L.divIcon({
-                iconSize: [60, 10],
-                html: "<div class='tweet'>"+words.join(" ")+"</div>",
-                popupAnchor:  [0, 0]
-              });
-            },
-            type_event: function(icon,time) {
-              return L.divIcon({
-                iconSize: [70, 10],
-                html: "<div class='event'><i class='fa fa-"+icon+"'></i><span>"+time+"</span></div>",
-                popupAnchor:  [0, 0]
-              });
-            }
-        };
-        _.each(plo.config.iconTypes, function(value, key) {
-            plo.icons['type_'+key] = L.AwesomeMarkers.icon({
-                prefix:         'fa',
-                icon:           value.split("_")[0],
-                markerColor:    value.split("_")[1]
-                //iconColor:#BBBBBB,
-                //spin:true,
-            });
-        });
         var cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
         var baseLayers = {
           minimal: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}),
@@ -342,7 +350,7 @@ function Ploufmap() {
             zoom: 14,
             maxZoom: 17,
             minZoom: 13,
-            icons: plo.icons,
+            icons: plo.config.icons,
             layers: [baseLayers.minimal].concat(_.values(plo.layers))
         });
 
@@ -410,16 +418,18 @@ function Ploufmap() {
     //////////////////////////////////////////////////////
     plo.addPlouf = function(p) {
         var markLayer = plo.markerLayer(p);
-        var mainType = p.ptype.split("_")[0];
-        var i = plo.icons['type_'+mainType];
-        // if function (aka for words) compute result !
-        if(typeof(i) == "function") {
-          if(mainType=='tweet')
-            i = i(p.words);
-          else {
-            var faicon = plo.config.iconTypes[p.ptype].split("_")[0];
-            i = i(faicon,moment(p.date.start).format("HH:mm"));
-          }
+        //var myt = p.ptype.split("_")[0];
+        var api = p.papi;
+        var i = null;
+        // ... before you used to check: if(typeof(i) == "function") {
+        // now simpler. we'll just allocate a marker icon based on the type of plouf
+        var ic = plo.config.icons;
+        if(plo.config.markers.msg.indexOf(api)!=-1) {
+          i = ic.type_msg(p.words);
+        }
+        if(plo.config.markers.evt.indexOf(api)!=-1) {
+          var faicon = plo.config.iconTypes[p.ptype].split("_")[0];
+          i = ic.type_evt(faicon,moment(p.date.start).format("HH:mm"));
         }
         var ltln = new L.LatLng(p.lat, p.lng);
         var f = _.find(markLayer._layers, function(e){
