@@ -234,7 +234,6 @@ function Ploufmap() {
     //////////////////////////////////////////////////////
     plo.clickMarker = function(event) {
         plo.log("marker clicked");
-        plo.log(event);
         var marker = event.target;
         
         plo.current = marker;

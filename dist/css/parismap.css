@@ -722,7 +722,7 @@ Pagination Styles
 	/* Specific visible button style: */	
 	
 }
-;body {
+;html, body {
   overflow: hidden;
 }
 
