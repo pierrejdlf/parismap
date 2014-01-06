@@ -1,10 +1,14 @@
 # Parismap client
 ## Todo
 
-* bug active event marker red when swiping (reset whan map panned)
+* keep all config options out of plouf.js
+* fix bug swipe navigation order from one to one
+* POST query /p/get with list of ids we already have, to avoid repetitions !
 * css: make a good-looking swiper display (msg & evt) !
 * css: unify metas (cdlm/twitter/events) ?
+* marker: bug active event marker red when swiping (reset whan map panned)
 * marker «vous-etes-ici» (add on click)
+* marker greater z-index > for events
 * marker set icon/color based on last refresh (new messages are all red, even if map panned)
 * vote on key press during navigation
 * over div blocking everything on mobile
