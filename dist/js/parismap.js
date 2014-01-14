@@ -9639,10 +9639,11 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
                   plo.map.panTo(plo.slides[i].options);
                 } else {
                   //plo.log("panning to:"+plo.next.options.text+plo.next.options.lat);
+
                   plo.map.panTo(plo.next.options);
                   if(i==plo.slides.length-1) {
                     plo.log("! need to load next slide");
-                    plo.swiperLoadNext();
+                    plo.swiperNextLoaded();
                   }
                 }
             },
@@ -9691,8 +9692,15 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     plo.swiperIsActive = function() {
         return $("#swiper").attr("show")=='on';
     };
-    plo.swiperLoadNext = function() {
+    plo.swiperNextLoaded = function() {
+        // update last marker class
+        $(plo.current._icon).data("status","visited");
+
         plo.current = plo.next ;
+
+        $(".leaflet-div-icon").removeClass("focused");
+        $(plo.current._icon).addClass("focused");
+
         plo.next = plo.getNext();
         plo.swiperAppend( plo.next );
     };
@@ -9756,6 +9764,7 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         
         $(".leaflet-div-icon").removeClass("focused");
         $(plo.current._icon).addClass("focused");
+        $(plo.current._icon).data("status","visited");
         
         // reset: all markers can be seen again
         _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
