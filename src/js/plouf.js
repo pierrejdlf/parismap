@@ -144,7 +144,7 @@ function Ploufmap(options) {
         //plo.map.panTo(tp);
     };
     plo.swiperToggle = function(show) {
-        if(!show) $(".leaflet-div-icon").removeClass("focused");
+        if(!show) $(".focused").addClass("visited").removeClass("focused");
         $("#swiper").attr("show", show ? "on" : "off");
     };
     plo.swiperIsActive = function() {
@@ -152,12 +152,11 @@ function Ploufmap(options) {
     };
     plo.swiperNextLoaded = function() {
         // update last marker class
-        $(plo.current._icon).data("status","visited");
+        plo.setMarkerStatus(plo.current,"visited");
 
         plo.current = plo.next ;
 
-        $(".leaflet-div-icon").removeClass("focused");
-        $(plo.current._icon).addClass("focused");
+        plo.setMarkerStatus(plo.current,"focused");
 
         plo.next = plo.getNext();
         plo.swiperAppend( plo.next );
@@ -211,6 +210,17 @@ function Ploufmap(options) {
       plo.swiper.swipeNext();
     };
 
+    plo.setMarkerStatus = function(m,status) {
+        if(status=="focused") {
+          $(".leaflet-div-icon").removeClass("focused");
+          $(m._icon).addClass("focused");
+        }
+        if(status=="visited") {
+          $(m._icon).removeClass("focused");
+          $(m._icon).addClass("visited");
+        }
+    };
+
     //////////////////////////////////////////////////////
     plo.clickMarker = function(event) {
         plo.log("marker clicked");
@@ -220,10 +230,8 @@ function Ploufmap(options) {
         plo.anchor = marker;
         plo.slides = [marker];
         
-        $(".leaflet-div-icon").removeClass("focused");
-        $(plo.current._icon).addClass("focused");
-        $(plo.current._icon).data("status","visited");
-        
+        plo.setMarkerStatus(plo.current,"focused");
+
         // reset: all markers can be seen again
         _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
           e.options.seen = "no";

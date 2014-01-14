@@ -102,7 +102,7 @@ html, body {
 
   /*transition: background 0.1s linear;*/
 }
-.leaflet-div-icon[data-status="visited"] .evt {
+.leaflet-div-icon.visited .evt {
   background: rgba(126, 126, 126, 0.73);
 }
 .leaflet-div-icon.focused .evt {
