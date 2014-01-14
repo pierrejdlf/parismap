@@ -186,7 +186,7 @@ function Ploufmap(options) {
         var next = null;
         _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
             var d = plo.anchor._latlng.distanceTo(e._latlng);
-            if(md==null || (d<md && e!=plo.anchor && e.options.seen=="no")) {
+            if(md===null || (d<md && e!=plo.anchor && e.options.seen=="no")) {
               md = d;
               next = e;
             }

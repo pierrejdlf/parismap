@@ -682,7 +682,7 @@ Pagination Styles
     bottom: 0%;
 }
 #swiper[show=off] {
-    bottom: -40%;
+    bottom: -50%; /* not 40% aka same than height to QAD hide arrow */
 }
 
 
@@ -771,26 +771,46 @@ Pagination Styles
 
 .plouf-container {
   height: 100%;
+  background: #E6E6E6;
 }
 
-.plouf-container .content {
-  padding: 15px 15% 15px 15%;
+/* following to style the slide of your marker */
+
+/* evt */
+
+.evt .arrow:after { border-color: whitesmoke transparent; }
+.content {
+  padding: 0;
   text-align: center;
 }
 
-.plouf-container .content .meta {
-
+.content .meta {
+  background: whitesmoke;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid lightgray;
 }
-.plouf-container .content .date {
- display: inline-block;
+.content .meta .date,
+.content .meta .address {
+  display: inline-block;
 }
-.plouf-container .content .text {
+.content .title {
+  margin-bottom: 4px;
+}
+.content .text {
+  padding:0 15% 0 15%;
   text-align: center;
   font-size: 1.4em;
   font-family: georgia, serif;
-  //font-style: italic;
+  /*font-style: italic;*/
 }
-.plouf-container .content .word {
+
+
+
+
+
+.content .word {
   text-align: center;
   font-size: 1em;
 }

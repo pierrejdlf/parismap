@@ -9724,11 +9724,11 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     //////////////////////////////////////////////////////
     // return next marker wich was unseen
     plo.getNext = function() {
-        var md = 100000;
+        var md = null;
         var next = null;
         _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
             var d = plo.anchor._latlng.distanceTo(e._latlng);
-            if(d<md && e!=plo.anchor && e.options.seen=="no") {
+            if(md===null || (d<md && e!=plo.anchor && e.options.seen=="no")) {
               md = d;
               next = e;
             }
@@ -9941,6 +9941,11 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
             _.each(data,function(p) {
                 plo.already.push(p._id);
                 p.markertype = plo.config.markers[p.ptype];
+                try {
+                  p.text = $(p.text).text();
+                } catch(err) {
+                  plo.log("html>text error: "+err);
+                }
                 plo.addPlouf(p);  
             });
         });

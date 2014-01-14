@@ -52,12 +52,14 @@
         <div class="content">
           <div class="meta">
             <div class="date">{{formatdate date}}</div>
-            <a class="link" href="{{link}}" target="_blank">info {{splitype ptype}}</a>
+            <i class="fa fa-home"></i>
+            <div class="address">{{place}} | {{address}}</div>
+            <i class="fa fa-arrow-circle-right"></i>
+            <a class="link" href="{{link}}" target="_blank">{{splitype ptype}}</a>
           </div>
-          <div class="address">{{place}} | {{address}}</div>
 
-          <div class="title">- {{title}} -</div>
-          <div class="text">{{{text}}}</div>
+          <div class="title">{{title}}</div>
+          <div class="text">{{text}}</div>
         </div>
 
       </div>
@@ -83,7 +85,7 @@
     <script>
 
     Handlebars.registerHelper('formatdate', function(date) {
-      var datestr = moment(date.start).format("HH[h]mm");
+      var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
       return new Handlebars.SafeString(datestr);
     });
     Handlebars.registerHelper('splitype', function(type) {
@@ -113,7 +115,7 @@
         
         // init map on div, with all required options
 
-        var cloudmadeAttribution = 'Mapdata &copy;2011 OSM contribs, Imagery &copy;2011 CloudMade';
+        var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
         var p = Ploufmap({
           map: "map", // map div id (carefull with css !)
 
@@ -171,9 +173,13 @@
                 'event_opendatasoft':   'gift'        
               };
               var ic = ev_icons[data.ptype];
+              var interval = false ; //data.date.start!=data.date.end;
               var ti = moment(data.date.start).format("HH:mm");
+              if(interval)
+                ti += " - "+moment(data.date.end).format("HH:mm");
+              var w = interval? 115 : 70;
               return L.divIcon({
-                iconSize: [70, 10],
+                iconSize: [w,10],
                 html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
                 popupAnchor:  [0, 0]
               });
