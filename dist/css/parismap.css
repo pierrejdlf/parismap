@@ -764,8 +764,7 @@ Pagination Styles
   top: -30px;
   left: 50%;
 }
-.msg .arrow:after { border-color: #FFFFFF transparent; }
-.evt .arrow:after { border-color: #F8EDD6 transparent; }
+.arrow:after { border-color: #FFFFFF transparent; }
 
 .plouf-container {
   height: 100%;
@@ -776,9 +775,6 @@ Pagination Styles
   text-align: center;
 }
 
-.plouf-container.evt {
-  background: #F8EDD6;
-}
 .plouf-container .content .meta {
 
 }

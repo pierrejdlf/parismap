@@ -45,33 +45,34 @@
       </div>
     </body>
 
-    <script id="plouf-template" type="text/x-handlebars-template">
+    <script id="plouf-template-evt" type="text/x-handlebars-template">
       <div class="plouf-container {{markertype}}">
-        
         <div class="arrow"></div>
 
         <div class="content">
-          {{#if istweet}}
-            <div class="meta">
-              <div class="date">{{formatdate date}}</div>
-              <a class="link" href="http://twitter.com/{{user.id}}" target="_blank">@{{user.name}}</a>
-            </div>
-          {{else}}
-            {{#if isevent}}
-              <div class="meta">
-                <div class="date">{{formatdate date}}</div>
-                <a class="link" href="{{link}}" target="_blank">info {{splitype ptype}}</a>
-              </div>
-              <div class="address">{{place}} | {{address}}</div>
-            {{/if}}
-          {{/if}}
+          <div class="meta">
+            <div class="date">{{formatdate date}}</div>
+            <a class="link" href="{{link}}" target="_blank">info {{splitype ptype}}</a>
+          </div>
+          <div class="address">{{place}} | {{address}}</div>
 
-          {{#if isevent}} 
-            <div class="title">- {{title}} -</div>
-            <div class="text">{{{text}}}</div>
-          {{else}}
-            <div class="text">{{{text}}}</div>
-          {{/if}}
+          <div class="title">- {{title}} -</div>
+          <div class="text">{{{text}}}</div>
+        </div>
+
+      </div>
+    </script>
+    <script id="plouf-template-msg" type="text/x-handlebars-template">
+      <div class="plouf-container {{markertype}}">
+        <div class="arrow"></div>
+
+        <div class="content">
+          <div class="meta">
+            <div class="date">{{formatdate date}}</div>
+            <a class="link" href="http://twitter.com/{{user.id}}" target="_blank">@{{user.name}}</a>
+          </div>
+
+          <div class="text">{{{text}}}</div>
         </div>
 
       </div>
@@ -106,8 +107,8 @@
         },
         
         markers = markers_evt;
-        if(window.location.hash=='all')
-          _.extend(markers,markers_msg);
+        if(window.location.hash=='#msg')
+          markers = markers_msg;
 
         
         // init map on div, with all required options
@@ -125,8 +126,8 @@
 
           // handlebar template for a slide showing a plouf
           templates: {
-            msg: Handlebars.compile($("#plouf-template").html()),
-            evt: Handlebars.compile($("#plouf-template").html())
+            msg: Handlebars.compile($("#plouf-template-msg").html()),
+            evt: Handlebars.compile($("#plouf-template-evt").html())
           },
 
           // define the icons for the previous types
@@ -170,7 +171,7 @@
                 'event_opendatasoft':   'gift'        
               };
               var ic = ev_icons[data.ptype];
-              var ti = moment(data.start).format("HH:mm");
+              var ti = moment(data.date.start).format("HH:mm");
               return L.divIcon({
                 iconSize: [70, 10],
                 html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
