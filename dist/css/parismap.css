@@ -663,7 +663,6 @@ Pagination Styles
 
 
 /* swiper */
-
 .swiper-container {
   overflow: visible;
 }
@@ -689,7 +688,6 @@ Pagination Styles
 
 
 /* layers groups */
-
 .leaflet-control-layers-group-name {
   font-weight: bold;
   margin-bottom: .2em;
@@ -706,7 +704,6 @@ Pagination Styles
 
 
 /* markers */
-
 .leaflet-div-icon {
   border:none;
   background: none;
@@ -719,7 +716,8 @@ Pagination Styles
   line-height: 1.1em;
   text-transform: lowercase;
   font-style: italic;
-  text-shadow: 2px 2px 2px rgba(255, 255, 255, 0.82);
+  color:whitesmoke;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);
 }
 
 .leaflet-div-icon .evt {

@@ -109,19 +109,23 @@
         },
         
         markers = markers_evt;
-        if(window.location.hash=='#msg')
+        var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
+        var baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
+        //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
+
+        if(window.location.hash=='#msg') {
           markers = markers_msg;
+          baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
+        }
 
         
         // init map on div, with all required options
-
-        var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
         var p = Ploufmap({
           map: "map", // map div id (carefull with css !)
+          initCenter:  L.latLng(48.87,2.347),
+          initZoom: 14,
 
-          baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}),
-          
-          //baseLayer: : L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
+          baseLayer: baseLayer,
 
           // which type will be fetched from server. and wich icon it will have
           markers: markers,
@@ -177,7 +181,7 @@
               var ti = moment(data.date.start).format("HH:mm");
               if(interval)
                 ti += " - "+moment(data.date.end).format("HH:mm");
-              var w = interval? 115 : 70;
+              var w = interval? 115 : 68;
               return L.divIcon({
                 iconSize: [w,10],
                 html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",

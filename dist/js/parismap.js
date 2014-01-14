@@ -9550,8 +9550,7 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     var defaults = {
         dev: dev,
         baseUrl:        dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-        throttleDelay:  2000,
-        defaultCenter:  L.latLng(48.87,2.347)
+        throttleDelay:  2000
     };
     plo.config = _.extend(defaults,options);
 
@@ -9817,7 +9816,7 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
           //plo.log(k,v);
           groupedOverlays[apitype] = {};
           _.each(apis, function(api,key) {
-            //var marks = [ L.marker(plo.options.defaultCenter) ];
+            //var marks = [ L.marker(plo.options.initCenter) ];
             //plo.markerLayer = L.layerGroup(marks);
             plo.layers[api] = new L.LayerGroup();
             groupedOverlays[apitype][key] = plo.layers[api];
@@ -9830,8 +9829,8 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
 
         plo.map = L.map(plo.config.map, {
             keyboard: false,
-            center: plo.config.defaultCenter,
-            zoom: 14,
+            center: plo.config.initCenter,
+            zoom: plo.config.initZoom,
             maxZoom: 17,
             minZoom: 13,
             icons: plo.config.icons,

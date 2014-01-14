@@ -8,7 +8,7 @@ function Ploufmap(options) {
     var defaults = {
         dev: dev,
         baseUrl:        dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-        throttleDelay:  2000,
+        throttleDelay:  2000
     };
     plo.config = _.extend(defaults,options);
 
