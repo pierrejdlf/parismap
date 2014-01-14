@@ -6,7 +6,7 @@
     "zepto":"http://github.com/madrobby/zepto/archive/master.zip",
     "handlebars":"1.1.2",
     "underscore":"1.5.2",
-    "Swiper":"http://github.com/nolimits4web/Swiper/archive/master.zip",
+    "swiper":"2.4.1",
     "leaflet": "http://leaflet-cdn.s3.amazonaws.com/build/leaflet-0.7.zip",
     "leaflet.bouncemarker":"https://github.com/maximeh/leaflet.bouncemarker/archive/master.zip",
     "leaflet.locatecontrol":"https://github.com/domoritz/leaflet-locatecontrol/archive/gh-pages.zip",

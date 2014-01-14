@@ -1,84 +1,17 @@
-Handlebars.registerHelper('formatdate', function(date) {
-  var datestr = moment(date.start).format("HH[h]mm");
-  return new Handlebars.SafeString(datestr);
-});
-Handlebars.registerHelper('markertype', function(papi) {
-  if(plo.config.markers.msg.indexOf(papi)!=-1) {
-    return "msg";
-  } else if(plo.config.markers.evt.indexOf(papi)!=-1) {
-    return "evt";
-  } else return "none";
-});
-Handlebars.registerHelper('splitype', function(type) {
-  return type.split("_")[1];
-});
-
-
-
-function Ploufmap() {
+function Ploufmap(options) {
 
     plo = {};
     plo.log = function(str) { if(plo.config.dev) console.log(str); };
 
     var dev = window.location.hostname == "localhost";
 
-    plo.config = {
+    var defaults = {
         dev: dev,
         baseUrl:        dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
         throttleDelay:  2000,
-        defaultCenter:  L.latLng(48.87,2.347),
-        // http://fortawesome.github.io/Font-Awesome/icons/
-        // 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
-        iconTypes: {
-          'ratp': 'truck_green',
-          'velib': 'wheelchair_green',
-          'wikipedia': 'info-circle_blue',
-          'file_sample': 'align-left_darkpurple',
-          'file_story': 'align-left_darkpurple',
-          'event_demosphere':     'bullhorn_orange',
-          'event_lylo':           'eye_orange',
-          'event_quefaire':       'calendar_orange',
-          'event_sowprog':        'lock_orange',
-          'event_cibul':          'flash_orange',
-          'event_oneheart':       'globe_orange',
-          'event_opendatasoft':   'gift_orange'
-        },
-        icons: {
-            // normal: L.icon({
-            //     iconUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-icon.png',
-            //     shadowUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-shadow.png',
-            //     iconSize: [25, 41],
-            //     iconAnchor: [12, 40],
-            //     popupAnchor: [0, -40],
-            //     shadowSize: [41, 41],
-            //     shadowAnchor: [12, 40]
-            // }),
-            type_msg: function(words) {
-              return L.divIcon({
-                iconSize: [60, 10],
-                html: "<div class='msg'>"+words.join(" ")+"</div>",
-                popupAnchor:  [0, 0]
-              });
-            },
-            type_evt: function(icon,time) {
-              return L.divIcon({
-                iconSize: [70, 10],
-                html: "<div class='evt'><i class='fa fa-"+icon+"'></i><span>"+time+"</span></div>",
-                popupAnchor:  [0, 0]
-              });
-            }
-        }
-        // following could allow you to use font-awesome standard markers
-        // _.each(plo.config.iconTypes, function(value, key) {
-        //     plo.config.icons['type_'+key] = L.AwesomeMarkers.icon({
-        //         prefix:         'fa',
-        //         icon:           value.split("_")[0],
-        //         markerColor:    value.split("_")[1]
-        //         //iconColor:#BBBBBB,
-        //         //spin:true,
-        //     });
-        // });
+        defaultCenter:  L.latLng(48.87,2.347)
     };
+    plo.config = _.extend(defaults,options);
 
     plo.map = null;
     plo.swiper = null;
@@ -90,10 +23,10 @@ function Ploufmap() {
 
     plo.anchor = null; // first clicked marker, to be able to loop around based on distance to anchor
 
+    plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
+
     plo.w = $("body").width();
     plo.log("width:"+plo.w);
-
-    plo.ploufTemplate = Handlebars.compile($("#plouf-template").html());
 
     // extend normal marker to store data for each
     // be careful to put here all what you need !
@@ -106,12 +39,11 @@ function Ploufmap() {
             bounceOnAddHeight: 40
         }
     });
-
     //////////////////////////////////////////////////////
     plo.init = function() {
       plo.log("Init all.");
       plo.initConfig(function(conf) {
-        plo.log("config: ",conf);
+        plo.log(conf);
 
         plo.initMap();
         plo.throttleFetch();
@@ -127,7 +59,6 @@ function Ploufmap() {
       //var menuTemplate = Handlebars.compile($("#menu-template").html());
       $.get( plo.config.baseUrl+"/config", function(response) {
           // rather extend ?
-          plo.config.markers = response.markers;
           plo.config.apis = response.apis;
           plo.config.esHQ = response.esHQ;
           plo.config.esChannel = response.esChannel;
@@ -225,10 +156,8 @@ function Ploufmap() {
     };
     plo.swiperAppend = function(m) {
         var data = m.options;
-        data.type = data.ptype.split("_")[0];
-        data.istweet = data.type == 'tweet';
-        data.isevent = data.type == 'event';
-        var html = plo.ploufTemplate(data);
+        var mtype = plo.config.markers[data.ptype];
+        var html = plo.config.templates[mtype](data);
         var newSlide = plo.swiper.createSlide(html);
         newSlide.append();
         //plo.log("Swiper appended: "+data.pid);
@@ -320,11 +249,7 @@ function Ploufmap() {
 
     //////////////////////////////////////////////////////
     plo.initMap = function() {
-        var cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
-        var baseLayers = {
-          minimal: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}),
-          midnight: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution})
-        };
+        var baseLayer = plo.config.baseLayer;
 
         // set marker layers hierarchy based on APIs received in config
         var groupedOverlays = {};
@@ -344,14 +269,14 @@ function Ploufmap() {
         //plo.log("api layers:",plo.layers);
         //plo.log("groupedOverlays:",groupedOverlays);
 
-        plo.map = L.map('map', {
+        plo.map = L.map(plo.config.map, {
             keyboard: false,
             center: plo.config.defaultCenter,
             zoom: 14,
             maxZoom: 17,
             minZoom: 13,
             icons: plo.config.icons,
-            layers: [baseLayers.minimal].concat(_.values(plo.layers))
+            layers: [baseLayer].concat(_.values(plo.layers))
         });
 
         // optional control to select visible layers
@@ -418,19 +343,9 @@ function Ploufmap() {
     //////////////////////////////////////////////////////
     plo.addPlouf = function(p) {
         var markLayer = plo.markerLayer(p);
-        //var myt = p.ptype.split("_")[0];
-        var api = p.papi;
-        var i = null;
-        // ... before you used to check: if(typeof(i) == "function") {
-        // now simpler. we'll just allocate a marker icon based on the type of plouf
-        var ic = plo.config.icons;
-        if(plo.config.markers.msg.indexOf(api)!=-1) {
-          i = ic.type_msg(p.words);
-        }
-        if(plo.config.markers.evt.indexOf(api)!=-1) {
-          var faicon = plo.config.iconTypes[p.ptype].split("_")[0];
-          i = ic.type_evt(faicon,moment(p.date.start).format("HH:mm"));
-        }
+        var marker = plo.config.markers[p.ptype];
+        var i = plo.config.icons[marker](p);
+
         var ltln = new L.LatLng(p.lat, p.lng);
         var f = _.find(markLayer._layers, function(e){
             return e.options.pid == p.pid;
@@ -452,6 +367,8 @@ function Ploufmap() {
         var bounds = plo.map.getBounds();
         var center = plo.map.getCenter();
         var data = {
+            without: plo.already,
+            ptypes: _.keys(plo.config.markers),
             zoom: plo.map.getZoom(),
             center: [center.lat,center.lng],
             bounds: [[bounds._southWest.lat,bounds._southWest.lng] , [bounds._northEast.lat,bounds._northEast.lng]]
@@ -463,6 +380,8 @@ function Ploufmap() {
             plo.log(Object.keys(data).length+" ploufs received !");
             //plo.log(data);
             _.each(data,function(p) {
+                plo.already.push(p._id);
+                p.markertype = plo.config.markers[p.ptype];
                 plo.addPlouf(p);  
             });
         });

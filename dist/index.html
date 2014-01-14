@@ -24,38 +24,29 @@
   
     <script type="text/javascript" src="./js/parismap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/font-awesome.css"/>
 
     </head>
 
     <body>
+    <!--
       <div id="locateMask">
         <div>please allow browser geoloc</div>
         <i class="fa fa-spinner fa-spin fa-2x fa-inverse"></i>
       </div>
+    -->
 
       <!-- <div id="menu"></div> -->
 
       <div id="map"></div>
+
       <div id="swiper" class="swiper-container">
         <div class="swiper-wrapper"></div>
       </div>
     </body>
 
-
-
-    <!-- Handlebars templates -->
-    <script id="menu-template" type="text/x-handlebars-template">
-    //   <nav class="nav-collapse">
-    //       <ul>
-    //       {{#categories}}
-    //         <li><a href="#{{name}}">{{name}}</a></li>
-    //       {{/categories}}
-    //       </ul>
-    //   </nav>
-    </script>
-
     <script id="plouf-template" type="text/x-handlebars-template">
-      <div class="plouf-container {{markertype papi}}">
+      <div class="plouf-container {{markertype}}">
         
         <div class="arrow"></div>
 
@@ -89,8 +80,105 @@
 
     <!-- script -->
     <script>
+
+    Handlebars.registerHelper('formatdate', function(date) {
+      var datestr = moment(date.start).format("HH[h]mm");
+      return new Handlebars.SafeString(datestr);
+    });
+    Handlebars.registerHelper('splitype', function(type) {
+      return type.split("_")[1];
+    });
+
     $(function(){
-        var p = Ploufmap();
+
+        var markers_msg = {
+            "tweet": 'msg',
+            "cdlm": 'msg',
+        };
+        var markers_evt = {
+            "event_cibul": 'evt',
+            "event_demosphere": 'evt',
+            "event_lylo": 'evt',
+            "event_oneheart": 'evt',
+            "event_opendatasoft": 'evt',
+            "event_quefaire": 'evt',
+            "event_sowprog": 'evt'      
+        },
+        
+        markers = markers_evt;
+        if(window.location.hash=='all')
+          _.extend(markers,markers_msg);
+
+        
+        // init map on div, with all required options
+
+        var cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
+        var p = Ploufmap({
+          map: "map", // map div id (carefull with css !)
+
+          baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}),
+          
+          //baseLayer: : L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
+
+          // which type will be fetched from server. and wich icon it will have
+          markers: markers,
+
+          // handlebar template for a slide showing a plouf
+          templates: {
+            msg: Handlebars.compile($("#plouf-template").html()),
+            evt: Handlebars.compile($("#plouf-template").html())
+          },
+
+          // define the icons for the previous types
+          icons: {
+            // icon_example: function(data) {
+            //  return L.icon({
+            //     iconUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-icon.png',
+            //     shadowUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-shadow.png',
+            //     iconSize: [25, 41],
+            //     iconAnchor: [12, 40],
+            //     popupAnchor: [0, -40],
+            //     shadowSize: [41, 41],
+            //     shadowAnchor: [12, 40]
+            // })
+            // },
+            // following could allow you to use font-awesome standard markers
+            // http://fortawesome.github.io/Font-Awesome/icons/
+            // 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+            // icon_awesome: L.AwesomeMarkers.icon({
+            //         prefix:         'fa',
+            //         icon:           value.split("_")[0],
+            //         markerColor:    value.split("_")[1]
+            //         //iconColor:#BBBBBB,
+            //         //spin:true,
+            //     });
+            msg: function(data) {
+              return L.divIcon({
+                iconSize: [60, 10],
+                html: "<div class='msg'>"+data.words.join(" ")+"</div>",
+                popupAnchor:  [0, 0]
+              });
+            },
+            evt: function(data) {
+              var ev_icons = {
+                'event_demosphere':     'bullhorn',
+                'event_lylo':           'eye',
+                'event_quefaire':       'calendar',
+                'event_sowprog':        'lock',
+                'event_cibul':          'flash',
+                'event_oneheart':       'globe',
+                'event_opendatasoft':   'gift'        
+              };
+              var ic = ev_icons[data.ptype];
+              var ti = moment(data.start).format("HH:mm");
+              return L.divIcon({
+                iconSize: [70, 10],
+                html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
+                popupAnchor:  [0, 0]
+              });
+            }
+          }
+        });
     });
     </script>
 

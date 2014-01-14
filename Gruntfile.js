@@ -25,9 +25,9 @@ module.exports = function(grunt) {
         src: [
           'vendor/leaflet/leaflet.css',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
-          'vendor/font-awesome/css/font-awesome.min.css',
-          'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.css',
-          'vendor/Swiper/dist/idangerous.swiper.css',
+          //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.css',
+          //'vendor/font-awesome/css/font-awesome.css',
+          'vendor/swiper/dist/idangerous.swiper.css',
           'src/css/style.css'
         ],
         dest: 'dist/css/<%= pkg.name %>.css'
@@ -42,9 +42,9 @@ module.exports = function(grunt) {
           'vendor/leaflet/leaflet.js',
           'vendor/leaflet.bouncemarker/bouncemarker.js',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.js',
-          'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.js',
-          'vendor/Swiper/dist/idangerous.swiper-2.4.js',
-          'vendor/Swiper/plugins/smooth-progress/idangerous.swiper.progress.js',
+          //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.js',
+          'vendor/swiper/dist/idangerous.swiper-2.4.js',
+          'vendor/swiper/plugins/smooth-progress/idangerous.swiper.progress.js',
           'vendor/moment/moment.js',
           'src/**/*.js'
         ],
@@ -63,6 +63,40 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+        dist: {
+            files: [
+                {
+                    expand: true,
+                    flatten: true,
+                    src: [ 
+                        'vendor/font-awesome/fonts/**'
+                    ],
+                    dest: 'dist/fonts/',
+                    filter: 'isFile'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: [ 
+                        'vendor/leaflet.locatecontrol/src/images/**'
+                    ],
+                    dest: 'dist/css/images/',
+                    filter: 'isFile'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: [ 
+                        'vendor/font-awesome/css/**'
+                    ],
+                    dest: 'dist/css/',
+                    filter: 'isFile'
+                }
+            ]
+        }
+    },
+
     preprocess : {
       dev : {
         src : './src/tmpl/index.html',
@@ -71,10 +105,6 @@ module.exports = function(grunt) {
       prod : {
         src : './src/index.html',
         dest : 'dist/index.html'
-      },
-      assets : {
-        src : './vendor/leaflet.locatecontrol/src/images/locate.png',
-        dest : 'dist/css/images/locate.png'
       },
       config : {
         src : './src/config.xml',
@@ -103,7 +133,8 @@ module.exports = function(grunt) {
       tasks: ['jshint', 'qunit']
     }
   });
-
+  
+  grunt.loadNpmTasks('grunt-contrib-copy' );
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -112,6 +143,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-preprocess');
   //grunt.loadNpmTasks('grunt-contrib-less');
 
-  grunt.registerTask('default', ['jshint','env:prod','concat','concat:build_css','uglify','preprocess:prod','preprocess:assets','preprocess:config','preprocess:icon']);
+  grunt.registerTask('default', ['jshint','env:prod','concat','concat:build_css','copy','uglify','preprocess:prod','preprocess:config','preprocess:icon']);
 
 };
