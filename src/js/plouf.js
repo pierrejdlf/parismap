@@ -259,30 +259,30 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.markerLayer = function(plouf) {
-      //plo.log("request api layer:"+plouf.papi);
-      return plo.layers[plouf.papi];
+      return plo.layers[plouf.markertype];
     };
 
     //////////////////////////////////////////////////////
     plo.initMap = function() {
         var baseLayer = plo.config.baseLayer;
 
+        // NB: following can help you build different marker/base layers
+
         // set marker layers hierarchy based on APIs received in config
-        var groupedOverlays = {};
+        //var groupedOverlays = {};
         plo.layers = {};
-        _.each(plo.config.apis, function(apis,apitype) {
-          //plo.log(k,v);
-          groupedOverlays[apitype] = {};
-          _.each(apis, function(api,key) {
+        _.each(plo.config.markers, function(markertype,plouftype) {
+          plo.layers[markertype] = new L.LayerGroup();
+          //groupedOverlays[apitype] = {};
+          //_.each(apis, function(api,key) {
             //var marks = [ L.marker(plo.options.initCenter) ];
             //plo.markerLayer = L.layerGroup(marks);
-            plo.layers[api] = new L.LayerGroup();
-            groupedOverlays[apitype][key] = plo.layers[api];
-
+            //plo.layers[api] = new L.LayerGroup();
+            //groupedOverlays[apitype][key] = plo.layers[api];
             //markGroup.on('click', plo.clickMarker);
-          });
+          //});
         });
-        //plo.log("api layers:",plo.layers);
+        //console.log(plo.layers);
         //plo.log("groupedOverlays:",groupedOverlays);
 
         plo.map = L.map(plo.config.map, {
@@ -399,9 +399,10 @@ function Ploufmap(options) {
                 plo.already.push(p._id);
                 p.markertype = plo.config.markers[p.ptype];
                 try {
-                  p.text = $(p.text).text();
+                  //p.text = $(p.text).text();
                 } catch(err) {
                   plo.log("html>text error: "+err);
+                  plo.log(p);
                 }
                 plo.addPlouf(p);  
             });

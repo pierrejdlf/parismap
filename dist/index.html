@@ -19,9 +19,8 @@
     <meta property="og:image" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846" />
     <meta property="og:description" content="3 sentences description of project"> -->
 
-    <script src="http://app.eventsourcehq.com/es.js"></script>
-
   
+    <script src="http://app.eventsourcehq.com/es.js"></script>
     <script type="text/javascript" src="./js/parismap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css"/>
@@ -97,6 +96,9 @@
         var markers_msg = {
             "tweet": 'msg',
             "cdlm": 'msg',
+            "geolocate.csv": 'msg',
+            "sample.csv": 'msg',
+            "story.csv": 'msg',
         };
         var markers_evt = {
             "event_cibul": 'evt',
@@ -105,9 +107,23 @@
             "event_oneheart": 'evt',
             "event_opendatasoft": 'evt',
             "event_quefaire": 'evt',
-            "event_sowprog": 'evt'      
-        },
-        
+            "event_sowprog": 'evt',
+            "event_calenda": 'evt',
+            "event_linternaute": 'evt'
+        };
+        var ev_icons = {
+            'event_demosphere':     'bullhorn',
+            'event_lylo':           'eye',
+            'event_quefaire':       'calendar',
+            'event_sowprog':        'lock',
+            'event_cibul':          'flash',
+            'event_oneheart':       'globe',
+            'event_opendatasoft':   'gift',
+            'event_calenda':        'briefcase',
+            'event_linternaute':    'sort-amount-desc'
+        };
+
+         
         markers = markers_evt;
         var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
         var baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
@@ -167,15 +183,6 @@
               });
             },
             evt: function(data) {
-              var ev_icons = {
-                'event_demosphere':     'bullhorn',
-                'event_lylo':           'eye',
-                'event_quefaire':       'calendar',
-                'event_sowprog':        'lock',
-                'event_cibul':          'flash',
-                'event_oneheart':       'globe',
-                'event_opendatasoft':   'gift'        
-              };
               var ic = ev_icons[data.ptype];
               var interval = false ; //data.date.start!=data.date.end;
               var ti = moment(data.date.start).format("HH:mm");
