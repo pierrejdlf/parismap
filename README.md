@@ -37,3 +37,12 @@ if you really want to be part of the system
 
 ## Licence
 Both parismap client and server are MIT Licensed
+
+# Ploufmap options
+
+	var p = Ploufmap(options)
+
+* `ploufEndpoint=/p/get|/p/zoomed` (please see server)
+	* `/p/get` all ploufs within the given rectangle
+	* `/p/zoomed` all ploufs with a `onZoom` property to set their opacity depending on zoom
+* `zoomClustering=true|false` to set opacity of ploufs based on `onZoom` property of fetched ploufs

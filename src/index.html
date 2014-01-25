@@ -31,6 +31,9 @@
     <script type="text/javascript" src="../vendor/leaflet/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="../vendor/leaflet/leaflet.css"/>
     
+    <script type="text/javascript" src="../vendor/leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+    <link rel="stylesheet" type="text/css" href="../vendor/leaflet.markercluster/dist/MarkerCluster.css"/>
+
     <script type="text/javascript" src="../vendor/leaflet.bouncemarker/bouncemarker.js"></script>
     <script type="text/javascript" src="../vendor/leaflet.locatecontrol/src/L.Control.Locate.js"></script>
     <link rel="stylesheet" type="text/css" href="../vendor/leaflet.locatecontrol/src/L.Control.Locate.css"/>
@@ -55,7 +58,9 @@
 <!-- @endif -->
 <!-- @if NODE_ENV == 'PRODUCTION' -->
   
-    <script src="http://app.eventsourcehq.com/es.js"></script>
+    <!--<script src="http://app.eventsourcehq.com/es.js"></script>-->
+    <script type="text/javascript" src="./js/eventsourcehq.js"></script>
+
     <script type="text/javascript" src="./js/parismap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css"/>
@@ -177,8 +182,11 @@
           map: "map", // map div id (carefull with css !)
           initCenter:  L.latLng(48.87,2.347),
           initZoom: 14,
+          minZoom: 7,
+          maxZoom: 30,
 
           baseLayer: baseLayer,
+          clusterize: false,
 
           // which type will be fetched from server. and wich icon it will have
           markers: markers,
@@ -212,20 +220,25 @@
             //         //iconColor:#BBBBBB,
             //         //spin:true,
             //     });
-            msg: function(data) {
+            msg: function(data,clustCount) {
+              var cl = clustCount ? "cluster msg" : "msg";
               return L.divIcon({
-                iconSize: [60, 10],
-                html: "<div class='msg'>"+data.words.join(" ")+"</div>",
+                iconSize: [110, 50],
+                html: "<div class='"+cl+"'>"+data.words.join("<br>")+"</div>",
                 popupAnchor:  [0, 0]
               });
             },
-            evt: function(data) {
+            evt: function(data,clustCount) {
               var ic = ev_icons[data.ptype];
               var interval = false ; //data.date.start!=data.date.end;
               var ti = moment(data.date.start).format("HH:mm");
               if(interval)
                 ti += " - "+moment(data.date.end).format("HH:mm");
+              if(clustCount)
+                ti += "•"+clustCount;
               var w = interval? 115 : 68;
+              w += clustCount? 15 : 0;
+
               return L.divIcon({
                 iconSize: [w,10],
                 html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
