@@ -229,19 +229,24 @@
               });
             },
             evt: function(data,clustCount) {
+              var cla = 'evt';
               var ic = ev_icons[data.ptype];
               var interval = false ; //data.date.start!=data.date.end;
               var ti = moment(data.date.start).format("HH:mm");
               if(interval)
                 ti += " - "+moment(data.date.end).format("HH:mm");
-              if(clustCount)
-                ti += "•"+clustCount;
               var w = interval? 115 : 68;
-              w += clustCount? 15 : 0;
-
+              
+              if(clustCount>1) {
+                cla += " cluster";
+                ti = clustCount;
+                ic = 'sun-o';
+                w = 48;
+              }
+              
               return L.divIcon({
-                iconSize: [w,10],
-                html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
+                iconSize: [w, 10],
+                html: "<div class='"+cla+"'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
                 popupAnchor:  [0, 0]
               });
             }

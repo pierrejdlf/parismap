@@ -103,6 +103,11 @@ html, body {
 
   /*transition: background 0.1s linear;*/
 }
+
+.leaflet-div-icon .evt.cluster {
+  background: rgba(0, 0, 0, 0.43);
+}
+
 .leaflet-div-icon.visited .evt {
   background: rgba(126, 126, 126, 0.73);
 }

@@ -11,8 +11,9 @@ function Ploufmap(options) {
         throttleDelay:  2000,
         clusterize:     false,
         bounce:         false,
-        minZoom: 13,
-        maxZoom: 17,
+        initZoom:   15,
+        minZoom:    13,
+        maxZoom:    17
     };
     plo.config = _.extend(defaults,options);
 
@@ -195,10 +196,12 @@ function Ploufmap(options) {
         var md = null;
         var next = null;
         
+        var layer = null;
+
         if(plo.config.clusterize)
-            var layer = plo.markerLayer(plo.current.options)._map._layers;
+            layer = plo.markerLayer(plo.current.options)._map._layers;
         else
-            var layer = plo.markerLayer(plo.current.options)._layers;
+            layer = plo.markerLayer(plo.current.options)._layers;
 
         _.each(layer, function(e) {
             var d = plo.anchor._latlng.distanceTo(e._latlng);
@@ -454,7 +457,7 @@ function Ploufmap(options) {
             ptypes: _.keys(plo.config.markers),
             zoom: plo.map.getZoom(),
             center: [center.lat,center.lng],
-            bounds: [[bounds._southWest.lat,bounds._southWest.lng] , [bounds._northEast.lat,bounds._northEast.lng]],
+            bounds: [[bounds._southWest.lat,bounds._southWest.lng] , [bounds._northEast.lat,bounds._northEast.lng]]
             //zoomAttribute: true,
             //screen: [$(document).width(),$(document).height()]
         };
