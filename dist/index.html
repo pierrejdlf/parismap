@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html ng-app="ngBoilerplate" ng-controller="AppCtrl">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    
+    <!-- <title ng-bind="pageTitle"></title> -->
+
+    <!-- social media tags -->
+<!--     <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@joshdmiller">
+    <meta name="twitter:title" content="ngBoilerplate">
+    <meta name="twitter:description" content="Non-Trivial AngularJS Made Easy: Everything you need to kickstart AngularJS projects: a best-practice directory structure, an intelligent build system, and the best web design libraries around.">
+    <meta name="twitter:creator" content="@joshdmiller">
+    <meta name="twitter:image:src" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846">
+    <meta property="og:title" content="ngBoilerplate" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://bit.ly/ngBoilerplate" />
+    <meta property="og:image" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846" />
+    <meta property="og:description" content="3 sentences description of project"> -->
+
+  
+    <!--<script src="http://app.eventsourcehq.com/es.js"></script>-->
+    <script type="text/javascript" src="./js/eventsourcehq.js"></script>
+
+    <script type="text/javascript" src="./js/parismap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/font-awesome.css"/>
+
+    </head>
+
+    <body>
+    <!--
+      <div id="locateMask">
+        <div>please allow browser geoloc</div>
+        <i class="fa fa-spinner fa-spin fa-2x fa-inverse"></i>
+      </div>
+    -->
+
+      <!-- <div id="menu"></div> -->
+
+      <div id="map"></div>
+
+      <div id="swiper" class="swiper-container">
+        <div class="swiper-wrapper"></div>
+      </div>
+    </body>
+
+    <script id="plouf-template-evt" type="text/x-handlebars-template">
+      <div class="plouf-container {{markertype}}">
+        <div class="arrow"></div>
+
+        <div class="content">
+          <div class="meta">
+            <div class="date">{{formatdate date}}</div>
+            <i class="fa fa-home"></i>
+            <div class="address">{{place}} | {{address}}</div>
+            <i class="fa fa-arrow-circle-right"></i>
+            <a class="link" href="{{link}}" target="_blank">{{splitype ptype}}</a>
+          </div>
+
+          <div class="title">{{title}}</div>
+          <div class="text">{{text}}</div>
+        </div>
+
+      </div>
+    </script>
+    <script id="plouf-template-msg" type="text/x-handlebars-template">
+      <div class="plouf-container {{markertype}}">
+        <div class="arrow"></div>
+
+        <div class="content">
+          <div class="meta">
+            <div class="date">{{formatdate date}}</div>
+            <a class="link" href="http://twitter.com/{{user.id}}" target="_blank">@{{user.name}}</a>
+          </div>
+
+          <div class="text">{{{text}}}</div>
+        </div>
+
+      </div>
+    </script>
+
+
+    <!-- script -->
+    <script>
+
+    Handlebars.registerHelper('formatdate', function(date) {
+      var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
+      return new Handlebars.SafeString(datestr);
+    });
+    Handlebars.registerHelper('splitype', function(type) {
+      return type.split("_")[1];
+    });
+
+    $(function(){
+
+        var markers_msg = {
+            "tweet": 'msg',
+            "cdlm": 'msg',
+            "geolocate.csv": 'msg',
+            "sample.csv": 'msg',
+            "story.csv": 'msg',
+        };
+        var markers_evt = {
+            "event_cibul": 'evt',
+            "event_demosphere": 'evt',
+            "event_lylo": 'evt',
+            "event_oneheart": 'evt',
+            "event_opendatasoft": 'evt',
+            "event_quefaire": 'evt',
+            "event_sowprog": 'evt',
+            "event_calenda": 'evt',
+            "event_linternaute": 'evt'
+        };
+        var ev_icons = {
+            'event_demosphere':     'bullhorn',
+            'event_lylo':           'eye',
+            'event_quefaire':       'calendar',
+            'event_sowprog':        'lock',
+            'event_cibul':          'flash',
+            'event_oneheart':       'globe',
+            'event_opendatasoft':   'gift',
+            'event_calenda':        'briefcase',
+            'event_linternaute':    'sort-amount-desc'
+        };
+
+         
+        markers = markers_evt;
+        var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
+        var baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
+        //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
+
+        if(window.location.hash=='#msg') {
+          markers = markers_msg;
+          baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
+        }
+
+        
+        // init map on div, with all required options
+        var p = Ploufmap({
+          map: "map", // map div id (carefull with css !)
+          initCenter:  L.latLng(48.87,2.347),
+          initZoom: 14,
+          //minZoom: 7,
+          //maxZoom: 30,
+
+          baseLayer: baseLayer,
+          clusterize: false,
+
+          // which type will be fetched from server. and wich icon it will have
+          markers: markers,
+
+          // handlebar template for a slide showing a plouf
+          templates: {
+            msg: Handlebars.compile($("#plouf-template-msg").html()),
+            evt: Handlebars.compile($("#plouf-template-evt").html())
+          },
+
+          // define the icons for the previous types
+          icons: {
+            // icon_example: function(data) {
+            //  return L.icon({
+            //     iconUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-icon.png',
+            //     shadowUrl: 'http://cdn.leafletjs.com/leaflet-0.6.4/images/marker-shadow.png',
+            //     iconSize: [25, 41],
+            //     iconAnchor: [12, 40],
+            //     popupAnchor: [0, -40],
+            //     shadowSize: [41, 41],
+            //     shadowAnchor: [12, 40]
+            // })
+            // },
+            // following could allow you to use font-awesome standard markers
+            // http://fortawesome.github.io/Font-Awesome/icons/
+            // 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+            // icon_awesome: L.AwesomeMarkers.icon({
+            //         prefix:         'fa',
+            //         icon:           value.split("_")[0],
+            //         markerColor:    value.split("_")[1]
+            //         //iconColor:#BBBBBB,
+            //         //spin:true,
+            //     });
+            msg: function(data,clustCount) {
+              var cl = clustCount ? "cluster msg" : "msg";
+              return L.divIcon({
+                iconSize: [110, 50],
+                html: "<div class='"+cl+"'>"+data.words.join("<br>")+"</div>",
+                popupAnchor:  [0, 0]
+              });
+            },
+            evt: function(data,clustCount) {
+              var cla = 'evt';
+              var ic = ev_icons[data.ptype];
+              var interval = false ; //data.date.start!=data.date.end;
+              var ti = moment(data.date.start).format("HH:mm");
+              if(interval)
+                ti += " - "+moment(data.date.end).format("HH:mm");
+              var w = interval? 115 : 68;
+              
+              if(clustCount>1) {
+                cla += " cluster";
+                ti = clustCount;
+                ic = 'sun-o';
+                w = 48;
+              }
+              
+              return L.divIcon({
+                iconSize: [w, 10],
+                html: "<div class='"+cla+"'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
+                popupAnchor:  [0, 0]
+              });
+            }
+          }
+        });
+    });
+    </script>
+
+</html>
