@@ -85,7 +85,7 @@ html, body {
   /*text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);*/
 }
 .leaflet-div-icon .msg.cluster {
-  color:rgb(194, 115, 115);
+  color: #E1DE98;
 }
 
 .leaflet-div-icon .evt {
@@ -105,7 +105,7 @@ html, body {
 }
 
 .leaflet-div-icon .evt.cluster {
-  background: rgba(0, 0, 0, 0.43);
+  background-color: #A6A45B;
 }
 
 .leaflet-div-icon.visited .evt {

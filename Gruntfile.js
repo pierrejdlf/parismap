@@ -25,6 +25,7 @@ module.exports = function(grunt) {
         src: [
           'vendor/leaflet/leaflet.css',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
+          'vendor/leaflet.markercluster/dist/MarkerCluster.css',
           //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.css',
           //'vendor/font-awesome/css/font-awesome.css',
           'vendor/swiper/dist/idangerous.swiper.css',
@@ -42,6 +43,7 @@ module.exports = function(grunt) {
           'vendor/leaflet/leaflet.js',
           'vendor/leaflet.bouncemarker/bouncemarker.js',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.js',
+          'vendor/leaflet.markercluster/dist/leaflet.markercluster.js',
           //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.js',
           'vendor/swiper/dist/idangerous.swiper-2.4.js',
           'vendor/swiper/plugins/smooth-progress/idangerous.swiper.progress.js',

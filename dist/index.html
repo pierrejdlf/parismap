@@ -85,6 +85,8 @@
     <!-- script -->
     <script>
 
+    function getURLParameter(name) {return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);}
+
     Handlebars.registerHelper('formatdate', function(date) {
       var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
       return new Handlebars.SafeString(datestr);
@@ -136,6 +138,8 @@
           baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
         }
 
+        var clusterize = getURLParameter("cluster")!='null';
+        console.log("clusterize ? "+clusterize);
         
         // init map on div, with all required options
         var p = Ploufmap({
@@ -146,7 +150,8 @@
           //maxZoom: 30,
 
           baseLayer: baseLayer,
-          clusterize: false,
+
+          clusterize: clusterize,
 
           // which type will be fetched from server. and wich icon it will have
           markers: markers,
@@ -157,7 +162,7 @@
             evt: Handlebars.compile($("#plouf-template-evt").html())
           },
 
-          // define the icons for the previous types
+          // define icons
           icons: {
             // icon_example: function(data) {
             //  return L.icon({
@@ -181,10 +186,14 @@
             //         //spin:true,
             //     });
             msg: function(data,clustCount) {
-              var cl = clustCount ? "cluster msg" : "msg";
+              var cla = 'msg';
+              if(clustCount>1) {
+                cla += " cluster";
+              }
+
               return L.divIcon({
                 iconSize: [110, 50],
-                html: "<div class='"+cl+"'>"+data.words.join("<br>")+"</div>",
+                html: "<div class='"+cla+"'>"+data.words.join("<br>")+"</div>",
                 popupAnchor:  [0, 0]
               });
             },

@@ -10,12 +10,13 @@ function Ploufmap(options) {
         baseUrl:        dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
         throttleDelay:  2000,
         clusterize:     false,
-        bounce:         false,
+        bounce:         true,
         initZoom:   15,
         minZoom:    13,
         maxZoom:    17
     };
     plo.config = _.extend(defaults,options);
+    plo.config.bounce = !plo.config.clusterize;
 
     plo.map = null;
     plo.swiper = null;
@@ -36,19 +37,16 @@ function Ploufmap(options) {
     // be careful to put here all what you need !
     plo.Marker = L.Marker.extend({
         options : { // really need to peuplate options {} ? don't think so
-            ploufs: [],
-            seen:   "no",
+            //ploufs: [],
             bounceOnAdd:            plo.config.bounce,
             bounceOnAddDuration:    900, //||1000
             bounceOnAddHeight:      40
         }
     });
     // also prepare the MarkerCLuster marker to receive options !
-    L.MarkerCluster = L.MarkerCluster.extend({
-        options: {
-            thiscanbeempty:"yes"
-        }
-    });
+    // L.MarkerCluster = L.MarkerCluster.extend({
+    //     ploufdata: {} // just need to declare it
+    // });
 
     //////////////////////////////////////////////////////
     plo.init = function() {
@@ -104,12 +102,12 @@ function Ploufmap(options) {
                 var i = plo.swiper.activeIndex;
                 plo.log("now looking at: "+i);
                 if(direction=='prev') {
-                  //plo.log("panning to:"+plo.slides[i].options.text+plo.slides[i].options.lat);
-                  plo.map.panTo(plo.slides[i].options);
+                  //plo.log("panning to:"+plo.slides[i].ploufdata.text+plo.slides[i].ploufdata.lat);
+                  plo.map.panTo(plo.slides[i].ploufdata);
                 } else {
-                  //plo.log("panning to:"+plo.next.options.text+plo.next.options.lat);
+                  //plo.log("panning to:"+plo.next.ploufdata.text+plo.next.ploufdata.lat);
 
-                  plo.map.panTo(plo.next.options);
+                  plo.map.panTo(plo.next.ploufdata);
                   if(i==plo.slides.length-1) {
                     plo.log("! need to load next slide");
                     plo.swiperNextLoaded();
@@ -146,8 +144,8 @@ function Ploufmap(options) {
     plo.swiperInterpolate = function(sw,p) {
         var k = -p.x/plo.w;
         //plo.log(k,p);
-        var a = plo.current.options;
-        var b = plo.next.options;
+        var a = plo.current.ploufdata;
+        var b = plo.next.ploufdata;
         var lat = (a.lat*k + b.lat*(1-k));
         var lng = (a.lng*k + b.lng*(1-k));
         var tp = [lat,lng];
@@ -173,7 +171,7 @@ function Ploufmap(options) {
         plo.swiperAppend( plo.next );
     };
     plo.swiperAppend = function(m) {
-        var data = m.options;
+        var data = m.ploufdata;
         var mtype = plo.config.markers[data.ptype];
         var html = plo.config.templates[mtype](data);
         var newSlide = plo.swiper.createSlide(html);
@@ -196,21 +194,27 @@ function Ploufmap(options) {
         var md = null;
         var next = null;
         
-        var layer = null;
+        var neighbors = null;
 
-        if(plo.config.clusterize)
-            layer = plo.markerLayer(plo.current.options)._map._layers;
-        else
-            layer = plo.markerLayer(plo.current.options)._layers;
+        //console.log(plo.markerLayer(plo.current.ploufdata));
 
-        _.each(layer, function(e) {
+        if(plo.config.clusterize) {
+            //neighbors = plo.markerLayer(plo.current.ploufdata)._map._layers;
+            neighbors = plo.markerLayer(plo.current.ploufdata)._featureGroup._layers;
+        } else
+            neighbors = plo.markerLayer(plo.current.ploufdata)._layers;
+
+        //console.log(neighbors);
+
+        _.each(neighbors, function(e) {
             var d = plo.anchor._latlng.distanceTo(e._latlng);
-            if(md===null || (d<md && e!=plo.anchor && e.options.seen=="no")) {
+            var iscluster = !e.hasOwnProperty("ploufdata");
+            if(!iscluster && (md===null || (d<md && e!=plo.anchor && e.ploufdata.seen=="no")) ) {
               md = d;
               next = e;
             }
         });
-        next.options.seen = "loaded";
+        next.ploufdata.seen = "loaded";
         plo.slides.push(next);
         return next;
     };
@@ -219,7 +223,7 @@ function Ploufmap(options) {
     // will POST down/up vote and swipe to next
     plo.voteAndSwipe = function(vote) {
       data = {
-        pid: plo.current.options.pid,
+        pid: plo.current.ploufdata.pid,
         vote:vote ? 1 : -1
       };
       $.post( plo.config.baseUrl+"/p/vote", data, function(response) {
@@ -241,9 +245,13 @@ function Ploufmap(options) {
     };
 
     //////////////////////////////////////////////////////
-    plo.clickMarker = function(event) {
-        plo.log("marker clicked");
-        console.log(event);
+    plo.clickMarker = function(event,type) {
+
+        plo.log(type+" clicked");
+
+        //console.log('cluster ' + a.layer.getAllChildMarkers().length);
+
+        //console.log(event);
 
         var marker = event.target;
 
@@ -254,8 +262,8 @@ function Ploufmap(options) {
         plo.setMarkerStatus(plo.current,"focused");
 
         // reset: all markers can be seen again
-        _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
-          e.options.seen = "no";
+        _.each(plo.markerLayer(plo.current.ploufdata)._layers, function(e) {
+          e.ploufdata.seen = "no";
         });
 
         plo.current.seen = "loaded";
@@ -264,7 +272,7 @@ function Ploufmap(options) {
         //plo.log("current index: "+plo.swiper.activeIndex);
         plo.swiper.swipeTo(0);
         plo.swiperToggle(true);
-        plo.map.panTo(plo.current.options);
+        plo.map.panTo(plo.current.ploufdata);
     };
     plo.clickMap = function(event) {
         plo.log("map clicked");
@@ -294,8 +302,9 @@ function Ploufmap(options) {
         //var groupedOverlays = {};
         plo.layers = {};
         _.each(plo.config.markers, function(markertype,plouftype) {
-            if(plo.config.clusterize)
-                plo.layers[markertype] = new L.MarkerClusterGroup({
+            var markerLayer = null;
+            if(plo.config.clusterize) {
+                markerLayer = new L.MarkerClusterGroup({
                     //spiderfyOnMaxZoom: false,
                     //showCoverageOnHover: false,
                     //zoomToBoundsOnClick: false,
@@ -320,9 +329,8 @@ function Ploufmap(options) {
                     // here we can define which marker will be visible as the cluster head !
                     iconCreateFunction: function(cluster) {
                         var children = cluster.getAllChildMarkers();
-                        //console.log("clustered:"+children.length);
-                        var p = children[0].options; // data of choosen one
-                        // add data to marker
+
+                        var p = children[0].ploufdata; // data of choosen one
 
                         // icon
                         var marker = plo.config.markers[p.ptype];
@@ -331,14 +339,28 @@ function Ploufmap(options) {
                         //return new L.DivIcon({ html: '<b>' + "oui"+cluster.getChildCount() + '</b>' });
                     }
                 });
-            else
-                plo.layers[markertype] = new L.LayerGroup();
-          
+            } else {
+                markerLayer = new L.LayerGroup();
+            }
+            
+            // if clusterization, we need to set click events here
+            if(plo.config.clusterize) {
+                // click events
+                markerLayer.on('click', function (a) {
+                    console.log(a);
+                    //plo.clickMarker(a,"marker");
+                });
+                markerLayer.on('clusterclick', function (a) {
+                    console.log(a);
+                    //plo.clickMarker(a,"cluster");
+                });
+            }
 
+            plo.layers[markertype] = markerLayer;
 
           //groupedOverlays[apitype] = {};
           //_.each(apis, function(api,key) {
-            //var marks = [ L.marker(plo.options.initCenter) ];
+            //var marks = [ L.marker(plo.ploufdata.initCenter) ];
             //plo.markerLayer = L.layerGroup(marks);
             //plo.layers[api] = new L.LayerGroup();
             //groupedOverlays[apitype][key] = plo.layers[api];
@@ -431,17 +453,28 @@ function Ploufmap(options) {
 
         var ltln = new L.LatLng(p.lat, p.lng);
         
-        // no need to check if already here, cause we now fetch with a "ya-here-blacklisted-ids"
-        //var f = _.find(markLayer._layers, function(e){ return e.options.pid == p.pid; });
+        // ! no need to check if already here, cause we now fetch with a "ya-here-blacklisted-ids"
+        //var f = _.find(markLayer._layers, function(e){ return e.ploufdata.pid == p.pid; });
         var f = false;
 
         if(!f) {
-            var newM = new plo.Marker(ltln, _.extend({
+            var newM = new plo.Marker(ltln,{
                 icon: i,
                 draggable: false
-            },p));
-            newM.on('click', plo.clickMarker);
+            });
+
+            newM.ploufdata = _.extend(p,{
+                seen: 'no'
+            });
+            
+            // we used to set listener here, but better to plug it on layer creation
+            // todo: verify it works with new added markers ?
+            newM.on('click', function(a) {
+                plo.clickMarker(a,"marker");
+            });
+
             newM.addTo(markLayer);
+
         } else {
             //plo.log("marker was already here");
         }
