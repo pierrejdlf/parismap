@@ -71,7 +71,7 @@ module.exports = function(grunt) {
                 {
                     expand: true,
                     flatten: true,
-                    src: [ 
+                    src: [
                         'vendor/font-awesome/fonts/**'
                     ],
                     dest: 'dist/fonts/',
@@ -80,7 +80,7 @@ module.exports = function(grunt) {
                 {
                     expand: true,
                     flatten: true,
-                    src: [ 
+                    src: [
                         'vendor/leaflet.locatecontrol/src/images/**'
                     ],
                     dest: 'dist/css/images/',
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
                 {
                     expand: true,
                     flatten: true,
-                    src: [ 
+                    src: [
                         'vendor/font-awesome/css/**'
                     ],
                     dest: 'dist/css/',
@@ -119,7 +119,7 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+      files: ['Gruntfile.js', 'src/plouf.js'],
       options: {
         // options here to override JSHint defaults
         globals: {
@@ -135,7 +135,7 @@ module.exports = function(grunt) {
       tasks: ['jshint', 'qunit']
     }
   });
-  
+
   grunt.loadNpmTasks('grunt-contrib-copy' );
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
