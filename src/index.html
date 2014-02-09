@@ -19,6 +19,8 @@
     <meta property="og:image" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846" />
     <meta property="og:description" content="3 sentences description of project"> -->
 
+    <link href='http://fonts.googleapis.com/css?family=Lato|Source+Sans+Pro:200,400' rel='stylesheet' type='text/css'>
+
 <!-- @if NODE_ENV == 'DEVELOPMENT' -->
 
     <script type="text/javascript" src="../vendor/underscore/underscore-min.js"></script>
@@ -32,40 +34,45 @@
     <link rel="stylesheet" type="text/css" href="../vendor/leaflet/leaflet.css"/>
     
     <script type="text/javascript" src="../vendor/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <link rel="stylesheet" type="text/css" href="../vendor/leaflet.markercluster/dist/MarkerCluster.css"/>
 
     <script type="text/javascript" src="../vendor/leaflet.bouncemarker/bouncemarker.js"></script>
     <script type="text/javascript" src="../vendor/leaflet.locatecontrol/src/L.Control.Locate.js"></script>
     <link rel="stylesheet" type="text/css" href="../vendor/leaflet.locatecontrol/src/L.Control.Locate.css"/>
 
     <link rel="stylesheet" type="text/css" href="../vendor/font-awesome/css/font-awesome.css"/>
+
+    <!--
     <script type="text/javascript" src="../vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.js"></script>
     <link rel="stylesheet" type="text/css" href="../vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.css"/>
+    -->
 
-    <script type="text/javascript" src="../vendor/Swiper/dist/idangerous.swiper-2.4.js"></script>
-    <link rel="stylesheet" type="text/css" href="../vendor/Swiper/dist/idangerous.swiper.css"/>
-    <script src="../vendor/Swiper/plugins/smooth-progress/idangerous.swiper.progress.js"></script>
+    <script type="text/javascript" src="../vendor/swiper/dist/idangerous.swiper.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../vendor/swiper/dist/idangerous.swiper.css"/>
 
     <script type="text/javascript" src="../vendor/moment/moment.js"></script>
 
-    <script src="../vendor/leaflet.groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script>
+    <!-- <script src="../vendor/leaflet.groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script> -->
 
     <!-- <link rel="stylesheet" href="../vendor/responsive-nav/responsive-nav.css"> -->
 
     <script type="text/javascript" src="./js/plouf.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+
+    <link rel="stylesheet/less" type="text/css" href="./css/style.less" />
+    <script type="text/javascript" src="../vendor/less/dist/less-1.6.2.min.js"></script>
+
 
 <!-- @endif -->
 <!-- @if NODE_ENV == 'PRODUCTION' -->
   
-    <!--<script src="http://app.eventsourcehq.com/es.js"></script>-->
-    <script type="text/javascript" src="./js/eventsourcehq.js"></script>
+    <!-- <script src="http://app.eventsourcehq.com/es.js"></script> -->
+    <!-- <script type="text/javascript" src="./vendor/eshq/index.js"></script> -->
 
     <script type="text/javascript" src="./js/parismap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
-    <link rel="stylesheet" type="text/css" href="./css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../vendor/font-awesome/css/font-awesome.css"/>
 
 <!-- @endif -->
+
 
     </head>
 
@@ -92,11 +99,8 @@
 
         <div class="content">
           <div class="meta">
-            <div class="date">{{formatdate date}}</div>
-            <i class="fa fa-home"></i>
-            <div class="address">{{place}} | {{address}}</div>
-            <i class="fa fa-arrow-circle-right"></i>
-            <a class="link" href="{{link}}" target="_blank">{{splitype ptype}}</a>
+            <!--<i class="fa fa-location-arrow"></i>-->
+            <a class="link" href="{{link}}" target="_blank"><div class="address">{{place}} - {{address}}</div></a>
           </div>
 
           <div class="title">{{title}}</div>
@@ -110,12 +114,14 @@
         <div class="arrow"></div>
 
         <div class="content">
+          <!--
           <div class="meta">
             <div class="date">{{formatdate date}}</div>
             <a class="link" href="http://twitter.com/{{user.id}}" target="_blank">@{{user.name}}</a>
           </div>
+          -->
 
-          <div class="text">{{{text}}}</div>
+          <div class="word">{{{text}}}</div>
         </div>
 
       </div>
@@ -173,24 +179,24 @@
         var baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
         //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
 
+        // different configs
         if(window.location.hash=='#msg') {
           markers = markers_msg;
           baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
         }
-
         var clusterize = getURLParameter("cluster")!='null';
-        console.log("clusterize ? "+clusterize);
-        
+        var dev = window.location.hostname == "localhost";
+
         // init map on div, with all required options
         var p = Ploufmap({
           map: "map", // map div id (carefull with css !)
+          dev: dev,
+          baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
           initCenter:  L.latLng(48.87,2.347),
           initZoom: 14,
           //minZoom: 7,
           //maxZoom: 30,
-
           baseLayer: baseLayer,
-
           clusterize: clusterize,
 
           // which type will be fetched from server. and wich icon it will have

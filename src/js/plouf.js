@@ -3,11 +3,9 @@ function Ploufmap(options) {
     plo = {};
     plo.log = function(str) { if(plo.config.dev) console.log(str); };
 
-    var dev = window.location.hostname == "localhost";
-
     var defaults = {
-        dev: dev,
-        baseUrl:        dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
+        dev: false,
+        baseUrl:        "http://beta.parismappartient.fr",
         throttleDelay:  2000,
         clusterize:     false,
         bounce:         true,
@@ -31,7 +29,7 @@ function Ploufmap(options) {
     plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
 
     plo.w = $("body").width();
-    plo.log("width:"+plo.w);
+    //plo.log("width:"+plo.w);
 
     // extend marker objects to store data for each
     // be careful to put here all what you need !
@@ -92,55 +90,43 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
      plo.swiperInit = function() {
         plo.swiper = new Swiper("#swiper",{
-            mode:               'horizontal',
+            mode: 'horizontal',
+            slidesPerView: 1.75,
+            freeMode: false,
+            //slidesPerView: 'auto',
             keyboardControl:    true,
             centeredSlides:     true,
-            offsetSlidesBefore:     1,
-            offsetSlidesAfter:      1,
-            initialSlide: 0,
+            //offsetSlidesBefore:     1,
+            //offsetSlidesAfter:      1,
+            //initialSlide: 0,
+
+            watchActiveIndex: true,
+
             onSlideChangeStart: function(swiper,direction) {
                 var i = plo.swiper.activeIndex;
-                plo.log("now looking at: "+i);
+                //plo.log("(start "+direction+") now looking at: "+i);
                 if(direction=='prev') {
                   //plo.log("panning to:"+plo.slides[i].ploufdata.text+plo.slides[i].ploufdata.lat);
                   plo.map.panTo(plo.slides[i].ploufdata);
                 } else {
                   //plo.log("panning to:"+plo.next.ploufdata.text+plo.next.ploufdata.lat);
-
                   plo.map.panTo(plo.next.ploufdata);
-                  if(i==plo.slides.length-1) {
-                    plo.log("! need to load next slide");
-                    plo.swiperNextLoaded();
-                  }
                 }
             },
-            onSetWrapperTransform:  plo.throttleInterpolater,
+            onSlideChangeEnd : function(swiper) {
+                var i = plo.swiper.activeIndex;
+                //plo.log("(end) now looking at: "+i);
+                if(i==plo.slides.length-1) {
+                    //plo.log("! need to load next slide");
+                    plo.swiperNextLoaded();
+                }
+            },
+            //onSetWrapperTransform:  plo.throttleInterpolater,
             //onResistanceBefore:     plo.swiperInterpolate,
             //onResistanceAfter:      plo.swiperInterpolate,
-
-            // following is swiper progress plugin
-
-            progress: true,
-            onProgressChange: function(swiper){
-              for (var i = 0; i < swiper.slides.length; i++){
-              var slide = swiper.slides[i];
-              var progress = slide.progress;
-              swiper.setTransform(slide,'translate3d(0px,0,'+(-Math.abs(progress*1500))+'px)');
-            }
-            },
-            onTouchStart:function(swiper){
-              for (var i = 0; i < swiper.slides.length; i++){
-              swiper.setTransition(swiper.slides[i], 0);
-            }
-            },
-            onSetWrapperTransition: function(swiper) {
-              for (var i = 0; i < swiper.slides.length; i++){
-              swiper.setTransition(swiper.slides[i], swiper.params.speed);
-            }
-            }
         });
     };
-    // if you want to try to move map interpolated based on swipe
+    // if you want to try to move map interpolated based on swipe-x
     plo.swiperInterpolate = function(sw,p) {
         var k = -p.x/plo.w;
         //plo.log(k,p);
@@ -174,9 +160,11 @@ function Ploufmap(options) {
         var data = m.ploufdata;
         var mtype = plo.config.markers[data.ptype];
         var html = plo.config.templates[mtype](data);
-        var newSlide = plo.swiper.createSlide(html);
-        newSlide.append();
-        //plo.log("Swiper appended: "+data.pid);
+        //var newSlide = plo.swiper.createSlide(html);
+        //newSlide.append();
+        plo.swiper.appendSlide(html);
+        //plo.swiper.calcSlides(true);
+        //plo.log("swiper appended slide: "+data.title);
     };
     plo.swiperReloadWith = function(list) {
         plo.log("reload swiper");
@@ -209,13 +197,17 @@ function Ploufmap(options) {
         _.each(neighbors, function(e) {
             var d = plo.anchor._latlng.distanceTo(e._latlng);
             var iscluster = !e.hasOwnProperty("ploufdata");
-            if(!iscluster && (md===null || (d<md && e!=plo.anchor && e.ploufdata.seen=="no")) ) {
-              md = d;
-              next = e;
+            if(!iscluster && ( (d<md || md===null) && e!=plo.anchor && e.ploufdata.seen=="no") ) {
+                md = d;
+                next = e;
             }
         });
+
+        plo.anchor = next;
         next.ploufdata.seen = "loaded";
         plo.slides.push(next);
+
+        if(next==null) plo.log("!! null next !!");
         return next;
     };
 
@@ -235,12 +227,15 @@ function Ploufmap(options) {
 
     plo.setMarkerStatus = function(m,status) {
         if(status=="focused") {
-          $(".leaflet-div-icon").removeClass("focused");
-          $(m._icon).addClass("focused");
+            $(".leaflet-div-icon").removeClass("focused");
+            $(m._icon).addClass("focused");
         }
         if(status=="visited") {
-          $(m._icon).removeClass("focused");
-          $(m._icon).addClass("visited");
+            $(m._icon).removeClass("focused");
+            $(m._icon).addClass("visited");
+        }
+        if(status=="reset") {
+            $(".leaflet-div-icon").removeClass("focused").removeClass("visited");   
         }
     };
 
@@ -277,6 +272,7 @@ function Ploufmap(options) {
     plo.clickMap = function(event) {
         plo.log("map clicked");
         plo.swiperToggle(false);
+        plo.setMarkerStatus(null,"reset");
     };
 
     //////////////////////////////////////////////////////
@@ -504,14 +500,22 @@ function Ploufmap(options) {
                 plo.already.push(p._id);
                 p.markertype = plo.config.markers[p.ptype];
                 try {
-                  //p.text = $(p.text).text();
+                    p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
                 } catch(err) {
-                  plo.log("html>text error: "+err);
-                  plo.log(p);
+                    p.text = "[error texting html]";
+                    plo.log("!! html>text error: "+err);
+                    plo.log(p);
                 }
                 plo.addPlouf(p);  
             });
         });
+    };
+
+    //////////////////////////////////////////////////////
+    plo.truncate = function(str,count) {
+        if(str.length<count) return str;
+        else if(str.length<3) return "[-]";
+        else return str.slice(0,count) + "..";
     };
 
     //////////////////////////////////////////////////////
