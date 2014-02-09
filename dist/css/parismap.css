@@ -511,12 +511,6 @@
 	border: 2px solid rgba(0,0,0,0.2);
 	background-clip: padding-box;
 }
-;.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
-	-webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
-	-moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
-	-o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
-	transition: transform 0.3s ease-out, opacity 0.3s ease-in;
-	}
 ;/*!
  *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

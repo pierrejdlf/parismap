@@ -27,7 +27,7 @@
 
     <script type="text/javascript" src="./js/parismap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
-    <link rel="stylesheet" type="text/css" href="../vendor/font-awesome/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css"/>
 
     </head>
 
@@ -146,7 +146,7 @@
         var p = Ploufmap({
           map: "map", // map div id (carefull with css !)
           dev: dev,
-          baseUrl: false ? "http://localhost:8080" : "http://beta.parismappartient.fr",
+          baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
           initCenter:  L.latLng(48.87,2.347),
           initZoom: 14,
           //minZoom: 7,
