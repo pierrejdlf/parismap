@@ -85,17 +85,20 @@
     -->
 
       <!-- <div id="menu"></div> -->
+      <div class="container">
 
-      <div id="map"></div>
+        <div id="map"></div>
 
-      <div id="swiper" class="swiper-container">
-        <div class="swiper-wrapper"></div>
+        <div id="swiper" class="swiper-container">
+          <div class="swiper-wrapper"></div>
+        </div>
+
       </div>
     </body>
 
     <script id="plouf-template-evt" type="text/x-handlebars-template">
       <div class="plouf-container {{markertype}}">
-        <div class="arrow"></div>
+        <!--<div class="arrow"></div>-->
 
         <div class="content">
           <div class="meta">
@@ -105,13 +108,17 @@
 
           <div class="title">{{title}}</div>
           <div class="text">{{text}}</div>
+
+          <div class="seemore"><a href="{{link}}" target="_blank">read more @{{papi}}</a></div>
+          <div class="ellipsis"></div>
         </div>
 
       </div>
     </script>
+    
     <script id="plouf-template-msg" type="text/x-handlebars-template">
       <div class="plouf-container {{markertype}}">
-        <div class="arrow"></div>
+        <!--<div class="arrow"></div>-->
 
         <div class="content">
           <!--
@@ -164,7 +171,7 @@
         var ev_icons = {
             'event_demosphere':     'bullhorn',
             'event_lylo':           'eye',
-            'event_quefaire':       'calendar',
+            'event_quefaire':       'home',
             'event_sowprog':        'lock',
             'event_cibul':          'flash',
             'event_oneheart':       'globe',
@@ -184,7 +191,7 @@
           markers = markers_msg;
           baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
         }
-        var clusterize = getURLParameter("cluster")!='null';
+        
         var dev = window.location.hostname == "localhost";
 
         // init map on div, with all required options
@@ -193,11 +200,11 @@
           dev: dev,
           baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
           initCenter:  L.latLng(48.87,2.347),
-          initZoom: 14,
-          //minZoom: 7,
-          //maxZoom: 30,
+          initZoom: 12,
+          minZoom: 7,
+          maxZoom: 18,
           baseLayer: baseLayer,
-          clusterize: clusterize,
+          clusterize: true,
 
           // which type will be fetched from server. and wich icon it will have
           markers: markers,
@@ -250,18 +257,21 @@
               var ti = moment(data.date.start).format("HH:mm");
               if(interval)
                 ti += " - "+moment(data.date.end).format("HH:mm");
-              var w = interval? 115 : 68;
+              var w = interval ? 115 : 68;
               
+              html = "<div class='"+cla+"'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>";
+
               if(clustCount>1) {
                 cla += " cluster";
                 ti = clustCount;
-                ic = 'sun-o';
-                w = 48;
+                ic = 'calendar';
+                w = clustCount>9 ? (clustCount>99 ? 56 : 48) : 40;
+                html = "<div class='"+cla+"'><span>"+ti+"</span><i class='fa fa-"+ic+"'></i></div>";
               }
               
               return L.divIcon({
-                iconSize: [w, 10],
-                html: "<div class='"+cla+"'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
+                iconSize:     [w, 10],
+                html:         html,
                 popupAnchor:  [0, 0]
               });
             }

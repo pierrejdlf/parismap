@@ -14,6 +14,7 @@
     "leaflet.bouncemarker":"https://github.com/maximeh/leaflet.bouncemarker/archive/master.zip",
     "leaflet.locatecontrol":"https://github.com/domoritz/leaflet-locatecontrol/archive/gh-pages.zip",
     "Font-Awesome":"4.0.3",
-    "leaflet-font-awesome":"http://github.com/lvoogdt/Leaflet.awesome-markers/archive/2.0/develop.zip"
+    "leaflet-font-awesome":"http://github.com/lvoogdt/Leaflet.awesome-markers/archive/2.0/develop.zip",
+    "clamp":"https://github.com/josephschmitt/Clamp.js/archive/master.zip"
   }
 }

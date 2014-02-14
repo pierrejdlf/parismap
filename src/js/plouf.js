@@ -11,7 +11,8 @@ function Ploufmap(options) {
         bounce:         true,
         initZoom:   15,
         minZoom:    13,
-        maxZoom:    17
+        maxZoom:    17,
+        isMobile:   $(document).width()<900
     };
     plo.config = _.extend(defaults,options);
     plo.config.bounce = !plo.config.clusterize;
@@ -91,7 +92,7 @@ function Ploufmap(options) {
      plo.swiperInit = function() {
         plo.swiper = new Swiper("#swiper",{
             mode: 'horizontal',
-            slidesPerView: 1.75,
+            slidesPerView: plo.config.isMobile ? 1 : 1.85,
             freeMode: false,
             //slidesPerView: 'auto',
             keyboardControl:    true,
@@ -106,11 +107,9 @@ function Ploufmap(options) {
                 var i = plo.swiper.activeIndex;
                 //plo.log("(start "+direction+") now looking at: "+i);
                 if(direction=='prev') {
-                  //plo.log("panning to:"+plo.slides[i].ploufdata.text+plo.slides[i].ploufdata.lat);
-                  plo.map.panTo(plo.slides[i].ploufdata);
+                    plo.swiperLookAt(plo.slides[i]);
                 } else {
-                  //plo.log("panning to:"+plo.next.ploufdata.text+plo.next.ploufdata.lat);
-                  plo.map.panTo(plo.next.ploufdata);
+                    plo.swiperLookAt(plo.next);
                 }
             },
             onSlideChangeEnd : function(swiper) {
@@ -118,7 +117,7 @@ function Ploufmap(options) {
                 //plo.log("(end) now looking at: "+i);
                 if(i==plo.slides.length-1) {
                     //plo.log("! need to load next slide");
-                    plo.swiperNextLoaded();
+                    plo.swiperNextPass();
                 }
             },
             //onSetWrapperTransform:  plo.throttleInterpolater,
@@ -139,17 +138,31 @@ function Ploufmap(options) {
         //plo.map.panTo(tp);
     };
     plo.swiperToggle = function(show) {
-        if(!show) $(".focused").addClass("visited").removeClass("focused");
-        $("#swiper").attr("show", show ? "on" : "off");
+        if(!show) $(".focused").removeClass("visited").removeClass("focused");
+        if(show)
+            $(".container").addClass("paneled");
+        else
+            $(".container").removeClass("paneled");
+        plo.map.invalidateSize(true);
     };
     plo.swiperIsActive = function() {
         return $("#swiper").attr("show")=='on';
     };
-    plo.swiperNextLoaded = function() {
+    plo.swiperLookAt = function(p) {
+        plo.log("------ panning to:"+p.ploufdata.text+p.ploufdata.lat);
+        plo.map.panTo(p.ploufdata);
+        plo.setMarkerStatus(p,"focused");
+        console.log(p);
+    }
+    plo.swiperNextPass = function() {
         // update last marker class
-        plo.setMarkerStatus(plo.current,"visited");
+        //plo.setMarkerStatus(plo.current,"visited");
 
         plo.current = plo.next ;
+
+        var isCluster = plo.current.hasOwnProperty('parentMarker');
+        // if(isCluster) plo.log("PASS: yourra, a cluster");
+        // else plo.log("PASS: just a marker");
 
         plo.setMarkerStatus(plo.current,"focused");
 
@@ -188,11 +201,28 @@ function Ploufmap(options) {
 
         if(plo.config.clusterize) {
             //neighbors = plo.markerLayer(plo.current.ploufdata)._map._layers;
-            neighbors = plo.markerLayer(plo.current.ploufdata)._featureGroup._layers;
+            var neighbors_tmp = plo.markerLayer(plo.current.ploufdata)._featureGroup._layers;
+            neighbors = [];
+            _.each(neighbors_tmp, function(e) {
+                var iscluster = !e.hasOwnProperty("ploufdata");
+                if(iscluster) {
+                    // for each children marker, store the parent, to be able to style it on swipes
+                    var children = e.getAllChildMarkers();
+                    children = _.map(children, function(c) {
+                        c.ploufdata.parentMarker = e;
+                        return c;
+                    });
+                    neighbors = neighbors.concat(children);
+                } else 
+                    neighbors.push(e);
+                // now we have an array with all the neighbors markers
+                // (keeping memory of the parentMarker(s) if there is) !
+            });
         } else
             neighbors = plo.markerLayer(plo.current.ploufdata)._layers;
 
-        //console.log(neighbors);
+        //plo.tt = neighbors_tmp;
+        //console.log(neighbors.length);
 
         _.each(neighbors, function(e) {
             var d = plo.anchor._latlng.distanceTo(e._latlng);
@@ -226,6 +256,11 @@ function Ploufmap(options) {
     };
 
     plo.setMarkerStatus = function(m,status) {
+        // we may be being setting a cluster !
+        if(m.ploufdata.hasOwnProperty('parentMarker')) {
+            m = m.ploufdata.parentMarker;
+        }
+
         if(status=="focused") {
             $(".leaflet-div-icon").removeClass("focused");
             $(m._icon).addClass("focused");
@@ -343,11 +378,13 @@ function Ploufmap(options) {
             if(plo.config.clusterize) {
                 // click events
                 markerLayer.on('click', function (a) {
-                    console.log(a);
+                    //console.log("CLICK!");
+                    //console.log(a);
                     //plo.clickMarker(a,"marker");
                 });
                 markerLayer.on('clusterclick', function (a) {
-                    console.log(a);
+                    //console.log("CLICK!");
+                    //console.log(a);
                     //plo.clickMarker(a,"cluster");
                 });
             }
@@ -369,6 +406,7 @@ function Ploufmap(options) {
 
 
         plo.map = L.map(plo.config.map, {
+            attributionControl: false,
             keyboard: false,
             center: plo.config.initCenter,
             zoom: plo.config.initZoom,
@@ -381,11 +419,22 @@ function Ploufmap(options) {
         // optional control to select visible layers
         //L.control.groupedLayers(baseLayers, groupedOverlays).addTo(plo.map);
 
+        L.control.attribution({position:'topright'}).addTo(plo.map);
+
         plo.map.on('click', plo.clickMap);
-        plo.map.on('move', function() {
+        plo.map.on('move', function(e) {
+            //plo.log("! moved");
             plo.throttleFetch();
         });
-        plo.map.on('moveEnd', plo.throttleFetch);
+        plo.map.on("zoomstart", function(e) {
+            plo.log("! zoomedStart");
+            plo.swiperToggle(false);
+        });
+        plo.map.on('moveEnd', function(e) {
+            plo.log("! movedEnd");
+            plo.throttleFetch();
+            plo.swiperToggle(false);
+        });
 
         var lc = L.control.locate({
             position: 'topleft',  // set the location of the control
@@ -494,13 +543,14 @@ function Ploufmap(options) {
         //plo.log(data);
         $.post( plo.config.baseUrl+"/p/get", data, function(response) {
             var data = JSON.parse(response);
-            plo.log(Object.keys(data).length+" ploufs received !");
+            //plo.log(Object.keys(data).length+" ploufs received !");
             //plo.log(data);
             _.each(data,function(p) {
                 plo.already.push(p._id);
                 p.markertype = plo.config.markers[p.ptype];
                 try {
-                    p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
+                    //p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
+                    p.text = $('<div>'+p.text+'</div>').text();
                 } catch(err) {
                     p.text = "[error texting html]";
                     plo.log("!! html>text error: "+err);
