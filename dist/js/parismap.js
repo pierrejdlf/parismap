@@ -6924,9 +6924,7 @@ for(var g=0;g<C.slides.length;g++){d+=e,e="auto"===b.slidesPerView?M?C.h.getWidt
         throttleDelay:  2000,
         clusterize:     false,
         bounce:         true,
-        initZoom:   15,
-        minZoom:    13,
-        maxZoom:    17,
+        locateButton:   true,
         isMobile:   $(document).width()<900
     };
     plo.config = _.extend(defaults,options);
@@ -7351,16 +7349,16 @@ for(var g=0;g<C.slides.length;g++){d+=e,e="auto"===b.slidesPerView?M?C.h.getWidt
         console.log("We have layers:");
         console.log(plo.layers);
 
-        plo.map = L.map(plo.config.map, {
+        plo.map = L.map(plo.config.map, _.defaults(plo.config.leaflet, {
             attributionControl: false,
             keyboard: false,
-            center: plo.config.initCenter,
-            zoom: plo.config.initZoom,
-            minZoom: plo.config.minZoom,
-            maxZoom: plo.config.maxZoom,
             icons: plo.config.icons,
+            center:  L.latLng(48.87,2.347),
+            zoom: 13,
+            minZoom: 2,
+            maxZoom: 18,
             layers: [baseLayer].concat(_.values(plo.layers))
-        });
+        }));
 
         // optional control to select visible layers
         //L.control.groupedLayers(baseLayers, groupedOverlays).addTo(plo.map);
@@ -7382,50 +7380,51 @@ for(var g=0;g<C.slides.length;g++){d+=e,e="auto"===b.slidesPerView?M?C.h.getWidt
             plo.swiperToggle(false);
         });
 
-        var lc = L.control.locate({
-            position: 'topleft',  // set the location of the control
-            drawCircle: true,  // controls whether a circle is drawn that shows the uncertainty about the location
-            //follow: false,  // follow the location if `watch` and `setView` are set to true in locateOptions
-            //stopFollowingOnDrag: false, // stop following when the map is dragged if `follow` is set to true (deprecated, see below)
-            circleStyle: {
-                color: '#136AEC',
-                fillColor: '#136AEC',
-                fillOpacity: 0.15,
-                weight: 2,
-                opacity: 0.5
-            },  // change the style of the circle around the user's location
-            markerStyle:  {
-                color: '#136AEC',
-                fillColor: '#2A93EE',
-                fillOpacity: 0.7,
-                weight: 2,
-                opacity: 0.9,
-                radius: 5
-            },
-            //followCircleStyle: {},  // set difference for the style of the circle around the user's location while following
-            //followMarkerStyle: {},
-            //circlePadding: [0, 0], // padding around accuracy circle, value is passed to setBounds
-            metric: true,  // use metric or imperial units
-            onLocationError: function(err) {
-              alert(err.message);
-            },  // define an error callback function
-            onLocationFound: function() {
-              plo.fadeOutMask();
-            },
-            onLocationOutsideMapBounds:  function(context) { // called when outside map boundaries
-              alert(context.options.strings.outsideMapBoundsMsg);
-            },
-            setView: true, // automatically sets the map view to the user's location
-            strings: {
-                title: "Show me where I am",  // title of the locat control
-                popup: "You are within {distance} {unit} from this point",  // text to appear if user clicks on circle
-                outsideMapBoundsMsg: "You seem located outside the boundaries of the map" // default message for onLocationOutsideMapBounds
-            },
-            locateOptions: {}  // define location options e.g enableHighAccuracy: true
-        }).addTo(plo.map);
-        
-        // start browser geoloc
-        //lc.locate();
+        if(plo.config.locateButton) {
+            var lc = L.control.locate({
+                position: 'topleft',  // set the location of the control
+                drawCircle: true,  // controls whether a circle is drawn that shows the uncertainty about the location
+                //follow: false,  // follow the location if `watch` and `setView` are set to true in locateOptions
+                //stopFollowingOnDrag: false, // stop following when the map is dragged if `follow` is set to true (deprecated, see below)
+                circleStyle: {
+                    color: '#136AEC',
+                    fillColor: '#136AEC',
+                    fillOpacity: 0.15,
+                    weight: 2,
+                    opacity: 0.5
+                },  // change the style of the circle around the user's location
+                markerStyle:  {
+                    color: '#136AEC',
+                    fillColor: '#2A93EE',
+                    fillOpacity: 0.7,
+                    weight: 2,
+                    opacity: 0.9,
+                    radius: 5
+                },
+                //followCircleStyle: {},  // set difference for the style of the circle around the user's location while following
+                //followMarkerStyle: {},
+                //circlePadding: [0, 0], // padding around accuracy circle, value is passed to setBounds
+                metric: true,  // use metric or imperial units
+                onLocationError: function(err) {
+                  alert(err.message);
+                },  // define an error callback function
+                onLocationFound: function() {
+                  plo.fadeOutMask();
+                },
+                onLocationOutsideMapBounds:  function(context) { // called when outside map boundaries
+                  alert(context.options.strings.outsideMapBoundsMsg);
+                },
+                setView: true, // automatically sets the map view to the user's location
+                strings: {
+                    title: "Show me where I am",  // title of the locat control
+                    popup: "You are within {distance} {unit} from this point",  // text to appear if user clicks on circle
+                    outsideMapBoundsMsg: "You seem located outside the boundaries of the map" // default message for onLocationOutsideMapBounds
+                },
+                locateOptions: {}  // define location options e.g enableHighAccuracy: true
+            }).addTo(plo.map);
+            // start browser geoloc
+            //lc.locate();
+        }
     };
 
     plo.fadeOutMask = function() {

@@ -138,8 +138,6 @@
               "event_calenda": 'evt',
               "event_linternaute": 'evt'
           },
-          initCenter:  L.latLng(48.87,2.347),
-          initZoom: 13,
         };
 
 
@@ -153,8 +151,6 @@
               "sample.csv": 'msg',
               "story.csv": 'msg',
           },
-          initCenter:  L.latLng(48.87,2.347),
-          initZoom: 13,
         };
 
 
@@ -164,8 +160,6 @@
           markers: {
             'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'word'
           },
-          initCenter:  L.latLng(47.975,12.129),
-          initZoom: 4,
         };
 
 
@@ -188,8 +182,13 @@
           map: "map", // map div id (carefull with css !)
           dev: dev,
           baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-          minZoom: 2,
-          maxZoom: 18,
+
+          leaflet: {
+            // here you could override default leaflet map options
+            //minZoom: 2,
+            //maxZoom: 18,
+            //scrollWheelZoom: false,
+          },
 
           clusterize: true,
 
