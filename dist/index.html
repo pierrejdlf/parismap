@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="ngBoilerplate" ng-controller="AppCtrl">
+<html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
@@ -19,11 +19,15 @@
     <meta property="og:image" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846" />
     <meta property="og:description" content="3 sentences description of project"> -->
 
+    <link href='http://fonts.googleapis.com/css?family=Lato|Source+Sans+Pro:200,400' rel='stylesheet' type='text/css'>
+
   
-    <script src="http://app.eventsourcehq.com/es.js"></script>
+    <!-- <script src="http://app.eventsourcehq.com/es.js"></script> -->
+    <!-- <script type="text/javascript" src="./vendor/eshq/index.js"></script> -->
+
     <script type="text/javascript" src="./js/parismap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css"/>
     <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
-    <link rel="stylesheet" type="text/css" href="./css/font-awesome.css"/>
 
     </head>
 
@@ -36,44 +40,50 @@
     -->
 
       <!-- <div id="menu"></div> -->
+      <div class="container">
 
-      <div id="map"></div>
+        <div id="map"></div>
 
-      <div id="swiper" class="swiper-container">
-        <div class="swiper-wrapper"></div>
+        <div id="swiper" class="swiper-container">
+          <div class="swiper-wrapper"></div>
+        </div>
+
       </div>
     </body>
 
     <script id="plouf-template-evt" type="text/x-handlebars-template">
       <div class="plouf-container {{markertype}}">
-        <div class="arrow"></div>
+        <!--<div class="arrow"></div>-->
 
         <div class="content">
           <div class="meta">
-            <div class="date">{{formatdate date}}</div>
-            <i class="fa fa-home"></i>
-            <div class="address">{{place}} | {{address}}</div>
-            <i class="fa fa-arrow-circle-right"></i>
-            <a class="link" href="{{link}}" target="_blank">{{splitype ptype}}</a>
+            <!--<i class="fa fa-location-arrow"></i>-->
+            <a class="link" href="{{link}}" target="_blank"><div class="address">{{place}} - {{address}}</div></a>
           </div>
 
           <div class="title">{{title}}</div>
           <div class="text">{{text}}</div>
+
+          <div class="seemore"><a href="{{link}}" target="_blank">read more @{{papi}}</a></div>
+          <div class="ellipsis"></div>
         </div>
 
       </div>
     </script>
+
     <script id="plouf-template-msg" type="text/x-handlebars-template">
       <div class="plouf-container {{markertype}}">
-        <div class="arrow"></div>
+        <!--<div class="arrow"></div>-->
 
         <div class="content">
+          <!--
           <div class="meta">
             <div class="date">{{formatdate date}}</div>
             <a class="link" href="http://twitter.com/{{user.id}}" target="_blank">@{{user.name}}</a>
           </div>
+          -->
 
-          <div class="text">{{{text}}}</div>
+          <div class="word">{{{text}}}</div>
         </div>
 
       </div>
@@ -82,6 +92,8 @@
 
     <!-- script -->
     <script>
+
+    function getURLParameter(name) {return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);}
 
     Handlebars.registerHelper('formatdate', function(date) {
       var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
@@ -114,7 +126,7 @@
         var ev_icons = {
             'event_demosphere':     'bullhorn',
             'event_lylo':           'eye',
-            'event_quefaire':       'calendar',
+            'event_quefaire':       'home',
             'event_sowprog':        'lock',
             'event_cibul':          'flash',
             'event_oneheart':       'globe',
@@ -129,19 +141,25 @@
         var baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
         //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
 
+        // different configs
         if(window.location.hash=='#msg') {
           markers = markers_msg;
           baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
         }
-
         
+        var dev = window.location.hostname == "localhost";
+
         // init map on div, with all required options
         var p = Ploufmap({
           map: "map", // map div id (carefull with css !)
+          dev: dev,
+          baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
           initCenter:  L.latLng(48.87,2.347),
-          initZoom: 14,
-
+          initZoom: 12,
+          minZoom: 7,
+          maxZoom: 18,
           baseLayer: baseLayer,
+          clusterize: true,
 
           // which type will be fetched from server. and wich icon it will have
           markers: markers,
@@ -152,7 +170,7 @@
             evt: Handlebars.compile($("#plouf-template-evt").html())
           },
 
-          // define the icons for the previous types
+          // define icons
           icons: {
             // icon_example: function(data) {
             //  return L.icon({
@@ -175,23 +193,40 @@
             //         //iconColor:#BBBBBB,
             //         //spin:true,
             //     });
-            msg: function(data) {
+            msg: function(data,clustCount) {
+              var cla = 'msg';
+              if(clustCount>1) {
+                cla += " cluster";
+              }
+
               return L.divIcon({
-                iconSize: [60, 10],
-                html: "<div class='msg'>"+data.words.join(" ")+"</div>",
+                iconSize: [110, 50],
+                html: "<div class='"+cla+"'>"+data.words.join("<br>")+"</div>",
                 popupAnchor:  [0, 0]
               });
             },
-            evt: function(data) {
+            evt: function(data,clustCount) {
+              var cla = 'evt';
               var ic = ev_icons[data.ptype];
               var interval = false ; //data.date.start!=data.date.end;
               var ti = moment(data.date.start).format("HH:mm");
               if(interval)
                 ti += " - "+moment(data.date.end).format("HH:mm");
-              var w = interval? 115 : 68;
+              var w = interval ? 115 : 68;
+              
+              html = "<div class='"+cla+"'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>";
+
+              if(clustCount>1) {
+                cla += " cluster";
+                ti = clustCount;
+                ic = 'calendar';
+                w = clustCount>9 ? (clustCount>99 ? 56 : 48) : 40;
+                html = "<div class='"+cla+"'><span>"+ti+"</span><i class='fa fa-"+ic+"'></i></div>";
+              }
+              
               return L.divIcon({
-                iconSize: [w,10],
-                html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
+                iconSize:     [w, 10],
+                html:         html,
                 popupAnchor:  [0, 0]
               });
             }

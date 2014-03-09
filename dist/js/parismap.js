@@ -4,7 +4,7 @@
 //     Underscore may be freely distributed under the MIT license.
 (function(){var n=this,t=n._,r={},e=Array.prototype,u=Object.prototype,i=Function.prototype,a=e.push,o=e.slice,c=e.concat,l=u.toString,f=u.hasOwnProperty,s=e.forEach,p=e.map,h=e.reduce,v=e.reduceRight,g=e.filter,d=e.every,m=e.some,y=e.indexOf,b=e.lastIndexOf,x=Array.isArray,w=Object.keys,_=i.bind,j=function(n){return n instanceof j?n:this instanceof j?(this._wrapped=n,void 0):new j(n)};"undefined"!=typeof exports?("undefined"!=typeof module&&module.exports&&(exports=module.exports=j),exports._=j):n._=j,j.VERSION="1.5.2";var A=j.each=j.forEach=function(n,t,e){if(null!=n)if(s&&n.forEach===s)n.forEach(t,e);else if(n.length===+n.length){for(var u=0,i=n.length;i>u;u++)if(t.call(e,n[u],u,n)===r)return}else for(var a=j.keys(n),u=0,i=a.length;i>u;u++)if(t.call(e,n[a[u]],a[u],n)===r)return};j.map=j.collect=function(n,t,r){var e=[];return null==n?e:p&&n.map===p?n.map(t,r):(A(n,function(n,u,i){e.push(t.call(r,n,u,i))}),e)};var E="Reduce of empty array with no initial value";j.reduce=j.foldl=j.inject=function(n,t,r,e){var u=arguments.length>2;if(null==n&&(n=[]),h&&n.reduce===h)return e&&(t=j.bind(t,e)),u?n.reduce(t,r):n.reduce(t);if(A(n,function(n,i,a){u?r=t.call(e,r,n,i,a):(r=n,u=!0)}),!u)throw new TypeError(E);return r},j.reduceRight=j.foldr=function(n,t,r,e){var u=arguments.length>2;if(null==n&&(n=[]),v&&n.reduceRight===v)return e&&(t=j.bind(t,e)),u?n.reduceRight(t,r):n.reduceRight(t);var i=n.length;if(i!==+i){var a=j.keys(n);i=a.length}if(A(n,function(o,c,l){c=a?a[--i]:--i,u?r=t.call(e,r,n[c],c,l):(r=n[c],u=!0)}),!u)throw new TypeError(E);return r},j.find=j.detect=function(n,t,r){var e;return O(n,function(n,u,i){return t.call(r,n,u,i)?(e=n,!0):void 0}),e},j.filter=j.select=function(n,t,r){var e=[];return null==n?e:g&&n.filter===g?n.filter(t,r):(A(n,function(n,u,i){t.call(r,n,u,i)&&e.push(n)}),e)},j.reject=function(n,t,r){return j.filter(n,function(n,e,u){return!t.call(r,n,e,u)},r)},j.every=j.all=function(n,t,e){t||(t=j.identity);var u=!0;return null==n?u:d&&n.every===d?n.every(t,e):(A(n,function(n,i,a){return(u=u&&t.call(e,n,i,a))?void 0:r}),!!u)};var O=j.some=j.any=function(n,t,e){t||(t=j.identity);var u=!1;return null==n?u:m&&n.some===m?n.some(t,e):(A(n,function(n,i,a){return u||(u=t.call(e,n,i,a))?r:void 0}),!!u)};j.contains=j.include=function(n,t){return null==n?!1:y&&n.indexOf===y?n.indexOf(t)!=-1:O(n,function(n){return n===t})},j.invoke=function(n,t){var r=o.call(arguments,2),e=j.isFunction(t);return j.map(n,function(n){return(e?t:n[t]).apply(n,r)})},j.pluck=function(n,t){return j.map(n,function(n){return n[t]})},j.where=function(n,t,r){return j.isEmpty(t)?r?void 0:[]:j[r?"find":"filter"](n,function(n){for(var r in t)if(t[r]!==n[r])return!1;return!0})},j.findWhere=function(n,t){return j.where(n,t,!0)},j.max=function(n,t,r){if(!t&&j.isArray(n)&&n[0]===+n[0]&&n.length<65535)return Math.max.apply(Math,n);if(!t&&j.isEmpty(n))return-1/0;var e={computed:-1/0,value:-1/0};return A(n,function(n,u,i){var a=t?t.call(r,n,u,i):n;a>e.computed&&(e={value:n,computed:a})}),e.value},j.min=function(n,t,r){if(!t&&j.isArray(n)&&n[0]===+n[0]&&n.length<65535)return Math.min.apply(Math,n);if(!t&&j.isEmpty(n))return 1/0;var e={computed:1/0,value:1/0};return A(n,function(n,u,i){var a=t?t.call(r,n,u,i):n;a<e.computed&&(e={value:n,computed:a})}),e.value},j.shuffle=function(n){var t,r=0,e=[];return A(n,function(n){t=j.random(r++),e[r-1]=e[t],e[t]=n}),e},j.sample=function(n,t,r){return arguments.length<2||r?n[j.random(n.length-1)]:j.shuffle(n).slice(0,Math.max(0,t))};var k=function(n){return j.isFunction(n)?n:function(t){return t[n]}};j.sortBy=function(n,t,r){var e=k(t);return j.pluck(j.map(n,function(n,t,u){return{value:n,index:t,criteria:e.call(r,n,t,u)}}).sort(function(n,t){var r=n.criteria,e=t.criteria;if(r!==e){if(r>e||r===void 0)return 1;if(e>r||e===void 0)return-1}return n.index-t.index}),"value")};var F=function(n){return function(t,r,e){var u={},i=null==r?j.identity:k(r);return A(t,function(r,a){var o=i.call(e,r,a,t);n(u,o,r)}),u}};j.groupBy=F(function(n,t,r){(j.has(n,t)?n[t]:n[t]=[]).push(r)}),j.indexBy=F(function(n,t,r){n[t]=r}),j.countBy=F(function(n,t){j.has(n,t)?n[t]++:n[t]=1}),j.sortedIndex=function(n,t,r,e){r=null==r?j.identity:k(r);for(var u=r.call(e,t),i=0,a=n.length;a>i;){var o=i+a>>>1;r.call(e,n[o])<u?i=o+1:a=o}return i},j.toArray=function(n){return n?j.isArray(n)?o.call(n):n.length===+n.length?j.map(n,j.identity):j.values(n):[]},j.size=function(n){return null==n?0:n.length===+n.length?n.length:j.keys(n).length},j.first=j.head=j.take=function(n,t,r){return null==n?void 0:null==t||r?n[0]:o.call(n,0,t)},j.initial=function(n,t,r){return o.call(n,0,n.length-(null==t||r?1:t))},j.last=function(n,t,r){return null==n?void 0:null==t||r?n[n.length-1]:o.call(n,Math.max(n.length-t,0))},j.rest=j.tail=j.drop=function(n,t,r){return o.call(n,null==t||r?1:t)},j.compact=function(n){return j.filter(n,j.identity)};var M=function(n,t,r){return t&&j.every(n,j.isArray)?c.apply(r,n):(A(n,function(n){j.isArray(n)||j.isArguments(n)?t?a.apply(r,n):M(n,t,r):r.push(n)}),r)};j.flatten=function(n,t){return M(n,t,[])},j.without=function(n){return j.difference(n,o.call(arguments,1))},j.uniq=j.unique=function(n,t,r,e){j.isFunction(t)&&(e=r,r=t,t=!1);var u=r?j.map(n,r,e):n,i=[],a=[];return A(u,function(r,e){(t?e&&a[a.length-1]===r:j.contains(a,r))||(a.push(r),i.push(n[e]))}),i},j.union=function(){return j.uniq(j.flatten(arguments,!0))},j.intersection=function(n){var t=o.call(arguments,1);return j.filter(j.uniq(n),function(n){return j.every(t,function(t){return j.indexOf(t,n)>=0})})},j.difference=function(n){var t=c.apply(e,o.call(arguments,1));return j.filter(n,function(n){return!j.contains(t,n)})},j.zip=function(){for(var n=j.max(j.pluck(arguments,"length").concat(0)),t=new Array(n),r=0;n>r;r++)t[r]=j.pluck(arguments,""+r);return t},j.object=function(n,t){if(null==n)return{};for(var r={},e=0,u=n.length;u>e;e++)t?r[n[e]]=t[e]:r[n[e][0]]=n[e][1];return r},j.indexOf=function(n,t,r){if(null==n)return-1;var e=0,u=n.length;if(r){if("number"!=typeof r)return e=j.sortedIndex(n,t),n[e]===t?e:-1;e=0>r?Math.max(0,u+r):r}if(y&&n.indexOf===y)return n.indexOf(t,r);for(;u>e;e++)if(n[e]===t)return e;return-1},j.lastIndexOf=function(n,t,r){if(null==n)return-1;var e=null!=r;if(b&&n.lastIndexOf===b)return e?n.lastIndexOf(t,r):n.lastIndexOf(t);for(var u=e?r:n.length;u--;)if(n[u]===t)return u;return-1},j.range=function(n,t,r){arguments.length<=1&&(t=n||0,n=0),r=arguments[2]||1;for(var e=Math.max(Math.ceil((t-n)/r),0),u=0,i=new Array(e);e>u;)i[u++]=n,n+=r;return i};var R=function(){};j.bind=function(n,t){var r,e;if(_&&n.bind===_)return _.apply(n,o.call(arguments,1));if(!j.isFunction(n))throw new TypeError;return r=o.call(arguments,2),e=function(){if(!(this instanceof e))return n.apply(t,r.concat(o.call(arguments)));R.prototype=n.prototype;var u=new R;R.prototype=null;var i=n.apply(u,r.concat(o.call(arguments)));return Object(i)===i?i:u}},j.partial=function(n){var t=o.call(arguments,1);return function(){return n.apply(this,t.concat(o.call(arguments)))}},j.bindAll=function(n){var t=o.call(arguments,1);if(0===t.length)throw new Error("bindAll must be passed function names");return A(t,function(t){n[t]=j.bind(n[t],n)}),n},j.memoize=function(n,t){var r={};return t||(t=j.identity),function(){var e=t.apply(this,arguments);return j.has(r,e)?r[e]:r[e]=n.apply(this,arguments)}},j.delay=function(n,t){var r=o.call(arguments,2);return setTimeout(function(){return n.apply(null,r)},t)},j.defer=function(n){return j.delay.apply(j,[n,1].concat(o.call(arguments,1)))},j.throttle=function(n,t,r){var e,u,i,a=null,o=0;r||(r={});var c=function(){o=r.leading===!1?0:new Date,a=null,i=n.apply(e,u)};return function(){var l=new Date;o||r.leading!==!1||(o=l);var f=t-(l-o);return e=this,u=arguments,0>=f?(clearTimeout(a),a=null,o=l,i=n.apply(e,u)):a||r.trailing===!1||(a=setTimeout(c,f)),i}},j.debounce=function(n,t,r){var e,u,i,a,o;return function(){i=this,u=arguments,a=new Date;var c=function(){var l=new Date-a;t>l?e=setTimeout(c,t-l):(e=null,r||(o=n.apply(i,u)))},l=r&&!e;return e||(e=setTimeout(c,t)),l&&(o=n.apply(i,u)),o}},j.once=function(n){var t,r=!1;return function(){return r?t:(r=!0,t=n.apply(this,arguments),n=null,t)}},j.wrap=function(n,t){return function(){var r=[n];return a.apply(r,arguments),t.apply(this,r)}},j.compose=function(){var n=arguments;return function(){for(var t=arguments,r=n.length-1;r>=0;r--)t=[n[r].apply(this,t)];return t[0]}},j.after=function(n,t){return function(){return--n<1?t.apply(this,arguments):void 0}},j.keys=w||function(n){if(n!==Object(n))throw new TypeError("Invalid object");var t=[];for(var r in n)j.has(n,r)&&t.push(r);return t},j.values=function(n){for(var t=j.keys(n),r=t.length,e=new Array(r),u=0;r>u;u++)e[u]=n[t[u]];return e},j.pairs=function(n){for(var t=j.keys(n),r=t.length,e=new Array(r),u=0;r>u;u++)e[u]=[t[u],n[t[u]]];return e},j.invert=function(n){for(var t={},r=j.keys(n),e=0,u=r.length;u>e;e++)t[n[r[e]]]=r[e];return t},j.functions=j.methods=function(n){var t=[];for(var r in n)j.isFunction(n[r])&&t.push(r);return t.sort()},j.extend=function(n){return A(o.call(arguments,1),function(t){if(t)for(var r in t)n[r]=t[r]}),n},j.pick=function(n){var t={},r=c.apply(e,o.call(arguments,1));return A(r,function(r){r in n&&(t[r]=n[r])}),t},j.omit=function(n){var t={},r=c.apply(e,o.call(arguments,1));for(var u in n)j.contains(r,u)||(t[u]=n[u]);return t},j.defaults=function(n){return A(o.call(arguments,1),function(t){if(t)for(var r in t)n[r]===void 0&&(n[r]=t[r])}),n},j.clone=function(n){return j.isObject(n)?j.isArray(n)?n.slice():j.extend({},n):n},j.tap=function(n,t){return t(n),n};var S=function(n,t,r,e){if(n===t)return 0!==n||1/n==1/t;if(null==n||null==t)return n===t;n instanceof j&&(n=n._wrapped),t instanceof j&&(t=t._wrapped);var u=l.call(n);if(u!=l.call(t))return!1;switch(u){case"[object String]":return n==String(t);case"[object Number]":return n!=+n?t!=+t:0==n?1/n==1/t:n==+t;case"[object Date]":case"[object Boolean]":return+n==+t;case"[object RegExp]":return n.source==t.source&&n.global==t.global&&n.multiline==t.multiline&&n.ignoreCase==t.ignoreCase}if("object"!=typeof n||"object"!=typeof t)return!1;for(var i=r.length;i--;)if(r[i]==n)return e[i]==t;var a=n.constructor,o=t.constructor;if(a!==o&&!(j.isFunction(a)&&a instanceof a&&j.isFunction(o)&&o instanceof o))return!1;r.push(n),e.push(t);var c=0,f=!0;if("[object Array]"==u){if(c=n.length,f=c==t.length)for(;c--&&(f=S(n[c],t[c],r,e)););}else{for(var s in n)if(j.has(n,s)&&(c++,!(f=j.has(t,s)&&S(n[s],t[s],r,e))))break;if(f){for(s in t)if(j.has(t,s)&&!c--)break;f=!c}}return r.pop(),e.pop(),f};j.isEqual=function(n,t){return S(n,t,[],[])},j.isEmpty=function(n){if(null==n)return!0;if(j.isArray(n)||j.isString(n))return 0===n.length;for(var t in n)if(j.has(n,t))return!1;return!0},j.isElement=function(n){return!(!n||1!==n.nodeType)},j.isArray=x||function(n){return"[object Array]"==l.call(n)},j.isObject=function(n){return n===Object(n)},A(["Arguments","Function","String","Number","Date","RegExp"],function(n){j["is"+n]=function(t){return l.call(t)=="[object "+n+"]"}}),j.isArguments(arguments)||(j.isArguments=function(n){return!(!n||!j.has(n,"callee"))}),"function"!=typeof/./&&(j.isFunction=function(n){return"function"==typeof n}),j.isFinite=function(n){return isFinite(n)&&!isNaN(parseFloat(n))},j.isNaN=function(n){return j.isNumber(n)&&n!=+n},j.isBoolean=function(n){return n===!0||n===!1||"[object Boolean]"==l.call(n)},j.isNull=function(n){return null===n},j.isUndefined=function(n){return n===void 0},j.has=function(n,t){return f.call(n,t)},j.noConflict=function(){return n._=t,this},j.identity=function(n){return n},j.times=function(n,t,r){for(var e=Array(Math.max(0,n)),u=0;n>u;u++)e[u]=t.call(r,u);return e},j.random=function(n,t){return null==t&&(t=n,n=0),n+Math.floor(Math.random()*(t-n+1))};var I={escape:{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;"}};I.unescape=j.invert(I.escape);var T={escape:new RegExp("["+j.keys(I.escape).join("")+"]","g"),unescape:new RegExp("("+j.keys(I.unescape).join("|")+")","g")};j.each(["escape","unescape"],function(n){j[n]=function(t){return null==t?"":(""+t).replace(T[n],function(t){return I[n][t]})}}),j.result=function(n,t){if(null==n)return void 0;var r=n[t];return j.isFunction(r)?r.call(n):r},j.mixin=function(n){A(j.functions(n),function(t){var r=j[t]=n[t];j.prototype[t]=function(){var n=[this._wrapped];return a.apply(n,arguments),z.call(this,r.apply(j,n))}})};var N=0;j.uniqueId=function(n){var t=++N+"";return n?n+t:t},j.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var q=/(.)^/,B={"'":"'","\\":"\\","\r":"r","\n":"n","	":"t","\u2028":"u2028","\u2029":"u2029"},D=/\\|'|\r|\n|\t|\u2028|\u2029/g;j.template=function(n,t,r){var e;r=j.defaults({},r,j.templateSettings);var u=new RegExp([(r.escape||q).source,(r.interpolate||q).source,(r.evaluate||q).source].join("|")+"|$","g"),i=0,a="__p+='";n.replace(u,function(t,r,e,u,o){return a+=n.slice(i,o).replace(D,function(n){return"\\"+B[n]}),r&&(a+="'+\n((__t=("+r+"))==null?'':_.escape(__t))+\n'"),e&&(a+="'+\n((__t=("+e+"))==null?'':__t)+\n'"),u&&(a+="';\n"+u+"\n__p+='"),i=o+t.length,t}),a+="';\n",r.variable||(a="with(obj||{}){\n"+a+"}\n"),a="var __t,__p='',__j=Array.prototype.join,"+"print=function(){__p+=__j.call(arguments,'');};\n"+a+"return __p;\n";try{e=new Function(r.variable||"obj","_",a)}catch(o){throw o.source=a,o}if(t)return e(t,j);var c=function(n){return e.call(this,n,j)};return c.source="function("+(r.variable||"obj")+"){\n"+a+"}",c},j.chain=function(n){return j(n).chain()};var z=function(n){return this._chain?j(n).chain():n};j.mixin(j),A(["pop","push","reverse","shift","sort","splice","unshift"],function(n){var t=e[n];j.prototype[n]=function(){var r=this._wrapped;return t.apply(r,arguments),"shift"!=n&&"splice"!=n||0!==r.length||delete r[0],z.call(this,r)}}),A(["concat","join","slice"],function(n){var t=e[n];j.prototype[n]=function(){return z.call(this,t.apply(this._wrapped,arguments))}}),j.extend(j.prototype,{chain:function(){return this._chain=!0,this},value:function(){return this._wrapped}})}).call(this);
 //# sourceMappingURL=underscore-min.map;//     Zepto.js
-//     (c) 2010-2014 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 var Zepto = (function() {
@@ -871,7 +871,7 @@ var Zepto = (function() {
 window.Zepto = Zepto
 window.$ === undefined && (window.$ = Zepto)
 ;//     Zepto.js
-//     (c) 2010-2014 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
@@ -1147,7 +1147,7 @@ window.$ === undefined && (window.$ = Zepto)
 
 })(Zepto)
 ;//     Zepto.js
-//     (c) 2010-2014 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
@@ -4580,2653 +4580,26 @@ L.control.locate = function (options) {
     return new L.Control.Locate(options);
 };
 ;/*
- * Swiper 2.4+ - Mobile Touch Slider
+ Leaflet.markercluster, Provides Beautiful Animated Marker Clustering functionality for Leaflet, a JS library for interactive maps.
+ https://github.com/Leaflet/Leaflet.markercluster
+ (c) 2012-2013, Dave Leaver, smartrak
+*/
+!function(t,e){L.MarkerClusterGroup=L.FeatureGroup.extend({options:{maxClusterRadius:80,iconCreateFunction:null,spiderfyOnMaxZoom:!0,showCoverageOnHover:!0,zoomToBoundsOnClick:!0,singleMarkerMode:!1,disableClusteringAtZoom:null,removeOutsideVisibleBounds:!0,animateAddingMarkers:!1,spiderfyDistanceMultiplier:1,polygonOptions:{}},initialize:function(t){L.Util.setOptions(this,t),this.options.iconCreateFunction||(this.options.iconCreateFunction=this._defaultIconCreateFunction),this._featureGroup=L.featureGroup(),this._featureGroup.on(L.FeatureGroup.EVENTS,this._propagateEvent,this),this._nonPointGroup=L.featureGroup(),this._nonPointGroup.on(L.FeatureGroup.EVENTS,this._propagateEvent,this),this._inZoomAnimation=0,this._needsClustering=[],this._needsRemoving=[],this._currentShownBounds=null,this._queue=[]},addLayer:function(t){if(t instanceof L.LayerGroup){var e=[];for(var i in t._layers)e.push(t._layers[i]);return this.addLayers(e)}if(!t.getLatLng)return this._nonPointGroup.addLayer(t),this;if(!this._map)return this._needsClustering.push(t),this;if(this.hasLayer(t))return this;this._unspiderfy&&this._unspiderfy(),this._addLayer(t,this._maxZoom);var n=t,s=this._map.getZoom();if(t.__parent)for(;n.__parent._zoom>=s;)n=n.__parent;return this._currentShownBounds.contains(n.getLatLng())&&(this.options.animateAddingMarkers?this._animationAddLayer(t,n):this._animationAddLayerNonAnimated(t,n)),this},removeLayer:function(t){if(t instanceof L.LayerGroup){var e=[];for(var i in t._layers)e.push(t._layers[i]);return this.removeLayers(e)}return t.getLatLng?this._map?t.__parent?(this._unspiderfy&&(this._unspiderfy(),this._unspiderfyLayer(t)),this._removeLayer(t,!0),this._featureGroup.hasLayer(t)&&(this._featureGroup.removeLayer(t),t.setOpacity&&t.setOpacity(1)),this):this:(!this._arraySplice(this._needsClustering,t)&&this.hasLayer(t)&&this._needsRemoving.push(t),this):(this._nonPointGroup.removeLayer(t),this)},addLayers:function(t){var e,i,n,s=this._map,r=this._featureGroup,o=this._nonPointGroup;for(e=0,i=t.length;i>e;e++)if(n=t[e],n.getLatLng){if(!this.hasLayer(n))if(s){if(this._addLayer(n,this._maxZoom),n.__parent&&2===n.__parent.getChildCount()){var a=n.__parent.getAllChildMarkers(),h=a[0]===n?a[1]:a[0];r.removeLayer(h)}}else this._needsClustering.push(n)}else o.addLayer(n);return s&&(r.eachLayer(function(t){t instanceof L.MarkerCluster&&t._iconNeedsUpdate&&t._updateIcon()}),this._topClusterLevel._recursivelyAddChildrenToMap(null,this._zoom,this._currentShownBounds)),this},removeLayers:function(t){var e,i,n,s=this._featureGroup,r=this._nonPointGroup;if(!this._map){for(e=0,i=t.length;i>e;e++)n=t[e],this._arraySplice(this._needsClustering,n),r.removeLayer(n);return this}for(e=0,i=t.length;i>e;e++)n=t[e],n.__parent?(this._removeLayer(n,!0,!0),s.hasLayer(n)&&(s.removeLayer(n),n.setOpacity&&n.setOpacity(1))):r.removeLayer(n);return this._topClusterLevel._recursivelyAddChildrenToMap(null,this._zoom,this._currentShownBounds),s.eachLayer(function(t){t instanceof L.MarkerCluster&&t._updateIcon()}),this},clearLayers:function(){return this._map||(this._needsClustering=[],delete this._gridClusters,delete this._gridUnclustered),this._noanimationUnspiderfy&&this._noanimationUnspiderfy(),this._featureGroup.clearLayers(),this._nonPointGroup.clearLayers(),this.eachLayer(function(t){delete t.__parent}),this._map&&this._generateInitialClusters(),this},getBounds:function(){var t=new L.LatLngBounds;if(this._topClusterLevel)t.extend(this._topClusterLevel._bounds);else for(var e=this._needsClustering.length-1;e>=0;e--)t.extend(this._needsClustering[e].getLatLng());return t.extend(this._nonPointGroup.getBounds()),t},eachLayer:function(t,e){var i,n=this._needsClustering.slice();for(this._topClusterLevel&&this._topClusterLevel.getAllChildMarkers(n),i=n.length-1;i>=0;i--)t.call(e,n[i]);this._nonPointGroup.eachLayer(t,e)},getLayers:function(){var t=[];return this.eachLayer(function(e){t.push(e)}),t},getLayer:function(t){var e=null;return this.eachLayer(function(i){L.stamp(i)===t&&(e=i)}),e},hasLayer:function(t){if(!t)return!1;var e,i=this._needsClustering;for(e=i.length-1;e>=0;e--)if(i[e]===t)return!0;for(i=this._needsRemoving,e=i.length-1;e>=0;e--)if(i[e]===t)return!1;return!(!t.__parent||t.__parent._group!==this)||this._nonPointGroup.hasLayer(t)},zoomToShowLayer:function(t,e){var i=function(){if((t._icon||t.__parent._icon)&&!this._inZoomAnimation)if(this._map.off("moveend",i,this),this.off("animationend",i,this),t._icon)e();else if(t.__parent._icon){var n=function(){this.off("spiderfied",n,this),e()};this.on("spiderfied",n,this),t.__parent.spiderfy()}};t._icon&&this._map.getBounds().contains(t.getLatLng())?e():t.__parent._zoom<this._map.getZoom()?(this._map.on("moveend",i,this),this._map.panTo(t.getLatLng())):(this._map.on("moveend",i,this),this.on("animationend",i,this),this._map.setView(t.getLatLng(),t.__parent._zoom+1),t.__parent.zoomToBounds())},onAdd:function(t){this._map=t;var e,i,n;if(!isFinite(this._map.getMaxZoom()))throw"Map has no maxZoom specified";for(this._featureGroup.onAdd(t),this._nonPointGroup.onAdd(t),this._gridClusters||this._generateInitialClusters(),e=0,i=this._needsRemoving.length;i>e;e++)n=this._needsRemoving[e],this._removeLayer(n,!0);for(this._needsRemoving=[],e=0,i=this._needsClustering.length;i>e;e++)n=this._needsClustering[e],n.getLatLng?n.__parent||this._addLayer(n,this._maxZoom):this._featureGroup.addLayer(n);this._needsClustering=[],this._map.on("zoomend",this._zoomEnd,this),this._map.on("moveend",this._moveEnd,this),this._spiderfierOnAdd&&this._spiderfierOnAdd(),this._bindEvents(),this._zoom=this._map.getZoom(),this._currentShownBounds=this._getExpandedVisibleBounds(),this._topClusterLevel._recursivelyAddChildrenToMap(null,this._zoom,this._currentShownBounds)},onRemove:function(t){t.off("zoomend",this._zoomEnd,this),t.off("moveend",this._moveEnd,this),this._unbindEvents(),this._map._mapPane.className=this._map._mapPane.className.replace(" leaflet-cluster-anim",""),this._spiderfierOnRemove&&this._spiderfierOnRemove(),this._hideCoverage(),this._featureGroup.onRemove(t),this._nonPointGroup.onRemove(t),this._featureGroup.clearLayers(),this._map=null},getVisibleParent:function(t){for(var e=t;e&&!e._icon;)e=e.__parent;return e||null},_arraySplice:function(t,e){for(var i=t.length-1;i>=0;i--)if(t[i]===e)return t.splice(i,1),!0},_removeLayer:function(t,e,i){var n=this._gridClusters,s=this._gridUnclustered,r=this._featureGroup,o=this._map;if(e)for(var a=this._maxZoom;a>=0&&s[a].removeObject(t,o.project(t.getLatLng(),a));a--);var h,_=t.__parent,u=_._markers;for(this._arraySplice(u,t);_&&(_._childCount--,!(_._zoom<0));)e&&_._childCount<=1?(h=_._markers[0]===t?_._markers[1]:_._markers[0],n[_._zoom].removeObject(_,o.project(_._cLatLng,_._zoom)),s[_._zoom].addObject(h,o.project(h.getLatLng(),_._zoom)),this._arraySplice(_.__parent._childClusters,_),_.__parent._markers.push(h),h.__parent=_.__parent,_._icon&&(r.removeLayer(_),i||r.addLayer(h))):(_._recalculateBounds(),i&&_._icon||_._updateIcon()),_=_.__parent;delete t.__parent},_isOrIsParent:function(t,e){for(;e;){if(t===e)return!0;e=e.parentNode}return!1},_propagateEvent:function(t){if(t.layer instanceof L.MarkerCluster){if(t.originalEvent&&this._isOrIsParent(t.layer._icon,t.originalEvent.relatedTarget))return;t.type="cluster"+t.type}this.fire(t.type,t)},_defaultIconCreateFunction:function(t){var e=t.getChildCount(),i=" marker-cluster-";return i+=10>e?"small":100>e?"medium":"large",new L.DivIcon({html:"<div><span>"+e+"</span></div>",className:"marker-cluster"+i,iconSize:new L.Point(40,40)})},_bindEvents:function(){var t=this._map,e=this.options.spiderfyOnMaxZoom,i=this.options.showCoverageOnHover,n=this.options.zoomToBoundsOnClick;(e||n)&&this.on("clusterclick",this._zoomOrSpiderfy,this),i&&(this.on("clustermouseover",this._showCoverage,this),this.on("clustermouseout",this._hideCoverage,this),t.on("zoomend",this._hideCoverage,this))},_zoomOrSpiderfy:function(t){var e=this._map;e.getMaxZoom()===e.getZoom()?this.options.spiderfyOnMaxZoom&&t.layer.spiderfy():this.options.zoomToBoundsOnClick&&t.layer.zoomToBounds(),t.originalEvent&&13===t.originalEvent.keyCode&&e._container.focus()},_showCoverage:function(t){var e=this._map;this._inZoomAnimation||(this._shownPolygon&&e.removeLayer(this._shownPolygon),t.layer.getChildCount()>2&&t.layer!==this._spiderfied&&(this._shownPolygon=new L.Polygon(t.layer.getConvexHull(),this.options.polygonOptions),e.addLayer(this._shownPolygon)))},_hideCoverage:function(){this._shownPolygon&&(this._map.removeLayer(this._shownPolygon),this._shownPolygon=null)},_unbindEvents:function(){var t=this.options.spiderfyOnMaxZoom,e=this.options.showCoverageOnHover,i=this.options.zoomToBoundsOnClick,n=this._map;(t||i)&&this.off("clusterclick",this._zoomOrSpiderfy,this),e&&(this.off("clustermouseover",this._showCoverage,this),this.off("clustermouseout",this._hideCoverage,this),n.off("zoomend",this._hideCoverage,this))},_zoomEnd:function(){this._map&&(this._mergeSplitClusters(),this._zoom=this._map._zoom,this._currentShownBounds=this._getExpandedVisibleBounds())},_moveEnd:function(){if(!this._inZoomAnimation){var t=this._getExpandedVisibleBounds();this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds,this._zoom,t),this._topClusterLevel._recursivelyAddChildrenToMap(null,this._map._zoom,t),this._currentShownBounds=t}},_generateInitialClusters:function(){var t=this._map.getMaxZoom(),e=this.options.maxClusterRadius;this.options.disableClusteringAtZoom&&(t=this.options.disableClusteringAtZoom-1),this._maxZoom=t,this._gridClusters={},this._gridUnclustered={};for(var i=t;i>=0;i--)this._gridClusters[i]=new L.DistanceGrid(e),this._gridUnclustered[i]=new L.DistanceGrid(e);this._topClusterLevel=new L.MarkerCluster(this,-1)},_addLayer:function(t,e){var i,n,s=this._gridClusters,r=this._gridUnclustered;for(this.options.singleMarkerMode&&(t.options.icon=this.options.iconCreateFunction({getChildCount:function(){return 1},getAllChildMarkers:function(){return[t]}}));e>=0;e--){i=this._map.project(t.getLatLng(),e);var o=s[e].getNearObject(i);if(o)return o._addChild(t),t.__parent=o,void 0;if(o=r[e].getNearObject(i)){var a=o.__parent;a&&this._removeLayer(o,!1);var h=new L.MarkerCluster(this,e,o,t);s[e].addObject(h,this._map.project(h._cLatLng,e)),o.__parent=h,t.__parent=h;var _=h;for(n=e-1;n>a._zoom;n--)_=new L.MarkerCluster(this,n,_),s[n].addObject(_,this._map.project(o.getLatLng(),n));for(a._addChild(_),n=e;n>=0&&r[n].removeObject(o,this._map.project(o.getLatLng(),n));n--);return}r[e].addObject(t,i)}this._topClusterLevel._addChild(t),t.__parent=this._topClusterLevel},_enqueue:function(t){this._queue.push(t),this._queueTimeout||(this._queueTimeout=setTimeout(L.bind(this._processQueue,this),300))},_processQueue:function(){for(var t=0;t<this._queue.length;t++)this._queue[t].call(this);this._queue.length=0,clearTimeout(this._queueTimeout),this._queueTimeout=null},_mergeSplitClusters:function(){this._processQueue(),this._zoom<this._map._zoom&&this._currentShownBounds.contains(this._getExpandedVisibleBounds())?(this._animationStart(),this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds,this._zoom,this._getExpandedVisibleBounds()),this._animationZoomIn(this._zoom,this._map._zoom)):this._zoom>this._map._zoom?(this._animationStart(),this._animationZoomOut(this._zoom,this._map._zoom)):this._moveEnd()},_getExpandedVisibleBounds:function(){if(!this.options.removeOutsideVisibleBounds)return this.getBounds();var t=this._map,e=t.getBounds(),i=e._southWest,n=e._northEast,s=L.Browser.mobile?0:Math.abs(i.lat-n.lat),r=L.Browser.mobile?0:Math.abs(i.lng-n.lng);return new L.LatLngBounds(new L.LatLng(i.lat-s,i.lng-r,!0),new L.LatLng(n.lat+s,n.lng+r,!0))},_animationAddLayerNonAnimated:function(t,e){if(e===t)this._featureGroup.addLayer(t);else if(2===e._childCount){e._addToMap();var i=e.getAllChildMarkers();this._featureGroup.removeLayer(i[0]),this._featureGroup.removeLayer(i[1])}else e._updateIcon()}}),L.MarkerClusterGroup.include(L.DomUtil.TRANSITION?{_animationStart:function(){this._map._mapPane.className+=" leaflet-cluster-anim",this._inZoomAnimation++},_animationEnd:function(){this._map&&(this._map._mapPane.className=this._map._mapPane.className.replace(" leaflet-cluster-anim","")),this._inZoomAnimation--,this.fire("animationend")},_animationZoomIn:function(t,e){var i,n=this._getExpandedVisibleBounds(),s=this._featureGroup;this._topClusterLevel._recursively(n,t,0,function(r){var o,a=r._latlng,h=r._markers;for(n.contains(a)||(a=null),r._isSingleParent()&&t+1===e?(s.removeLayer(r),r._recursivelyAddChildrenToMap(null,e,n)):(r.setOpacity(0),r._recursivelyAddChildrenToMap(a,e,n)),i=h.length-1;i>=0;i--)o=h[i],n.contains(o._latlng)||s.removeLayer(o)}),this._forceLayout(),this._topClusterLevel._recursivelyBecomeVisible(n,e),s.eachLayer(function(t){t instanceof L.MarkerCluster||!t._icon||t.setOpacity(1)}),this._topClusterLevel._recursively(n,t,e,function(t){t._recursivelyRestoreChildPositions(e)}),this._enqueue(function(){this._topClusterLevel._recursively(n,t,0,function(t){s.removeLayer(t),t.setOpacity(1)}),this._animationEnd()})},_animationZoomOut:function(t,e){this._animationZoomOutSingle(this._topClusterLevel,t-1,e),this._topClusterLevel._recursivelyAddChildrenToMap(null,e,this._getExpandedVisibleBounds()),this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds,t,this._getExpandedVisibleBounds())},_animationZoomOutSingle:function(t,e,i){var n=this._getExpandedVisibleBounds();t._recursivelyAnimateChildrenInAndAddSelfToMap(n,e+1,i);var s=this;this._forceLayout(),t._recursivelyBecomeVisible(n,i),this._enqueue(function(){if(1===t._childCount){var r=t._markers[0];r.setLatLng(r.getLatLng()),r.setOpacity(1)}else t._recursively(n,i,0,function(t){t._recursivelyRemoveChildrenFromMap(n,e+1)});s._animationEnd()})},_animationAddLayer:function(t,e){var i=this,n=this._featureGroup;n.addLayer(t),e!==t&&(e._childCount>2?(e._updateIcon(),this._forceLayout(),this._animationStart(),t._setPos(this._map.latLngToLayerPoint(e.getLatLng())),t.setOpacity(0),this._enqueue(function(){n.removeLayer(t),t.setOpacity(1),i._animationEnd()})):(this._forceLayout(),i._animationStart(),i._animationZoomOutSingle(e,this._map.getMaxZoom(),this._map.getZoom())))},_forceLayout:function(){L.Util.falseFn(e.body.offsetWidth)}}:{_animationStart:function(){},_animationZoomIn:function(t,e){this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds,t),this._topClusterLevel._recursivelyAddChildrenToMap(null,e,this._getExpandedVisibleBounds())},_animationZoomOut:function(t,e){this._topClusterLevel._recursivelyRemoveChildrenFromMap(this._currentShownBounds,t),this._topClusterLevel._recursivelyAddChildrenToMap(null,e,this._getExpandedVisibleBounds())},_animationAddLayer:function(t,e){this._animationAddLayerNonAnimated(t,e)}}),L.markerClusterGroup=function(t){return new L.MarkerClusterGroup(t)},L.MarkerCluster=L.Marker.extend({initialize:function(t,e,i,n){L.Marker.prototype.initialize.call(this,i?i._cLatLng||i.getLatLng():new L.LatLng(0,0),{icon:this}),this._group=t,this._zoom=e,this._markers=[],this._childClusters=[],this._childCount=0,this._iconNeedsUpdate=!0,this._bounds=new L.LatLngBounds,i&&this._addChild(i),n&&this._addChild(n)},getAllChildMarkers:function(t){t=t||[];for(var e=this._childClusters.length-1;e>=0;e--)this._childClusters[e].getAllChildMarkers(t);for(var i=this._markers.length-1;i>=0;i--)t.push(this._markers[i]);return t},getChildCount:function(){return this._childCount},zoomToBounds:function(){for(var t,e=this._childClusters.slice(),i=this._group._map,n=i.getBoundsZoom(this._bounds),s=this._zoom+1,r=i.getZoom();e.length>0&&n>s;){s++;var o=[];for(t=0;t<e.length;t++)o=o.concat(e[t]._childClusters);e=o}n>s?this._group._map.setView(this._latlng,s):r>=n?this._group._map.setView(this._latlng,r+1):this._group._map.fitBounds(this._bounds)},getBounds:function(){var t=new L.LatLngBounds;return t.extend(this._bounds),t},_updateIcon:function(){this._iconNeedsUpdate=!0,this._icon&&this.setIcon(this)},createIcon:function(){return this._iconNeedsUpdate&&(this._iconObj=this._group.options.iconCreateFunction(this),this._iconNeedsUpdate=!1),this._iconObj.createIcon()},createShadow:function(){return this._iconObj.createShadow()},_addChild:function(t,e){this._iconNeedsUpdate=!0,this._expandBounds(t),t instanceof L.MarkerCluster?(e||(this._childClusters.push(t),t.__parent=this),this._childCount+=t._childCount):(e||this._markers.push(t),this._childCount++),this.__parent&&this.__parent._addChild(t,!0)},_expandBounds:function(t){var e,i=t._wLatLng||t._latlng;t instanceof L.MarkerCluster?(this._bounds.extend(t._bounds),e=t._childCount):(this._bounds.extend(i),e=1),this._cLatLng||(this._cLatLng=t._cLatLng||i);var n=this._childCount+e;this._wLatLng?(this._wLatLng.lat=(i.lat*e+this._wLatLng.lat*this._childCount)/n,this._wLatLng.lng=(i.lng*e+this._wLatLng.lng*this._childCount)/n):this._latlng=this._wLatLng=new L.LatLng(i.lat,i.lng)},_addToMap:function(t){t&&(this._backupLatlng=this._latlng,this.setLatLng(t)),this._group._featureGroup.addLayer(this)},_recursivelyAnimateChildrenIn:function(t,e,i){this._recursively(t,0,i-1,function(t){var i,n,s=t._markers;for(i=s.length-1;i>=0;i--)n=s[i],n._icon&&(n._setPos(e),n.setOpacity(0))},function(t){var i,n,s=t._childClusters;for(i=s.length-1;i>=0;i--)n=s[i],n._icon&&(n._setPos(e),n.setOpacity(0))})},_recursivelyAnimateChildrenInAndAddSelfToMap:function(t,e,i){this._recursively(t,i,0,function(n){n._recursivelyAnimateChildrenIn(t,n._group._map.latLngToLayerPoint(n.getLatLng()).round(),e),n._isSingleParent()&&e-1===i?(n.setOpacity(1),n._recursivelyRemoveChildrenFromMap(t,e)):n.setOpacity(0),n._addToMap()})},_recursivelyBecomeVisible:function(t,e){this._recursively(t,0,e,null,function(t){t.setOpacity(1)})},_recursivelyAddChildrenToMap:function(t,e,i){this._recursively(i,-1,e,function(n){if(e!==n._zoom)for(var s=n._markers.length-1;s>=0;s--){var r=n._markers[s];i.contains(r._latlng)&&(t&&(r._backupLatlng=r.getLatLng(),r.setLatLng(t),r.setOpacity&&r.setOpacity(0)),n._group._featureGroup.addLayer(r))}},function(e){e._addToMap(t)})},_recursivelyRestoreChildPositions:function(t){for(var e=this._markers.length-1;e>=0;e--){var i=this._markers[e];i._backupLatlng&&(i.setLatLng(i._backupLatlng),delete i._backupLatlng)}if(t-1===this._zoom)for(var n=this._childClusters.length-1;n>=0;n--)this._childClusters[n]._restorePosition();else for(var s=this._childClusters.length-1;s>=0;s--)this._childClusters[s]._recursivelyRestoreChildPositions(t)},_restorePosition:function(){this._backupLatlng&&(this.setLatLng(this._backupLatlng),delete this._backupLatlng)},_recursivelyRemoveChildrenFromMap:function(t,e,i){var n,s;this._recursively(t,-1,e-1,function(t){for(s=t._markers.length-1;s>=0;s--)n=t._markers[s],i&&i.contains(n._latlng)||(t._group._featureGroup.removeLayer(n),n.setOpacity&&n.setOpacity(1))},function(t){for(s=t._childClusters.length-1;s>=0;s--)n=t._childClusters[s],i&&i.contains(n._latlng)||(t._group._featureGroup.removeLayer(n),n.setOpacity&&n.setOpacity(1))})},_recursively:function(t,e,i,n,s){var r,o,a=this._childClusters,h=this._zoom;if(e>h)for(r=a.length-1;r>=0;r--)o=a[r],t.intersects(o._bounds)&&o._recursively(t,e,i,n,s);else if(n&&n(this),s&&this._zoom===i&&s(this),i>h)for(r=a.length-1;r>=0;r--)o=a[r],t.intersects(o._bounds)&&o._recursively(t,e,i,n,s)},_recalculateBounds:function(){var t,e=this._markers,i=this._childClusters;for(this._bounds=new L.LatLngBounds,delete this._wLatLng,t=e.length-1;t>=0;t--)this._expandBounds(e[t]);for(t=i.length-1;t>=0;t--)this._expandBounds(i[t])},_isSingleParent:function(){return this._childClusters.length>0&&this._childClusters[0]._childCount===this._childCount}}),L.DistanceGrid=function(t){this._cellSize=t,this._sqCellSize=t*t,this._grid={},this._objectPoint={}},L.DistanceGrid.prototype={addObject:function(t,e){var i=this._getCoord(e.x),n=this._getCoord(e.y),s=this._grid,r=s[n]=s[n]||{},o=r[i]=r[i]||[],a=L.Util.stamp(t);this._objectPoint[a]=e,o.push(t)},updateObject:function(t,e){this.removeObject(t),this.addObject(t,e)},removeObject:function(t,e){var i,n,s=this._getCoord(e.x),r=this._getCoord(e.y),o=this._grid,a=o[r]=o[r]||{},h=a[s]=a[s]||[];for(delete this._objectPoint[L.Util.stamp(t)],i=0,n=h.length;n>i;i++)if(h[i]===t)return h.splice(i,1),1===n&&delete a[s],!0},eachObject:function(t,e){var i,n,s,r,o,a,h,_=this._grid;for(i in _){o=_[i];for(n in o)for(a=o[n],s=0,r=a.length;r>s;s++)h=t.call(e,a[s]),h&&(s--,r--)}},getNearObject:function(t){var e,i,n,s,r,o,a,h,_=this._getCoord(t.x),u=this._getCoord(t.y),l=this._objectPoint,d=this._sqCellSize,p=null;for(e=u-1;u+1>=e;e++)if(s=this._grid[e])for(i=_-1;_+1>=i;i++)if(r=s[i])for(n=0,o=r.length;o>n;n++)a=r[n],h=this._sqDist(l[L.Util.stamp(a)],t),d>h&&(d=h,p=a);return p},_getCoord:function(t){return Math.floor(t/this._cellSize)},_sqDist:function(t,e){var i=e.x-t.x,n=e.y-t.y;return i*i+n*n}},function(){L.QuickHull={getDistant:function(t,e){var i=e[1].lat-e[0].lat,n=e[0].lng-e[1].lng;return n*(t.lat-e[0].lat)+i*(t.lng-e[0].lng)},findMostDistantPointFromBaseLine:function(t,e){var i,n,s,r=0,o=null,a=[];for(i=e.length-1;i>=0;i--)n=e[i],s=this.getDistant(n,t),s>0&&(a.push(n),s>r&&(r=s,o=n));return{maxPoint:o,newPoints:a}},buildConvexHull:function(t,e){var i=[],n=this.findMostDistantPointFromBaseLine(t,e);return n.maxPoint?(i=i.concat(this.buildConvexHull([t[0],n.maxPoint],n.newPoints)),i=i.concat(this.buildConvexHull([n.maxPoint,t[1]],n.newPoints))):[t[0]]},getConvexHull:function(t){var e,i=!1,n=!1,s=null,r=null;for(e=t.length-1;e>=0;e--){var o=t[e];(i===!1||o.lat>i)&&(s=o,i=o.lat),(n===!1||o.lat<n)&&(r=o,n=o.lat)}var a=[].concat(this.buildConvexHull([r,s],t),this.buildConvexHull([s,r],t));return a}}}(),L.MarkerCluster.include({getConvexHull:function(){var t,e,i=this.getAllChildMarkers(),n=[];for(e=i.length-1;e>=0;e--)t=i[e].getLatLng(),n.push(t);return L.QuickHull.getConvexHull(n)}}),L.MarkerCluster.include({_2PI:2*Math.PI,_circleFootSeparation:25,_circleStartAngle:Math.PI/6,_spiralFootSeparation:28,_spiralLengthStart:11,_spiralLengthFactor:5,_circleSpiralSwitchover:9,spiderfy:function(){if(this._group._spiderfied!==this&&!this._group._inZoomAnimation){var t,e=this.getAllChildMarkers(),i=this._group,n=i._map,s=n.latLngToLayerPoint(this._latlng);this._group._unspiderfy(),this._group._spiderfied=this,e.length>=this._circleSpiralSwitchover?t=this._generatePointsSpiral(e.length,s):(s.y+=10,t=this._generatePointsCircle(e.length,s)),this._animationSpiderfy(e,t)}},unspiderfy:function(t){this._group._inZoomAnimation||(this._animationUnspiderfy(t),this._group._spiderfied=null)},_generatePointsCircle:function(t,e){var i,n,s=this._group.options.spiderfyDistanceMultiplier*this._circleFootSeparation*(2+t),r=s/this._2PI,o=this._2PI/t,a=[];for(a.length=t,i=t-1;i>=0;i--)n=this._circleStartAngle+i*o,a[i]=new L.Point(e.x+r*Math.cos(n),e.y+r*Math.sin(n))._round();return a},_generatePointsSpiral:function(t,e){var i,n=this._group.options.spiderfyDistanceMultiplier*this._spiralLengthStart,s=this._group.options.spiderfyDistanceMultiplier*this._spiralFootSeparation,r=this._group.options.spiderfyDistanceMultiplier*this._spiralLengthFactor,o=0,a=[];for(a.length=t,i=t-1;i>=0;i--)o+=s/n+5e-4*i,a[i]=new L.Point(e.x+n*Math.cos(o),e.y+n*Math.sin(o))._round(),n+=this._2PI*r/o;return a},_noanimationUnspiderfy:function(){var t,e,i=this._group,n=i._map,s=i._featureGroup,r=this.getAllChildMarkers();for(this.setOpacity(1),e=r.length-1;e>=0;e--)t=r[e],s.removeLayer(t),t._preSpiderfyLatlng&&(t.setLatLng(t._preSpiderfyLatlng),delete t._preSpiderfyLatlng),t.setZIndexOffset&&t.setZIndexOffset(0),t._spiderLeg&&(n.removeLayer(t._spiderLeg),delete t._spiderLeg);i._spiderfied=null}}),L.MarkerCluster.include(L.DomUtil.TRANSITION?{SVG_ANIMATION:function(){return e.createElementNS("http://www.w3.org/2000/svg","animate").toString().indexOf("SVGAnimate")>-1}(),_animationSpiderfy:function(t,i){var n,s,r,o,a=this,h=this._group,_=h._map,u=h._featureGroup,l=_.latLngToLayerPoint(this._latlng);for(n=t.length-1;n>=0;n--)s=t[n],s.setOpacity?(s.setZIndexOffset(1e6),s.setOpacity(0),u.addLayer(s),s._setPos(l)):u.addLayer(s);h._forceLayout(),h._animationStart();var d=L.Path.SVG?0:.3,p=L.Path.SVG_NS;for(n=t.length-1;n>=0;n--)if(o=_.layerPointToLatLng(i[n]),s=t[n],s._preSpiderfyLatlng=s._latlng,s.setLatLng(o),s.setOpacity&&s.setOpacity(1),r=new L.Polyline([a._latlng,o],{weight:1.5,color:"#222",opacity:d}),_.addLayer(r),s._spiderLeg=r,L.Path.SVG&&this.SVG_ANIMATION){var c=r._path.getTotalLength();r._path.setAttribute("stroke-dasharray",c+","+c);var m=e.createElementNS(p,"animate");m.setAttribute("attributeName","stroke-dashoffset"),m.setAttribute("begin","indefinite"),m.setAttribute("from",c),m.setAttribute("to",0),m.setAttribute("dur",.25),r._path.appendChild(m),m.beginElement(),m=e.createElementNS(p,"animate"),m.setAttribute("attributeName","stroke-opacity"),m.setAttribute("attributeName","stroke-opacity"),m.setAttribute("begin","indefinite"),m.setAttribute("from",0),m.setAttribute("to",.5),m.setAttribute("dur",.25),r._path.appendChild(m),m.beginElement()}if(a.setOpacity(.3),L.Path.SVG)for(this._group._forceLayout(),n=t.length-1;n>=0;n--)s=t[n]._spiderLeg,s.options.opacity=.5,s._path.setAttribute("stroke-opacity",.5);setTimeout(function(){h._animationEnd(),h.fire("spiderfied")},200)},_animationUnspiderfy:function(t){var e,i,n,s=this._group,r=s._map,o=s._featureGroup,a=t?r._latLngToNewLayerPoint(this._latlng,t.zoom,t.center):r.latLngToLayerPoint(this._latlng),h=this.getAllChildMarkers(),_=L.Path.SVG&&this.SVG_ANIMATION;for(s._animationStart(),this.setOpacity(1),i=h.length-1;i>=0;i--)e=h[i],e._preSpiderfyLatlng&&(e.setLatLng(e._preSpiderfyLatlng),delete e._preSpiderfyLatlng,e.setOpacity?(e._setPos(a),e.setOpacity(0)):o.removeLayer(e),_&&(n=e._spiderLeg._path.childNodes[0],n.setAttribute("to",n.getAttribute("from")),n.setAttribute("from",0),n.beginElement(),n=e._spiderLeg._path.childNodes[1],n.setAttribute("from",.5),n.setAttribute("to",0),n.setAttribute("stroke-opacity",0),n.beginElement(),e._spiderLeg._path.setAttribute("stroke-opacity",0)));setTimeout(function(){var t=0;for(i=h.length-1;i>=0;i--)e=h[i],e._spiderLeg&&t++;for(i=h.length-1;i>=0;i--)e=h[i],e._spiderLeg&&(e.setOpacity&&(e.setOpacity(1),e.setZIndexOffset(0)),t>1&&o.removeLayer(e),r.removeLayer(e._spiderLeg),delete e._spiderLeg);s._animationEnd()},200)}}:{_animationSpiderfy:function(t,e){var i,n,s,r,o=this._group,a=o._map,h=o._featureGroup;for(i=t.length-1;i>=0;i--)r=a.layerPointToLatLng(e[i]),n=t[i],n._preSpiderfyLatlng=n._latlng,n.setLatLng(r),n.setZIndexOffset&&n.setZIndexOffset(1e6),h.addLayer(n),s=new L.Polyline([this._latlng,r],{weight:1.5,color:"#222"}),a.addLayer(s),n._spiderLeg=s;this.setOpacity(.3),o.fire("spiderfied")},_animationUnspiderfy:function(){this._noanimationUnspiderfy()}}),L.MarkerClusterGroup.include({_spiderfied:null,_spiderfierOnAdd:function(){this._map.on("click",this._unspiderfyWrapper,this),this._map.options.zoomAnimation&&this._map.on("zoomstart",this._unspiderfyZoomStart,this),this._map.on("zoomend",this._noanimationUnspiderfy,this),L.Path.SVG&&!L.Browser.touch&&this._map._initPathRoot()},_spiderfierOnRemove:function(){this._map.off("click",this._unspiderfyWrapper,this),this._map.off("zoomstart",this._unspiderfyZoomStart,this),this._map.off("zoomanim",this._unspiderfyZoomAnim,this),this._unspiderfy()},_unspiderfyZoomStart:function(){this._map&&this._map.on("zoomanim",this._unspiderfyZoomAnim,this)},_unspiderfyZoomAnim:function(t){L.DomUtil.hasClass(this._map._mapPane,"leaflet-touching")||(this._map.off("zoomanim",this._unspiderfyZoomAnim,this),this._unspiderfy(t))},_unspiderfyWrapper:function(){this._unspiderfy()},_unspiderfy:function(t){this._spiderfied&&this._spiderfied.unspiderfy(t)},_noanimationUnspiderfy:function(){this._spiderfied&&this._spiderfied._noanimationUnspiderfy()},_unspiderfyLayer:function(t){t._spiderLeg&&(this._featureGroup.removeLayer(t),t.setOpacity(1),t.setZIndexOffset(0),this._map.removeLayer(t._spiderLeg),delete t._spiderLeg)}})}(window,document);;/*
+ * swiper 2.4.3
+ * Mobile touch slider and framework with hardware accelerated transitions
+ *
  * http://www.idangero.us/sliders/swiper/
  *
- * Copyright 2012-2013, Vladimir Kharlampidi
+ * Copyright 2010-2014, Vladimir Kharlampidi
  * The iDangero.us
  * http://www.idangero.us/
  *
  * Licensed under GPL & MIT
  *
- * Updated on: December 6, 2013
+ * Released on: January 29, 2014
 */
-var Swiper = function (selector, params) {
-    /*=========================
-      A little bit dirty but required part for IE8 and old FF support
-      ===========================*/
-    if (document.body.__defineGetter__) {
-        if (HTMLElement) {
-            var element = HTMLElement.prototype;
-            if (element.__defineGetter__) {
-                element.__defineGetter__("outerHTML", function () { return new XMLSerializer().serializeToString(this); } );
-            }
-        }
-    }
-
-    if (!window.getComputedStyle) {
-        window.getComputedStyle = function (el, pseudo) {
-            this.el = el;
-            this.getPropertyValue = function (prop) {
-                var re = /(\-([a-z]){1})/g;
-                if (prop === 'float') prop = 'styleFloat';
-                if (re.test(prop)) {
-                    prop = prop.replace(re, function () {
-                        return arguments[2].toUpperCase();
-                    });
-                }
-                return el.currentStyle[prop] ? el.currentStyle[prop] : null;
-            }
-            return this;
-        }
-    }
-    if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function(obj, start) {
-            for (var i = (start || 0), j = this.length; i < j; i++) {
-                if (this[i] === obj) { return i; }
-            }
-            return -1;
-        }
-    }
-    if (!document.querySelectorAll) {
-        if (!window.jQuery) return;
-    }
-    function $$(selector, context) {
-        if (document.querySelectorAll)
-            return (context || document).querySelectorAll(selector);
-        else
-            return jQuery(selector, context);
-    }
-
-    /*=========================
-      Check for correct selector
-      ===========================*/
-    if(typeof selector === 'undefined') return;
-
-    if(!(selector.nodeType)){
-        if ($$(selector).length === 0) return;
-    }
-
-     /*=========================
-      _this
-      ===========================*/
-    var _this = this;
-
-     /*=========================
-      Default Flags and vars
-      ===========================*/
-    _this.touches = {
-        start:0,
-        startX:0,
-        startY:0,
-        current:0,
-        currentX:0,
-        currentY:0,
-        diff:0,
-        abs:0
-    };
-    _this.positions = {
-        start:0,
-        abs:0,
-        diff:0,
-        current:0
-    };
-    _this.times = {
-        start:0,
-        end:0
-    };
-
-    _this.id = (new Date()).getTime();
-    _this.container = (selector.nodeType) ? selector : $$(selector)[0];
-    _this.isTouched = false;
-    _this.isMoved = false;
-    _this.activeIndex = 0;
-    _this.centerIndex = 0;
-    _this.activeLoaderIndex = 0;
-    _this.activeLoopIndex = 0;
-    _this.previousIndex = null;
-    _this.velocity = 0;
-    _this.snapGrid = [];
-    _this.slidesGrid = [];
-    _this.imagesToLoad = [];
-    _this.imagesLoaded = 0;
-    _this.wrapperLeft=0;
-    _this.wrapperRight=0;
-    _this.wrapperTop=0;
-    _this.wrapperBottom=0;
-    var wrapper, slideSize, wrapperSize, direction, isScrolling, containerSize;
-
-    /*=========================
-      Default Parameters
-      ===========================*/
-    var defaults = {
-        mode : 'horizontal', // or 'vertical'
-        touchRatio : 1,
-        speed : 300,
-        freeMode : false,
-        freeModeFluid : false,
-        momentumRatio: 1,
-        momentumBounce: true,
-        momentumBounceRatio: 1,
-        slidesPerView : 1,
-        slidesPerGroup : 1,
-        simulateTouch : true,
-        followFinger : true,
-        shortSwipes : true,
-        moveStartThreshold:false,
-        onlyExternal : false,
-        createPagination : true,
-        pagination : false,
-        paginationElement: 'span',
-        paginationClickable: false,
-        paginationAsRange: true,
-        resistance : true, // or false or 100%
-        scrollContainer : false,
-        preventLinks : true,
-        noSwiping : false, // or class
-        noSwipingClass : 'swiper-no-swiping', //:)
-        initialSlide: 0,
-        keyboardControl: false,
-        mousewheelControl : false,
-        useCSS3Transforms : true,
-        // Autoplay
-        autoplay: false,
-        autoplayDisableOnInteraction: true,
-        //Loop mode
-        loop:false,
-        loopAdditionalSlides:0,
-        //Auto Height
-        calculateHeight: false,
-        cssWidthAndHeight: false,
-        //Images Preloader
-        updateOnImagesReady : true,
-        //Form elements
-        releaseFormElements : true,
-        //Watch for active slide, useful when use effects on different slide states
-        watchActiveIndex: false,
-        //Slides Visibility Fit
-        visibilityFullFit : false,
-        //Slides Offset
-        offsetPxBefore : 0,
-        offsetPxAfter : 0,
-        offsetSlidesBefore : 0,
-        offsetSlidesAfter : 0,
-        centeredSlides: false,
-        //Queue callbacks
-        queueStartCallbacks : false,
-        queueEndCallbacks : false,
-        //Auto Resize
-        autoResize : true,
-        resizeReInit : false,
-        //DOMAnimation
-        DOMAnimation : true,
-        //Slides Loader
-        loader: {
-            slides:[], //array with slides
-            slidesHTMLType:'inner', // or 'outer'
-            surroundGroups: 1, //keep preloaded slides groups around view
-            logic: 'reload', //or 'change'
-            loadAllSlides: false
-        },
-        //Namespace
-        slideElement : 'div',
-        slideClass : 'swiper-slide',
-        slideActiveClass : 'swiper-slide-active',
-        slideVisibleClass : 'swiper-slide-visible',
-        wrapperClass : 'swiper-wrapper',
-        paginationElementClass: 'swiper-pagination-switch',
-        paginationActiveClass : 'swiper-active-switch',
-        paginationVisibleClass : 'swiper-visible-switch'
-    }
-    params = params || {};
-    for (var prop in defaults) {
-        if (prop in params && typeof params[prop]==='object') {
-            for (var subProp in defaults[prop]) {
-                if (! (subProp in params[prop])) {
-                    params[prop][subProp] = defaults[prop][subProp];
-                }
-            }
-        }
-        else if (! (prop in params)) {
-            params[prop] = defaults[prop]
-        }
-    }
-    _this.params = params;
-    if (params.scrollContainer) {
-        params.freeMode = true;
-        params.freeModeFluid = true;
-    }
-    if (params.loop) {
-        params.resistance = '100%';
-    }
-    var isH = params.mode==='horizontal';
-
-    /*=========================
-      Define Touch Events
-      ===========================*/
-
-    _this.touchEvents = {
-        touchStart : _this.support.touch || !params.simulateTouch  ? 'touchstart' : (_this.browser.ie10 ? 'MSPointerDown' : 'mousedown'),
-        touchMove : _this.support.touch || !params.simulateTouch ? 'touchmove' : (_this.browser.ie10 ? 'MSPointerMove' : 'mousemove'),
-        touchEnd : _this.support.touch || !params.simulateTouch ? 'touchend' : (_this.browser.ie10 ? 'MSPointerUp' : 'mouseup')
-    };
-
-    /*=========================
-      Wrapper
-      ===========================*/
-    for (var i = _this.container.childNodes.length - 1; i >= 0; i--) {
-        if (_this.container.childNodes[i].className) {
-            var _wrapperClasses = _this.container.childNodes[i].className.split(' ')
-            for (var j = 0; j < _wrapperClasses.length; j++) {
-                if (_wrapperClasses[j]===params.wrapperClass) {
-                    wrapper = _this.container.childNodes[i];
-                }
-            };
-        }
-    };
-
-    _this.wrapper = wrapper;
-    /*=========================
-      Slide API
-      ===========================*/
-    _this._extendSwiperSlide = function  (el) {
-        el.append = function () {
-            if (params.loop) {
-                el.insertAfter(_this.slides.length-_this.loopedSlides);
-                _this.removeLoopedSlides();
-                _this.calcSlides();
-                _this.createLoop();
-            }
-            else {
-                _this.wrapper.appendChild(el);
-            }
-
-            _this.reInit();
-            return el;
-        }
-        el.prepend = function () {
-            if (params.loop) {
-                _this.wrapper.insertBefore(el, _this.slides[_this.loopedSlides]);
-                _this.removeLoopedSlides();
-                _this.calcSlides();
-                _this.createLoop();
-            }
-            else {
-                _this.wrapper.insertBefore(el, _this.wrapper.firstChild);
-            }
-            _this.reInit();
-            return el;
-        }
-        el.insertAfter = function (index) {
-            if(typeof index === 'undefined') return false;
-            var beforeSlide;
-
-            if (params.loop) {
-                beforeSlide = _this.slides[index + 1 + _this.loopedSlides];
-                _this.wrapper.insertBefore(el, beforeSlide);
-                _this.removeLoopedSlides();
-                _this.calcSlides();
-                _this.createLoop();
-            }
-            else {
-                beforeSlide = _this.slides[index + 1];
-                _this.wrapper.insertBefore(el, beforeSlide)
-            }
-            _this.reInit();
-            return el;
-        }
-        el.clone = function () {
-            return _this._extendSwiperSlide(el.cloneNode(true))
-        }
-        el.remove = function () {
-            _this.wrapper.removeChild(el);
-            _this.reInit();
-        }
-        el.html = function (html) {
-            if (typeof html === 'undefined') {
-                return el.innerHTML;
-            }
-            else {
-                el.innerHTML = html;
-                return el;
-            }
-        }
-        el.index = function () {
-            var index;
-            for (var i = _this.slides.length - 1; i >= 0; i--) {
-                if(el === _this.slides[i]) index = i;
-            }
-            return index;
-        }
-        el.isActive = function () {
-            if (el.index() === _this.activeIndex) return true;
-            else return false;
-        }
-        if (!el.swiperSlideDataStorage) el.swiperSlideDataStorage={};
-        el.getData = function (name) {
-            return el.swiperSlideDataStorage[name];
-        }
-        el.setData = function (name, value) {
-            el.swiperSlideDataStorage[name] = value;
-            return el;
-        }
-        el.data = function (name, value) {
-            if (!value) {
-                return el.getAttribute('data-'+name);
-            }
-            else {
-                el.setAttribute('data-'+name,value);
-                return el;
-            }
-        }
-        el.getWidth = function (outer) {
-            return _this.h.getWidth(el, outer);
-        }
-        el.getHeight = function (outer) {
-            return _this.h.getHeight(el, outer);
-        }
-        el.getOffset = function() {
-            return _this.h.getOffset(el);
-        }
-        return el;
-    }
-
-    //Calculate information about number of slides
-    _this.calcSlides = function (forceCalcSlides) {
-        var oldNumber = _this.slides ? _this.slides.length : false;
-        _this.slides = [];
-        _this.displaySlides = [];
-        for (var i = 0; i < _this.wrapper.childNodes.length; i++) {
-            if (_this.wrapper.childNodes[i].className) {
-                var _className = _this.wrapper.childNodes[i].className;
-                var _slideClasses = _className.split(' ');
-                for (var j = 0; j < _slideClasses.length; j++) {
-                    if(_slideClasses[j]===params.slideClass) {
-                        _this.slides.push(_this.wrapper.childNodes[i]);
-                    }
-                }
-            }
-        }
-        for (i = _this.slides.length - 1; i >= 0; i--) {
-            _this._extendSwiperSlide(_this.slides[i]);
-        }
-        if (oldNumber===false) return;
-        if(oldNumber!==_this.slides.length || forceCalcSlides) {
-            // Number of slides has been changed
-            removeSlideEvents();
-            addSlideEvents();
-            _this.updateActiveSlide();
-            if (_this.params.pagination) _this.createPagination();
-            _this.callPlugins('numberOfSlidesChanged');
-        }
-    }
-
-    //Create Slide
-    _this.createSlide = function (html, slideClassList, el) {
-        var slideClassList = slideClassList || _this.params.slideClass;
-        var el = el||params.slideElement;
-        var newSlide = document.createElement(el);
-        newSlide.innerHTML = html||'';
-        newSlide.className = slideClassList;
-        return _this._extendSwiperSlide(newSlide);
-    }
-
-    //Append Slide
-    _this.appendSlide = function (html, slideClassList, el) {
-        if (!html) return;
-        if (html.nodeType) {
-            return _this._extendSwiperSlide(html).append()
-        }
-        else {
-            return _this.createSlide(html, slideClassList, el).append()
-        }
-    }
-    _this.prependSlide = function (html, slideClassList, el) {
-        if (!html) return;
-        if (html.nodeType) {
-            return _this._extendSwiperSlide(html).prepend()
-        }
-        else {
-            return _this.createSlide(html, slideClassList, el).prepend()
-        }
-    }
-    _this.insertSlideAfter = function (index, html, slideClassList, el) {
-        if (typeof index === 'undefined') return false;
-        if (html.nodeType) {
-            return _this._extendSwiperSlide(html).insertAfter(index);
-        }
-        else {
-            return _this.createSlide(html, slideClassList, el).insertAfter(index);
-        }
-    }
-    _this.removeSlide = function (index) {
-        if (_this.slides[index]) {
-            if (params.loop) {
-                if (!_this.slides[index+_this.loopedSlides]) return false;
-                _this.slides[index+_this.loopedSlides].remove();
-                _this.removeLoopedSlides();
-                _this.calcSlides();
-                _this.createLoop();
-            }
-            else _this.slides[index].remove();
-            return true;
-        }
-        else return false;
-    }
-    _this.removeLastSlide = function () {
-        if (_this.slides.length>0) {
-            if (params.loop) {
-                _this.slides[_this.slides.length - 1 - _this.loopedSlides].remove();
-                _this.removeLoopedSlides();
-                _this.calcSlides();
-                _this.createLoop();
-            }
-            else _this.slides[ (_this.slides.length-1) ].remove();
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    _this.removeAllSlides = function () {
-        for (var i = _this.slides.length - 1; i >= 0; i--) {
-            _this.slides[i].remove()
-        }
-    }
-    _this.getSlide = function (index) {
-        return _this.slides[index]
-    }
-    _this.getLastSlide = function () {
-        return _this.slides[ _this.slides.length-1 ]
-    }
-    _this.getFirstSlide = function () {
-        return _this.slides[0]
-    }
-
-    //Currently Active Slide
-    _this.activeSlide = function () {
-        return _this.slides[_this.activeIndex]
-    }
-
-    /*=========================
-      Plugins API
-      ===========================*/
-    var _plugins = [];
-    for (var plugin in _this.plugins) {
-        if (params[plugin]) {
-            var p = _this.plugins[plugin](_this, params[plugin]);
-            if (p) _plugins.push( p );
-        }
-    }
-    _this.callPlugins = function(method, args) {
-        if (!args) args = {}
-        for (var i=0; i<_plugins.length; i++) {
-            if (method in _plugins[i]) {
-                _plugins[i][method](args);
-            }
-        }
-    }
-
-    /*=========================
-     Wrapper for Callbacks : Allows additive callbacks via function arrays
-     ===========================*/
-    _this.fireCallback = function() {
-        var callback = arguments[0];
-        if( Object.prototype.toString.call( callback ) === '[object Array]' ) {
-            for (var i = 0; i < callback.length; i++) {
-                if (typeof callback[i] === 'function') {
-                    callback[i](arguments[1], arguments[2], arguments[3], arguments[4], arguments[5])
-                }
-            }
-        } else {
-            callback(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
-        }
-    }
-    function isArray (obj) {
-        "use strict";
-        if (Object.prototype.toString.apply( obj ) === '[object Array]') return true;
-        return false;
-    }
-
-    /**
-     * Allows user to add callbacks, rather than replace them
-     * @param callback
-     * @param func
-     * @return {*}
-     */
-    _this.addCallback = function (callback, func) {
-        "use strict";
-        var _this = this, tempFunc;
-        if (_this.params['on' + callback]) {
-            if (isArray(this.params['on' + callback])) {
-                return this.params['on' + callback].push(func);
-            } else if (typeof this.params['on' + callback] === 'function') {
-                tempFunc = this.params['on' + callback];
-                this.params['on' + callback] = [];
-                this.params['on' + callback].push(tempFunc);
-                return this.params['on' + callback].push(func);
-            }
-        } else {
-            this.params['on' + callback] = [];
-            return this.params['on' + callback].push(func);
-        }
-    }
-    _this.removeCallbacks = function (callback) {
-        if (_this.params['on' + callback]) {
-            return _this.params['on' + callback] = null;
-        }
-    }
-
-    /*=========================
-      WP8 Fix
-      ===========================*/
-    if (_this.browser.ie10 && !params.onlyExternal) {
-        _this.wrapper.classList.add('swiper-wp8-' + (isH ? 'horizontal' : 'vertical'));
-    }
-
-    /*=========================
-      Free Mode Class
-      ===========================*/
-    if (params.freeMode) {
-        _this.container.className+=' swiper-free-mode';
-    }
-
-    /*==================================================
-        Init/Re-init/Resize Fix
-    ====================================================*/
-    _this.initialized = false;
-    _this.init = function(force, forceCalcSlides) {
-        var _width = _this.h.getWidth(_this.container);
-        var _height = _this.h.getHeight(_this.container);
-        if (_width===_this.width && _height===_this.height && !force) return;
-        _this.width = _width;
-        _this.height = _height;
-
-        containerSize = isH ? _width : _height;
-        var wrapper = _this.wrapper;
-
-        if (force) {
-            _this.calcSlides(forceCalcSlides);
-        }
-
-        if (params.slidesPerView==='auto') {
-            //Auto mode
-            var slidesWidth = 0;
-            var slidesHeight = 0;
-
-            //Unset Styles
-            if (params.slidesOffset>0) {
-                wrapper.style.paddingLeft = '';
-                wrapper.style.paddingRight = '';
-                wrapper.style.paddingTop = '';
-                wrapper.style.paddingBottom = '';
-            }
-            wrapper.style.width = '';
-            wrapper.style.height = '';
-            if (params.offsetPxBefore>0) {
-                if (isH) _this.wrapperLeft = params.offsetPxBefore;
-                else _this.wrapperTop = params.offsetPxBefore;
-            }
-            if (params.offsetPxAfter>0) {
-                if (isH) _this.wrapperRight = params.offsetPxAfter;
-                else _this.wrapperBottom = params.offsetPxAfter;
-            }
-
-            if (params.centeredSlides) {
-                if (isH) {
-                    _this.wrapperLeft = (containerSize - this.slides[0].getWidth(true) )/2;
-                    _this.wrapperRight = (containerSize - _this.slides[ _this.slides.length-1 ].getWidth(true))/2;
-                }
-                else {
-                    _this.wrapperTop = (containerSize - _this.slides[0].getHeight(true))/2;
-                    _this.wrapperBottom = (containerSize - _this.slides[ _this.slides.length-1 ].getHeight(true))/2;
-                }
-            }
-
-            if (isH) {
-                if (_this.wrapperLeft>=0) wrapper.style.paddingLeft = _this.wrapperLeft+'px';
-                if (_this.wrapperRight>=0) wrapper.style.paddingRight = _this.wrapperRight+'px';
-            }
-            else {
-                if (_this.wrapperTop>=0) wrapper.style.paddingTop = _this.wrapperTop+'px';
-                if (_this.wrapperBottom>=0) wrapper.style.paddingBottom = _this.wrapperBottom+'px';
-            }
-            var slideLeft = 0;
-            var centeredSlideLeft=0;
-            _this.snapGrid = [];
-            _this.slidesGrid = [];
-
-            var slideMaxHeight = 0;
-            for(var i = 0; i<_this.slides.length; i++) {
-                var slideWidth = _this.slides[i].getWidth(true);
-                var slideHeight = _this.slides[i].getHeight(true);
-                if (params.calculateHeight) {
-                    slideMaxHeight = Math.max(slideMaxHeight, slideHeight)
-                }
-                var _slideSize = isH ? slideWidth : slideHeight;
-                if (params.centeredSlides) {
-                    var nextSlideWidth = i === _this.slides.length-1 ? 0 : _this.slides[i+1].getWidth(true);
-                    var nextSlideHeight = i === _this.slides.length-1 ? 0 : _this.slides[i+1].getHeight(true);
-                    var nextSlideSize = isH ? nextSlideWidth : nextSlideHeight;
-                    if (_slideSize>containerSize) {
-                        for (var j=0; j<=Math.floor(_slideSize/(containerSize+_this.wrapperLeft)); j++) {
-                            if (j === 0) _this.snapGrid.push(slideLeft+_this.wrapperLeft);
-                            else _this.snapGrid.push(slideLeft+_this.wrapperLeft+containerSize*j);
-                        }
-                        _this.slidesGrid.push(slideLeft+_this.wrapperLeft);
-                    }
-                    else {
-                        _this.snapGrid.push(centeredSlideLeft);
-                        _this.slidesGrid.push(centeredSlideLeft);
-                    }
-
-                    centeredSlideLeft += _slideSize/2 + nextSlideSize/2;
-
-                }
-                else {
-                    if (_slideSize>containerSize) {
-                        for (var j=0; j<=Math.floor(_slideSize/containerSize); j++) {
-                            _this.snapGrid.push(slideLeft+containerSize*j);
-                        }
-                    }
-                    else {
-                        _this.snapGrid.push(slideLeft);
-                    }
-                    _this.slidesGrid.push(slideLeft);
-                }
-
-                slideLeft += _slideSize;
-
-                slidesWidth += slideWidth;
-                slidesHeight += slideHeight;
-            }
-            if (params.calculateHeight) _this.height = slideMaxHeight;
-            if(isH) {
-                wrapperSize = slidesWidth + _this.wrapperRight + _this.wrapperLeft;
-                wrapper.style.width = (slidesWidth)+'px';
-                wrapper.style.height = (_this.height)+'px';
-            }
-            else {
-                wrapperSize = slidesHeight + _this.wrapperTop + _this.wrapperBottom;
-                wrapper.style.width = (_this.width)+'px';
-                wrapper.style.height = (slidesHeight)+'px';
-            }
-
-        }
-        else if (params.scrollContainer) {
-            //Scroll Container
-            wrapper.style.width = '';
-            wrapper.style.height = '';
-            var wrapperWidth = _this.slides[0].getWidth(true);
-            var wrapperHeight = _this.slides[0].getHeight(true);
-            wrapperSize = isH ? wrapperWidth : wrapperHeight;
-            wrapper.style.width = wrapperWidth+'px';
-            wrapper.style.height = wrapperHeight+'px';
-            slideSize = isH ? wrapperWidth : wrapperHeight;
-
-        }
-        else {
-            //For usual slides
-            if (params.calculateHeight) {
-                var slideMaxHeight = 0;
-                var wrapperHeight = 0;
-                //ResetWrapperSize
-                if (!isH) _this.container.style.height= '';
-                wrapper.style.height='';
-
-                for (var i=0; i<_this.slides.length; i++) {
-                    //ResetSlideSize
-                    _this.slides[i].style.height='';
-                    slideMaxHeight = Math.max( _this.slides[i].getHeight(true), slideMaxHeight );
-                    if (!isH) wrapperHeight+=_this.slides[i].getHeight(true);
-                }
-                var slideHeight = slideMaxHeight;
-                _this.height = slideHeight;
-
-                if (isH) wrapperHeight = slideHeight;
-                else containerSize = slideHeight, _this.container.style.height= containerSize+'px';
-            }
-            else {
-                var slideHeight = isH ? _this.height : _this.height/params.slidesPerView;
-                var wrapperHeight = isH ? _this.height : _this.slides.length*slideHeight;
-            }
-            var slideWidth = isH ? _this.width/params.slidesPerView : _this.width;
-            var wrapperWidth = isH ? _this.slides.length*slideWidth : _this.width;
-            slideSize = isH ? slideWidth : slideHeight;
-
-            if (params.offsetSlidesBefore>0) {
-                if (isH) _this.wrapperLeft = slideSize*params.offsetSlidesBefore;
-                else _this.wrapperTop = slideSize*params.offsetSlidesBefore;
-            }
-            if (params.offsetSlidesAfter>0) {
-                if (isH) _this.wrapperRight = slideSize*params.offsetSlidesAfter;
-                else _this.wrapperBottom = slideSize*params.offsetSlidesAfter;
-            }
-            if (params.offsetPxBefore>0) {
-                if (isH) _this.wrapperLeft = params.offsetPxBefore;
-                else _this.wrapperTop = params.offsetPxBefore;
-            }
-            if (params.offsetPxAfter>0) {
-                if (isH) _this.wrapperRight = params.offsetPxAfter;
-                else _this.wrapperBottom = params.offsetPxAfter;
-            }
-            if (params.centeredSlides) {
-                if (isH) {
-                    _this.wrapperLeft = (containerSize - slideSize)/2;
-                    _this.wrapperRight = (containerSize - slideSize)/2;
-                }
-                else {
-                    _this.wrapperTop = (containerSize - slideSize)/2;
-                    _this.wrapperBottom = (containerSize - slideSize)/2;
-                }
-            }
-            if (isH) {
-                if (_this.wrapperLeft>0) wrapper.style.paddingLeft = _this.wrapperLeft+'px';
-                if (_this.wrapperRight>0) wrapper.style.paddingRight = _this.wrapperRight+'px';
-            }
-            else {
-                if (_this.wrapperTop>0) wrapper.style.paddingTop = _this.wrapperTop+'px';
-                if (_this.wrapperBottom>0) wrapper.style.paddingBottom = _this.wrapperBottom+'px';
-            }
-
-            wrapperSize = isH ? wrapperWidth + _this.wrapperRight + _this.wrapperLeft : wrapperHeight + _this.wrapperTop + _this.wrapperBottom;
-            if (!params.cssWidthAndHeight) {
-                if (parseFloat(wrapperWidth) > 0) {
-                    wrapper.style.width = wrapperWidth+'px';
-                }
-                if (parseFloat(wrapperHeight) > 0) {
-                    wrapper.style.height = wrapperHeight+'px';
-                }
-            }
-            var slideLeft = 0;
-            _this.snapGrid = [];
-            _this.slidesGrid = [];
-            for (var i=0; i<_this.slides.length; i++) {
-                _this.snapGrid.push(slideLeft);
-                _this.slidesGrid.push(slideLeft);
-                slideLeft+=slideSize;
-                if (!params.cssWidthAndHeight) {
-                    if (parseFloat(slideWidth) > 0) {
-                        _this.slides[i].style.width = slideWidth+'px';
-                    }
-                    if (parseFloat(slideHeight) > 0) {
-                        _this.slides[i].style.height = slideHeight+'px';
-                    }
-                }
-            }
-
-        }
-
-        if (!_this.initialized) {
-            _this.callPlugins('onFirstInit');
-            if (params.onFirstInit) _this.fireCallback(params.onFirstInit,_this);
-        }
-        else {
-            _this.callPlugins('onInit');
-            if (params.onInit) _this.fireCallback(params.onInit,_this);
-        }
-        _this.initialized = true;
-    }
-    
-    _this.reInit = function (forceCalcSlides) {
-        _this.init(true, forceCalcSlides);
-    }
-    
-    _this.resizeFix = function (reInit) {
-        _this.callPlugins('beforeResizeFix');
-        
-        _this.init(params.resizeReInit || reInit);
-        
-        // swipe to active slide in fixed mode
-        if (!params.freeMode) {
-            _this.swipeTo((params.loop ? _this.activeLoopIndex : _this.activeIndex), 0, false);
-        }
-        
-        // move wrapper to the beginning in free mode
-        else if (_this.getWrapperTranslate() < -maxWrapperPosition()) {
-            _this.setWrapperTransition(0);
-            _this.setWrapperTranslate(-maxWrapperPosition());
-        }
-        
-        _this.callPlugins('afterResizeFix');
-    }
-
-    /*==========================================
-        Max and Min Positions
-    ============================================*/
-    function maxWrapperPosition() {
-        var a = (wrapperSize - containerSize);
-        if (params.freeMode) {
-            a = wrapperSize - containerSize;
-        }
-        // if (params.loop) a -= containerSize;
-        if (params.slidesPerView > _this.slides.length) a = 0;
-        if (a<0) a = 0;
-        return a;
-    }
-    function minWrapperPosition() {
-        var a = 0;
-        // if (params.loop) a = containerSize;
-        return a;
-    }
-
-    /*==========================================
-        Event Listeners
-    ============================================*/
-    function initEvents() {
-        var bind = _this.h.addEventListener;
-        
-        //Touch Events
-        if (!_this.browser.ie10) {
-            if (_this.support.touch) {
-                bind(_this.wrapper, 'touchstart', onTouchStart);
-                bind(_this.wrapper, 'touchmove', onTouchMove);
-                bind(_this.wrapper, 'touchend', onTouchEnd);
-            }
-            if (params.simulateTouch) {
-                bind(_this.wrapper, 'mousedown', onTouchStart);
-                bind(document, 'mousemove', onTouchMove);
-                bind(document, 'mouseup', onTouchEnd);
-            }
-        }
-        else {
-            bind(_this.wrapper, _this.touchEvents.touchStart, onTouchStart);
-            bind(document, _this.touchEvents.touchMove, onTouchMove);
-            bind(document, _this.touchEvents.touchEnd, onTouchEnd);
-        }
-
-        //Resize Event
-        if (params.autoResize) {
-            bind(window, 'resize', _this.resizeFix);
-        }
-        //Slide Events
-        addSlideEvents();
-        //Mousewheel
-        _this._wheelEvent = false;
-        if (params.mousewheelControl) {
-            if ( document.onmousewheel !== undefined ) {
-                _this._wheelEvent = "mousewheel";
-            }
-            try {
-                WheelEvent("wheel");
-                _this._wheelEvent = "wheel";
-            } catch (e) {}
-            if ( !_this._wheelEvent ) {
-                _this._wheelEvent = "DOMMouseScroll";
-            }
-
-            if (_this._wheelEvent) {
-                bind(_this.container, _this._wheelEvent, handleMousewheel);
-            }
-        }
-
-        //Keyboard
-        if (params.keyboardControl) {
-            bind(document, 'keydown', handleKeyboardKeys);
-        }
-        if (params.updateOnImagesReady) {
-            _this.imagesToLoad = $$('img', _this.container);
-
-            for (var i=0; i<_this.imagesToLoad.length; i++) {
-                _loadImage(_this.imagesToLoad[i].getAttribute('src'))
-            }
-        }
-        function _loadImage(src) {
-            var image = new Image();
-            image.onload = function(){
-                _this.imagesLoaded++;
-                if (_this.imagesLoaded==_this.imagesToLoad.length) {
-                    _this.reInit();
-                    if (params.onImagesReady) _this.fireCallback(params.onImagesReady, _this);
-                }
-            }
-            image.src = src;
-        }
-    }
-
-    //Remove Event Listeners
-    _this.destroy = function(removeResizeFix){
-        var unbind = _this.h.removeEventListener;
-        
-        //Touch Events
-        if (!_this.browser.ie10) {
-            if (_this.support.touch) {
-                unbind(_this.wrapper, 'touchstart', onTouchStart);
-                unbind(_this.wrapper, 'touchmove', onTouchMove);
-                unbind(_this.wrapper, 'touchend', onTouchEnd);
-            }
-            if (params.simulateTouch) {
-                unbind(_this.wrapper, 'mousedown', onTouchStart);
-                unbind(document, 'mousemove', onTouchMove);
-                unbind(document, 'mouseup', onTouchEnd);
-            }
-        }
-        else {
-            unbind(_this.wrapper, _this.touchEvents.touchStart, onTouchStart);
-            unbind(document, _this.touchEvents.touchMove, onTouchMove);
-            unbind(document, _this.touchEvents.touchEnd, onTouchEnd);
-        }
-
-        //Resize Event
-        if (params.autoResize) {
-            unbind(window, 'resize', _this.resizeFix);
-        }
-        
-        //Init Slide Events
-        removeSlideEvents();
-
-        //Pagination
-        if (params.paginationClickable) {
-            removePaginationEvents();
-        }
-
-        //Mousewheel
-        if (params.mousewheelControl && _this._wheelEvent) {
-           unbind(_this.container, _this._wheelEvent, handleMousewheel);
-        }
-
-        //Keyboard
-        if (params.keyboardControl) {
-            unbind(document, 'keydown', handleKeyboardKeys);
-        }
-
-        //Stop autoplay
-        if (params.autoplay) {
-            _this.stopAutoplay();
-        }
-        _this.callPlugins('onDestroy');
-
-        //Destroy variable
-        _this = null;
-    }
-    function addSlideEvents() {
-        var bind = _this.h.addEventListener,
-            i;
-
-        //Prevent Links Events
-        if (params.preventLinks) {
-            var links = $$('a', _this.container);
-            for (i=0; i<links.length; i++) {
-                bind(links[i], 'click', preventClick);
-            }
-        }
-        //Release Form Elements
-        if (params.releaseFormElements) {
-            var formElements = $$('input, textarea, select', _this.container);
-            for (i=0; i<formElements.length; i++) {
-                bind(formElements[i], _this.touchEvents.touchStart, releaseForms, true);
-            }
-        }
-
-        //Slide Clicks & Touches
-        if (params.onSlideClick) {
-            for (i=0; i<_this.slides.length; i++) {
-                bind(_this.slides[i], 'click', slideClick);
-            }
-        }
-        if (params.onSlideTouch) {
-            for (i=0; i<_this.slides.length; i++) {
-                bind(_this.slides[i], _this.touchEvents.touchStart, slideTouch);
-            }
-        }
-    }
-    function removeSlideEvents() {
-        var unbind = _this.h.removeEventListener,
-            i;
-
-        //Slide Clicks & Touches
-        if (params.onSlideClick) {
-            for (i=0; i<_this.slides.length; i++) {
-                unbind(_this.slides[i], 'click', slideClick);
-            }
-        }
-        if (params.onSlideTouch) {
-            for (i=0; i<_this.slides.length; i++) {
-                unbind(_this.slides[i], _this.touchEvents.touchStart, slideTouch);
-            }
-        }
-        //Release Form Elements
-        if (params.releaseFormElements) {
-            var formElements = $$('input, textarea, select', _this.container);
-            for (i=0; i<formElements.length; i++) {
-                unbind(formElements[i], _this.touchEvents.touchStart, releaseForms, true);
-            }
-        }
-        //Prevent Links Events
-        if (params.preventLinks) {
-            var links = $$('a', _this.container);
-            for (i=0; i<links.length; i++) {
-                unbind(links[i], 'click', preventClick);
-            }
-        }
-    }
-    /*==========================================
-        Keyboard Control
-    ============================================*/
-    function handleKeyboardKeys (e) {
-        var kc = e.keyCode || e.charCode;
-        if (kc==37 || kc==39 || kc==38 || kc==40) {
-            var inView = false;
-            //Check that swiper should be inside of visible area of window
-            var swiperOffset = _this.h.getOffset( _this.container );
-            var scrollLeft = _this.h.windowScroll().left;
-            var scrollTop = _this.h.windowScroll().top;
-            var windowWidth = _this.h.windowWidth();
-            var windowHeight = _this.h.windowHeight();
-            var swiperCoord = [
-                [swiperOffset.left, swiperOffset.top],
-                [swiperOffset.left + _this.width, swiperOffset.top],
-                [swiperOffset.left, swiperOffset.top + _this.height],
-                [swiperOffset.left + _this.width, swiperOffset.top + _this.height]
-            ]
-            for (var i=0; i<swiperCoord.length; i++) {
-                var point = swiperCoord[i];
-                if (
-                    point[0]>=scrollLeft && point[0]<=scrollLeft+windowWidth &&
-                    point[1]>=scrollTop && point[1]<=scrollTop+windowHeight
-                ) {
-                    inView = true;
-                }
-
-            }
-            if (!inView) return;
-        }
-        if (isH) {
-            if (kc==37 || kc==39) {
-                if (e.preventDefault) e.preventDefault();
-                else e.returnValue = false;
-            }
-            if (kc == 39) _this.swipeNext();
-            if (kc == 37) _this.swipePrev();
-        }
-        else {
-            if (kc==38 || kc==40) {
-                if (e.preventDefault) e.preventDefault();
-                else e.returnValue = false;
-            }
-            if (kc == 40) _this.swipeNext();
-            if (kc == 38) _this.swipePrev();
-        }
-    }
-
-    /*==========================================
-        Mousewheel Control
-    ============================================*/
-    var lastScrollTime = (new Date()).getTime();
-    function handleMousewheel (e) {
-        var we = _this._wheelEvent;
-        var delta = 0;
-        
-        //Opera & IE
-        if (e.detail) delta = -e.detail;
-        //WebKits
-        else if (we == 'mousewheel') {
-            if (isH) {
-                if (Math.abs(e.wheelDeltaX)>Math.abs(e.wheelDeltaY)) delta = e.wheelDeltaX;
-                else return;
-            }
-            else {
-                if (Math.abs(e.wheelDeltaY)>Math.abs(e.wheelDeltaX)) delta = e.wheelDeltaY;
-                else return;
-            }
-        }
-        //Old FireFox
-        else if (we == 'DOMMouseScroll') delta = -e.detail;
-        //New FireFox
-        else if (we == 'wheel') {
-            if (isH) {
-                if (Math.abs(e.deltaX)>Math.abs(e.deltaY)) delta = -e.deltaX;
-                else return;
-            }
-            else {
-                if (Math.abs(e.deltaY)>Math.abs(e.deltaX)) delta = -e.deltaY;
-                else return;
-            }
-        }
-
-        if (!params.freeMode) {
-            if ((new Date()).getTime() - lastScrollTime > 60) {
-                if(delta<0) _this.swipeNext();
-                else _this.swipePrev();
-            }
-            lastScrollTime = (new Date()).getTime();    
-            
-        }
-        else {
-            //Freemode or scrollContainer:
-            var position = _this.getWrapperTranslate() + delta;
-            
-            if (position > 0) position = 0;
-            if (position < -maxWrapperPosition()) position = -maxWrapperPosition();
-            
-            _this.setWrapperTransition(0);
-            _this.setWrapperTranslate(position);
-            _this.updateActiveSlide(position);
-
-            // Return page scroll on edge positions
-            if (position == 0 || position == -maxWrapperPosition()) return;
-        }
-        if (params.autoplay) _this.stopAutoplay(true);
-
-        if(e.preventDefault) e.preventDefault();
-        else e.returnValue = false;
-        return false;
-    }
-
-    /*=========================
-      Grab Cursor
-      ===========================*/
-    if (params.grabCursor) {
-        var containerStyle = _this.container.style;
-        containerStyle.cursor = 'move';
-        containerStyle.cursor = 'grab';
-        containerStyle.cursor = '-moz-grab';
-        containerStyle.cursor = '-webkit-grab';
-    }
-
-    /*=========================
-      Slides Events Handlers
-      ===========================*/
-    
-    _this.allowSlideClick = true;
-    function slideClick(event) {
-        if (_this.allowSlideClick) {
-            setClickedSlide(event);
-            _this.fireCallback(params.onSlideClick, _this, event);
-        }
-    }
-    
-    function slideTouch(event) {
-        setClickedSlide(event);
-        _this.fireCallback(params.onSlideTouch, _this, event);
-    }
-    
-    function setClickedSlide(event) {
-        
-        // IE 6-8 support
-        if (!event.currentTarget) {
-            var element = event.srcElement;
-            do {
-                if (element.className.indexOf(params.slideClass) > -1) {
-                    break;
-                }
-            }
-            while (element = element.parentNode);
-            _this.clickedSlide = element;
-        }
-        else {
-            _this.clickedSlide = event.currentTarget;
-        }
-        
-        _this.clickedSlideIndex     = _this.slides.indexOf(_this.clickedSlide);
-        _this.clickedSlideLoopIndex = _this.clickedSlideIndex - (_this.loopedSlides || 0);
-    }
-    
-    _this.allowLinks = true;
-    function preventClick(e) {
-        if (!_this.allowLinks) {
-            if(e.preventDefault) e.preventDefault();
-            else e.returnValue = false;
-            return false;
-        }
-    }
-    function releaseForms(e) {
-        if (e.stopPropagation) e.stopPropagation();
-        else e.returnValue = false;
-        return false;
-        
-    }
-
-    /*==================================================
-        Event Handlers
-    ====================================================*/
-    var isTouchEvent = false;
-    var allowThresholdMove;
-    var allowMomentumBounce = true;
-    function onTouchStart(event) {
-        if (params.preventLinks) _this.allowLinks = true;
-        //Exit if slider is already was touched
-        if (_this.isTouched || params.onlyExternal) {
-            return false;
-        }
-
-        if (params.noSwiping && (event.target || event.srcElement) && noSwipingSlide(event.target || event.srcElement)) return false;
-        allowMomentumBounce = false;
-
-        //Check For Nested Swipers
-        _this.isTouched = true;
-        isTouchEvent = event.type=='touchstart';
-
-        if (!isTouchEvent || event.targetTouches.length == 1 ) {
-            _this.callPlugins('onTouchStartBegin');
-
-            if(!isTouchEvent) {
-                if(event.preventDefault) event.preventDefault();
-                else event.returnValue = false;
-            }
-            
-            var pageX = isTouchEvent ? event.targetTouches[0].pageX : (event.pageX || event.clientX);
-            var pageY = isTouchEvent ? event.targetTouches[0].pageY : (event.pageY || event.clientY);
-
-            //Start Touches to check the scrolling
-            _this.touches.startX = _this.touches.currentX = pageX;
-            _this.touches.startY = _this.touches.currentY = pageY;
-
-            _this.touches.start = _this.touches.current = isH ? pageX : pageY;
-
-            //Set Transition Time to 0
-            _this.setWrapperTransition(0);
-
-            //Get Start Translate Position
-            _this.positions.start = _this.positions.current = _this.getWrapperTranslate();
-
-            //Set Transform
-            _this.setWrapperTranslate(_this.positions.start);
-
-            //TouchStartTime
-            _this.times.start = (new Date()).getTime();
-
-            //Unset Scrolling
-            isScrolling = undefined;
-
-            //Set Treshold
-            if (params.moveStartThreshold>0) allowThresholdMove = false;
-
-            //CallBack
-            if (params.onTouchStart) _this.fireCallback(params.onTouchStart, _this);
-            _this.callPlugins('onTouchStartEnd');
-
-        }
-    }
-    var velocityPrevPosition, velocityPrevTime;
-    function onTouchMove(event) {
-        // If slider is not touched - exit
-        if (!_this.isTouched || params.onlyExternal) return;
-        if (isTouchEvent && event.type=='mousemove') return;
-
-        var pageX = isTouchEvent ? event.targetTouches[0].pageX : (event.pageX || event.clientX);
-        var pageY = isTouchEvent ? event.targetTouches[0].pageY : (event.pageY || event.clientY);
-
-        //check for scrolling
-        if ( typeof isScrolling === 'undefined' && isH) {
-          isScrolling = !!( isScrolling || Math.abs(pageY - _this.touches.startY) > Math.abs( pageX - _this.touches.startX ) );
-        }
-        if ( typeof isScrolling === 'undefined' && !isH) {
-          isScrolling = !!( isScrolling || Math.abs(pageY - _this.touches.startY) < Math.abs( pageX - _this.touches.startX ) );
-        }
-        if (isScrolling ) {
-            _this.isTouched = false;
-            return;
-        }
-
-        //Check For Nested Swipers
-        if (event.assignedToSwiper) {
-            _this.isTouched = false;
-            return;
-        }
-        event.assignedToSwiper = true;
-
-        //Block inner links
-        if (params.preventLinks) {
-            _this.allowLinks = false;
-        }
-        if (params.onSlideClick) {
-            _this.allowSlideClick = false;
-        }
-
-        //Stop AutoPlay if exist
-        if (params.autoplay) {
-            _this.stopAutoplay(true);
-        }
-        if (!isTouchEvent || event.touches.length == 1) {
-
-            //Moved Flag
-            if (!_this.isMoved) {
-                _this.callPlugins('onTouchMoveStart');
-                
-                if (params.loop) {
-                    _this.fixLoop();
-                    _this.positions.start = _this.getWrapperTranslate();
-                }
-                if (params.onTouchMoveStart) _this.fireCallback(params.onTouchMoveStart, _this);
-            }
-            _this.isMoved = true;
-            
-            // cancel event
-            if(event.preventDefault) event.preventDefault();
-            else event.returnValue = false;
-
-            _this.touches.current = isH ? pageX : pageY ;
-
-            _this.positions.current = (_this.touches.current - _this.touches.start) * params.touchRatio + _this.positions.start;
-
-            //Resistance Callbacks
-            if(_this.positions.current > 0 && params.onResistanceBefore) {
-                _this.fireCallback(params.onResistanceBefore, _this, _this.positions.current);
-            }
-            if(_this.positions.current < -maxWrapperPosition() && params.onResistanceAfter) {
-                _this.fireCallback(params.onResistanceAfter, _this, Math.abs(_this.positions.current + maxWrapperPosition()));
-            }
-            //Resistance
-            if (params.resistance && params.resistance!='100%') {
-                //Resistance for Negative-Back sliding
-                if(_this.positions.current > 0) {
-                    var resistance = 1 - _this.positions.current/containerSize/2;
-                    if (resistance < 0.5)
-                        _this.positions.current = (containerSize/2);
-                    else
-                        _this.positions.current = _this.positions.current * resistance;
-                }
-                //Resistance for After-End Sliding
-                if ( _this.positions.current < -maxWrapperPosition() ) {
-
-                    var diff = (_this.touches.current - _this.touches.start)*params.touchRatio + (maxWrapperPosition()+_this.positions.start);
-                    var resistance = (containerSize+diff)/(containerSize);
-                    var newPos = _this.positions.current-diff*(1-resistance)/2;
-                    var stopPos = -maxWrapperPosition() - containerSize/2;
-
-                    if (newPos < stopPos || resistance<=0)
-                        _this.positions.current = stopPos;
-                    else
-                        _this.positions.current = newPos;
-                }
-            }
-            if (params.resistance && params.resistance=='100%') {
-                //Resistance for Negative-Back sliding
-                if(_this.positions.current > 0 && !(params.freeMode&&!params.freeModeFluid)) {
-                    _this.positions.current = 0;
-                }
-                //Resistance for After-End Sliding
-                if ( (_this.positions.current) < -maxWrapperPosition() && !(params.freeMode&&!params.freeModeFluid)) {
-                    _this.positions.current = -maxWrapperPosition();
-                }
-            }
-            //Move Slides
-            if (!params.followFinger) return;
-
-            if (!params.moveStartThreshold) {
-                _this.setWrapperTranslate(_this.positions.current);
-            }
-            else {
-                if ( Math.abs(_this.touches.current - _this.touches.start)>params.moveStartThreshold || allowThresholdMove) {
-                    allowThresholdMove = true;
-                    _this.setWrapperTranslate(_this.positions.current);
-                }
-                else {
-                    _this.positions.current = _this.positions.start;
-                }
-            }
-
-            if (params.freeMode || params.watchActiveIndex) {
-                _this.updateActiveSlide(_this.positions.current);
-            }
-
-            //Grab Cursor
-            if (params.grabCursor) {
-                _this.container.style.cursor = 'move';
-                _this.container.style.cursor = 'grabbing';
-                _this.container.style.cursor = '-moz-grabbin';
-                _this.container.style.cursor = '-webkit-grabbing';
-            }
-            //Velocity
-            if (!velocityPrevPosition) velocityPrevPosition = _this.touches.current;
-            if (!velocityPrevTime) velocityPrevTime = (new Date).getTime();
-            _this.velocity = (_this.touches.current - velocityPrevPosition)/((new Date).getTime() - velocityPrevTime)/2;
-            if (Math.abs(_this.touches.current - velocityPrevPosition)<2) _this.velocity=0;
-            velocityPrevPosition = _this.touches.current;
-            velocityPrevTime = (new Date).getTime();
-            //Callbacks
-            _this.callPlugins('onTouchMoveEnd');
-            if (params.onTouchMove) _this.fireCallback(params.onTouchMove, _this);
-
-            return false;
-        }
-    }
-    function onTouchEnd(event) {
-        //Check For scrolling
-        if (isScrolling) {
-            _this.swipeReset();
-        }
-        // If slider is not touched exit
-        if ( params.onlyExternal || !_this.isTouched ) return;
-        _this.isTouched = false
-
-        //Return Grab Cursor
-        if (params.grabCursor) {
-            _this.container.style.cursor = 'move';
-            _this.container.style.cursor = 'grab';
-            _this.container.style.cursor = '-moz-grab';
-            _this.container.style.cursor = '-webkit-grab';
-        }
-
-        //Check for Current Position
-        if (!_this.positions.current && _this.positions.current!==0) {
-            _this.positions.current = _this.positions.start
-        }
-
-        //For case if slider touched but not moved
-        if (params.followFinger) {
-            _this.setWrapperTranslate(_this.positions.current);
-        }
-
-        // TouchEndTime
-        _this.times.end = (new Date()).getTime();
-
-        //Difference
-        _this.touches.diff = _this.touches.current - _this.touches.start
-        _this.touches.abs = Math.abs(_this.touches.diff)
-
-        _this.positions.diff = _this.positions.current - _this.positions.start
-        _this.positions.abs = Math.abs(_this.positions.diff)
-
-        var diff = _this.positions.diff ;
-        var diffAbs =_this.positions.abs ;
-        var timeDiff = _this.times.end - _this.times.start
-
-        if(diffAbs < 5 && (timeDiff) < 300 && _this.allowLinks == false) {
-            if (!params.freeMode && diffAbs!=0) _this.swipeReset()
-            //Release inner links
-            if (params.preventLinks) {
-                _this.allowLinks = true;
-            }
-            if (params.onSlideClick) {
-                _this.allowSlideClick = true;
-            }
-        }
-        
-        setTimeout(function () {
-            //Release inner links
-            if (params.preventLinks) {
-                _this.allowLinks = true;
-            }
-            if (params.onSlideClick) {
-                _this.allowSlideClick = true;
-            }
-        }, 100);
-
-        var maxPosition = maxWrapperPosition();
-
-        //Not moved or Prevent Negative Back Sliding/After-End Sliding
-        if (!_this.isMoved && params.freeMode) {
-            _this.isMoved = false;
-            if (params.onTouchEnd) _this.fireCallback(params.onTouchEnd, _this);
-            _this.callPlugins('onTouchEnd');
-            return;   
-        }
-        if (!_this.isMoved || _this.positions.current > 0 || _this.positions.current < -maxPosition) {
-            _this.swipeReset();
-            if (params.onTouchEnd) _this.fireCallback(params.onTouchEnd, _this);
-            _this.callPlugins('onTouchEnd');
-            return;
-        }
-
-        _this.isMoved = false;
-
-        //Free Mode
-        if (params.freeMode) {
-            if ( params.freeModeFluid ) {
-                var momentumDuration = 1000*params.momentumRatio;
-                var momentumDistance = _this.velocity*momentumDuration;
-                var newPosition = _this.positions.current + momentumDistance
-                var doBounce = false;
-                var afterBouncePosition;
-                var bounceAmount = Math.abs( _this.velocity )*20*params.momentumBounceRatio;
-                if (newPosition < -maxPosition) {
-                    if (params.momentumBounce && _this.support.transitions) {
-                        if (newPosition + maxPosition < -bounceAmount) newPosition = -maxPosition-bounceAmount;
-                        afterBouncePosition = -maxPosition;
-                        doBounce=true;
-                        allowMomentumBounce = true;
-                    }
-                    else newPosition = -maxPosition;
-                }
-                if (newPosition > 0) {
-                    if (params.momentumBounce && _this.support.transitions) {
-                        if (newPosition>bounceAmount) newPosition = bounceAmount;
-                        afterBouncePosition = 0
-                        doBounce = true;
-                        allowMomentumBounce = true;
-                    }
-                    else newPosition = 0;
-                }
-                //Fix duration
-                if (_this.velocity!=0) momentumDuration = Math.abs((newPosition - _this.positions.current)/_this.velocity)
-
-                _this.setWrapperTranslate(newPosition);
-
-                _this.setWrapperTransition( momentumDuration );
-
-                if (params.momentumBounce && doBounce) {
-                    _this.wrapperTransitionEnd(function () {
-                        if (!allowMomentumBounce) return;
-                        if (params.onMomentumBounce) _this.fireCallback(params.onMomentumBounce, _this);
-                        _this.callPlugins('onMomentumBounce');
-                        
-                        _this.setWrapperTranslate(afterBouncePosition);
-                        _this.setWrapperTransition(300);
-                    })
-                }
-
-                _this.updateActiveSlide(newPosition)
-            }
-            if (!params.freeModeFluid || timeDiff >= 300) _this.updateActiveSlide(_this.positions.current)
-
-            if (params.onTouchEnd) _this.fireCallback(params.onTouchEnd, _this);
-            _this.callPlugins('onTouchEnd');
-            return;
-        }
-
-        //Direction
-        direction = diff < 0 ? "toNext" : "toPrev"
-
-        //Short Touches
-        if (direction=="toNext" && ( timeDiff <= 300 ) ) {
-            if (diffAbs < 30 || !params.shortSwipes) _this.swipeReset()
-            else _this.swipeNext(true);
-        }
-
-        if (direction=="toPrev" && ( timeDiff <= 300 ) ) {
-            if (diffAbs < 30 || !params.shortSwipes) _this.swipeReset()
-            else _this.swipePrev(true);
-        }
-
-        //Long Touches
-        var targetSlideSize = 0;
-        if(params.slidesPerView == 'auto') {
-            //Define current slide's width
-            var currentPosition = Math.abs(_this.getWrapperTranslate());
-            var slidesOffset = 0;
-            var _slideSize;
-            for (var i=0; i<_this.slides.length; i++) {
-                _slideSize = isH ? _this.slides[i].getWidth(true) : _this.slides[i].getHeight(true);
-                slidesOffset+= _slideSize;
-                if (slidesOffset>currentPosition) {
-                    targetSlideSize = _slideSize;
-                    break;
-                }
-            }
-            if (targetSlideSize>containerSize) targetSlideSize = containerSize;
-        }
-        else {
-            targetSlideSize = slideSize * params.slidesPerView;
-        }
-        if (direction=="toNext" && ( timeDiff > 300 ) ) {
-            if (diffAbs >= targetSlideSize*0.5) {
-                _this.swipeNext(true)
-            }
-            else {
-                _this.swipeReset()
-            }
-        }
-        if (direction=="toPrev" && ( timeDiff > 300 ) ) {
-            if (diffAbs >= targetSlideSize*0.5) {
-                _this.swipePrev(true);
-            }
-            else {
-                _this.swipeReset()
-            }
-        }
-        if (params.onTouchEnd) params.onTouchEnd(_this)
-        _this.callPlugins('onTouchEnd');
-    }
-
-
-    /*==================================================
-        noSwiping Bubble Check by Isaac Strack
-    ====================================================*/
-    function noSwipingSlide(el){
-        /*This function is specifically designed to check the parent elements for the noSwiping class, up to the wrapper.
-        We need to check parents because while onTouchStart bubbles, _this.isTouched is checked in onTouchStart, which stops the bubbling.
-        So, if a text box, for example, is the initial target, and the parent slide container has the noSwiping class, the _this.isTouched
-        check will never find it, and what was supposed to be noSwiping is able to be swiped.
-        This function will iterate up and check for the noSwiping class in parents, up through the wrapperClass.*/
-
-        // First we create a truthy variable, which is that swiping is allowd (noSwiping = false)
-        var noSwiping = false;
-    
-        // Now we iterate up (parentElements) until we reach the node with the wrapperClass.
-        do{
-
-            // Each time, we check to see if there's a 'swiper-no-swiping' class (noSwipingClass).
-            if (el.className.indexOf(params.noSwipingClass)>-1)
-            {
-                noSwiping = true; // If there is, we set noSwiping = true;
-            }
-
-            el = el.parentElement;  // now we iterate up (parent node)
-
-        } while(!noSwiping && el.parentElement && el.className.indexOf(params.wrapperClass)==-1); // also include el.parentElement truthy, just in case.
-
-        // because we didn't check the wrapper itself, we do so now, if noSwiping is false:
-        if (!noSwiping && el.className.indexOf(params.wrapperClass)>-1 && el.className.indexOf(params.noSwipingClass)>-1)
-            noSwiping = true; // if the wrapper has the noSwipingClass, we set noSwiping = true;
-
-        return noSwiping;
-    }
-
-    /*==================================================
-        Swipe Functions
-    ====================================================*/
-    _this.swipeNext = function(internal){
-        if (!internal && params.loop) _this.fixLoop();
-        if (!internal && params.autoplay) _this.stopAutoplay(true);
-        _this.callPlugins('onSwipeNext');
-        var currentPosition = _this.getWrapperTranslate();
-        var newPosition = currentPosition;
-        if (params.slidesPerView=='auto') {
-            for (var i=0; i<_this.snapGrid.length; i++) {
-                if (-currentPosition >= _this.snapGrid[i] && -currentPosition<_this.snapGrid[i+1]) {
-                    newPosition = -_this.snapGrid[i+1]
-                    break;
-                }
-            }
-        }
-        else {
-            var groupSize = slideSize * params.slidesPerGroup;
-            newPosition = -(Math.floor(Math.abs(currentPosition)/Math.floor(groupSize))*groupSize + groupSize);
-        }
-        if (newPosition < - maxWrapperPosition()) {
-            newPosition = - maxWrapperPosition()
-        };
-        if (newPosition == currentPosition) return false;
-        swipeToPosition(newPosition, 'next');
-        return true
-    }
-    _this.swipePrev = function(internal){
-        if (!internal && params.loop) _this.fixLoop();
-        if (!internal && params.autoplay) _this.stopAutoplay(true);
-        _this.callPlugins('onSwipePrev');
-
-        var currentPosition = Math.ceil(_this.getWrapperTranslate());
-        var newPosition;
-        if (params.slidesPerView=='auto') {
-            newPosition = 0;
-            for (var i=1; i<_this.snapGrid.length; i++) {
-                if (-currentPosition == _this.snapGrid[i]) {
-                    newPosition = -_this.snapGrid[i-1]
-                    break;
-                }
-                if (-currentPosition > _this.snapGrid[i] && -currentPosition<_this.snapGrid[i+1]) {
-                    newPosition = -_this.snapGrid[i]
-                    break;
-                }
-            }
-        }
-        else {
-            var groupSize = slideSize * params.slidesPerGroup;
-            newPosition = -(Math.ceil(-currentPosition/groupSize)-1)*groupSize;
-        }
-
-        if (newPosition > 0) newPosition = 0;
-
-        if (newPosition == currentPosition) return false;
-        swipeToPosition(newPosition, 'prev');
-        return true;
-
-    }
-    _this.swipeReset = function(){
-        _this.callPlugins('onSwipeReset');
-        var currentPosition = _this.getWrapperTranslate();
-        var groupSize = slideSize * params.slidesPerGroup;
-        var newPosition;
-        var maxPosition = -maxWrapperPosition();
-        if (params.slidesPerView=='auto') {
-            newPosition = 0;
-            for (var i=0; i<_this.snapGrid.length; i++) {
-                if (-currentPosition===_this.snapGrid[i]) return;
-                if (-currentPosition >= _this.snapGrid[i] && -currentPosition<_this.snapGrid[i+1]) {
-                    if(_this.positions.diff>0) newPosition = -_this.snapGrid[i+1]
-                    else newPosition = -_this.snapGrid[i]
-                    break;
-                }
-            }
-            if (-currentPosition >= _this.snapGrid[_this.snapGrid.length-1]) newPosition = -_this.snapGrid[_this.snapGrid.length-1];
-            if (currentPosition <= -maxWrapperPosition()) newPosition = -maxWrapperPosition()
-        }
-        else {
-            newPosition = currentPosition<0 ? Math.round(currentPosition/groupSize)*groupSize : 0
-        }
-        if (params.scrollContainer)  {
-            newPosition = currentPosition<0 ? currentPosition : 0;
-        }
-        if (newPosition < -maxWrapperPosition()) {
-            newPosition = -maxWrapperPosition()
-        }
-        if (params.scrollContainer && (containerSize>slideSize)) {
-            newPosition = 0;
-        }
-
-        if (newPosition == currentPosition) return false;
-
-        swipeToPosition(newPosition, 'reset');
-        return true;
-    }
-    
-    _this.swipeTo = function(index, speed, runCallbacks) {
-        index = parseInt(index, 10);
-        _this.callPlugins('onSwipeTo', {index:index, speed:speed});
-        if (params.loop) index = index + _this.loopedSlides;
-        var currentPosition = _this.getWrapperTranslate();
-        if (index > (_this.slides.length-1) || index < 0) return;
-        var newPosition
-        if (params.slidesPerView=='auto') {
-            newPosition = -_this.slidesGrid[ index ];
-        }
-        else {
-            newPosition =  -index*slideSize;
-        }
-        if (newPosition < - maxWrapperPosition()) {
-            newPosition = - maxWrapperPosition();
-        };
-
-        if (newPosition == currentPosition) return false;
-
-        runCallbacks = runCallbacks===false ? false : true;
-        swipeToPosition(newPosition, 'to', {index:index, speed:speed, runCallbacks:runCallbacks});
-        return true;
-    }
-    
-    function swipeToPosition(newPosition, action, toOptions) {
-        var speed = (action=='to' && toOptions.speed >= 0) ? toOptions.speed : params.speed;
-        
-        if (_this.support.transitions || !params.DOMAnimation) {
-            _this.setWrapperTranslate(newPosition);
-            _this.setWrapperTransition(speed);
-        }
-        else {
-            //Try the DOM animation
-            var currentPosition = _this.getWrapperTranslate();
-            var animationStep = Math.ceil( (newPosition - currentPosition)/speed*(1000/60) );
-            var direction = currentPosition > newPosition ? 'toNext' : 'toPrev';
-            var condition = direction=='toNext' ? currentPosition > newPosition : currentPosition < newPosition;
-            if (_this._DOMAnimating) return;
-
-            anim();
-        }
-        function anim(){
-            currentPosition += animationStep;
-            condition = direction=='toNext' ? currentPosition > newPosition : currentPosition < newPosition;
-            if (condition) {
-                _this.setWrapperTranslate(Math.round(currentPosition));
-                _this._DOMAnimating = true
-                window.setTimeout(function(){
-                    anim()
-                }, 1000 / 60)
-            }
-            else {
-                if (params.onSlideChangeEnd) _this.fireCallback(params.onSlideChangeEnd, _this);
-                _this.setWrapperTranslate(newPosition);
-                _this._DOMAnimating = false;
-            }
-        }
-
-        //Update Active Slide Index
-        _this.updateActiveSlide(newPosition);
-
-        //Callbacks
-        if (params.onSlideNext && action=='next') {
-            _this.fireCallback(params.onSlideNext, _this, newPosition);
-        }
-        if (params.onSlidePrev && action=='prev') {
-            _this.fireCallback(params.onSlidePrev, _this, newPosition);
-        }
-        //"Reset" Callback
-        if (params.onSlideReset && action=='reset') {
-            _this.fireCallback(params.onSlideReset, _this, newPosition);
-        }
-
-        //"Next", "Prev" and "To" Callbacks
-        if (action=='next' || action=='prev' || (action=='to' && toOptions.runCallbacks==true))
-            slideChangeCallbacks(action);
-    }
-    /*==================================================
-        Transition Callbacks
-    ====================================================*/
-    //Prevent Multiple Callbacks
-    _this._queueStartCallbacks = false;
-    _this._queueEndCallbacks = false;
-    function slideChangeCallbacks(direction) {
-        //Transition Start Callback
-        _this.callPlugins('onSlideChangeStart');
-        if (params.onSlideChangeStart) {
-            if (params.queueStartCallbacks && _this.support.transitions) {
-                if (_this._queueStartCallbacks) return;
-                _this._queueStartCallbacks = true;
-                _this.fireCallback(params.onSlideChangeStart, _this, direction)
-                _this.wrapperTransitionEnd(function(){
-                    _this._queueStartCallbacks = false;
-                })
-            }
-            else _this.fireCallback(params.onSlideChangeStart, _this, direction)
-        }
-        //Transition End Callback
-        if (params.onSlideChangeEnd) {
-            if (_this.support.transitions) {
-                if (params.queueEndCallbacks) {
-                    if (_this._queueEndCallbacks) return;
-                    _this._queueEndCallbacks = true;
-                    _this.wrapperTransitionEnd(function(swiper){_this.fireCallback(params.onSlideChangeEnd, swiper, direction)})
-                }
-                else _this.wrapperTransitionEnd(function(swiper){_this.fireCallback(params.onSlideChangeEnd, swiper, direction)})
-            }
-            else {
-                if (!params.DOMAnimation) {
-                    setTimeout(function(){
-                        _this.fireCallback(params.onSlideChangeStart, _this, direction)
-                    },10)
-                }
-            }
-        }
-    }
-    
-    /*==================================================
-        Update Active Slide Index
-    ====================================================*/
-    _this.updateActiveSlide = function(position) {
-        if (!_this.initialized) return;
-        if (_this.slides.length==0) return;
-        _this.previousIndex = _this.activeIndex;
-        if (typeof position=='undefined') position = _this.getWrapperTranslate();
-        if (position>0) position=0;
-        
-        if (params.slidesPerView == 'auto') {
-            var slidesOffset = 0;
-            _this.activeIndex = _this.slidesGrid.indexOf(-position);
-            if (_this.activeIndex<0) {
-                for (var i=0; i<_this.slidesGrid.length-1; i++) {
-                    if (-position>_this.slidesGrid[i] && -position<_this.slidesGrid[i+1]) {
-                        break;
-                    }
-                }
-                var leftDistance = Math.abs( _this.slidesGrid[i] + position )
-                var rightDistance = Math.abs( _this.slidesGrid[i+1] + position )
-                if (leftDistance<=rightDistance) _this.activeIndex = i;
-                else _this.activeIndex = i+1;
-            }
-        }
-        else {
-            _this.activeIndex = Math[params.visibilityFullFit ? 'ceil' : 'round']( -position/slideSize );
-        }
-        
-        if (_this.activeIndex == _this.slides.length ) _this.activeIndex = _this.slides.length - 1;
-        if (_this.activeIndex < 0) _this.activeIndex = 0;
-        
-        // Check for slide
-        if (!_this.slides[_this.activeIndex]) return;
-        
-        // Calc Visible slides
-        _this.calcVisibleSlides(position);
-
-        // Mark visible and active slides with additonal classes
-        var activeClassRegexp = new RegExp( "\\s*" + params.slideActiveClass );
-        var inViewClassRegexp = new RegExp( "\\s*" + params.slideVisibleClass );
-
-        for (var i = 0; i < _this.slides.length; i++) {
-            _this.slides[ i ].className = _this.slides[ i ].className.replace( activeClassRegexp, '' ).replace( inViewClassRegexp, '' );
-            if ( _this.visibleSlides.indexOf( _this.slides[ i ] )>=0 ) {
-                _this.slides[ i ].className += ' ' + params.slideVisibleClass;
-            }
-
-        }
-        _this.slides[ _this.activeIndex ].className += ' ' + params.slideActiveClass;
-
-        //Update loop index
-        if (params.loop) {
-            var ls = _this.loopedSlides;
-            _this.activeLoopIndex = _this.activeIndex - ls;
-            if (_this.activeLoopIndex >= _this.slides.length - ls*2 ) {
-                _this.activeLoopIndex = _this.slides.length - ls*2 - _this.activeLoopIndex;
-            }
-            if (_this.activeLoopIndex<0) {
-                _this.activeLoopIndex = _this.slides.length - ls*2 + _this.activeLoopIndex;
-            }
-        }
-        else {
-            _this.activeLoopIndex = _this.activeIndex;
-        }
-        //Update Pagination
-        if (params.pagination) {
-            _this.updatePagination(position);
-        }
-    }
-    /*==================================================
-        Pagination
-    ====================================================*/
-    _this.createPagination = function (firstInit) {
-        if (params.paginationClickable && _this.paginationButtons) {
-            removePaginationEvents();
-        }
-        _this.paginationContainer = params.pagination.nodeType ? params.pagination : $$(params.pagination)[0];
-        if (params.createPagination) {
-            var paginationHTML = "";
-            var numOfSlides = _this.slides.length;
-            var numOfButtons = numOfSlides;
-            if (params.loop) numOfButtons -= _this.loopedSlides*2
-            for (var i = 0; i < numOfButtons; i++) {
-                paginationHTML += '<'+params.paginationElement+' class="'+params.paginationElementClass+'"></'+params.paginationElement+'>'
-            }
-            _this.paginationContainer.innerHTML = paginationHTML;    
-        }
-        _this.paginationButtons = $$('.'+params.paginationElementClass, _this.paginationContainer);
-        if (!firstInit) _this.updatePagination()
-        _this.callPlugins('onCreatePagination');
-        if (params.paginationClickable) {
-            addPaginationEvents();
-        }
-    }
-    function removePaginationEvents() {
-        var pagers = _this.paginationButtons;
-        for (var i=0; i<pagers.length; i++) {
-            _this.h.removeEventListener(pagers[i], 'click', paginationClick);
-        }
-    }
-    function addPaginationEvents() {
-        var pagers = _this.paginationButtons;
-        for (var i=0; i<pagers.length; i++) {
-            _this.h.addEventListener(pagers[i], 'click', paginationClick);
-        }
-    }
-    function paginationClick(e){
-        var index;
-        var target = e.target || e.srcElement;
-        var pagers = _this.paginationButtons;
-        for (var i=0; i<pagers.length; i++) {
-            if (target===pagers[i]) index = i;
-        }
-        _this.swipeTo(index)
-    }
-    _this.updatePagination = function(position) {
-        if (!params.pagination) return;
-        if (_this.slides.length<1) return;
-        var activePagers = $$('.'+params.paginationActiveClass, _this.paginationContainer);
-        if(!activePagers) return;
-
-        //Reset all Buttons' class to not active
-        var pagers = _this.paginationButtons;
-        if (pagers.length==0) return;
-        for (var i=0; i < pagers.length; i++) {
-            pagers[i].className = params.paginationElementClass
-        }
-
-        var indexOffset = params.loop ? _this.loopedSlides : 0;
-        if (params.paginationAsRange) {
-            if (!_this.visibleSlides) _this.calcVisibleSlides(position)
-            //Get Visible Indexes
-            var visibleIndexes = [];
-            for (var i = 0; i < _this.visibleSlides.length; i++) {
-                var visIndex = _this.slides.indexOf( _this.visibleSlides[i] ) - indexOffset
-
-                if (params.loop && visIndex<0) {
-                    visIndex = _this.slides.length - _this.loopedSlides*2 + visIndex;
-                }
-                if (params.loop && visIndex>=_this.slides.length-_this.loopedSlides*2) {
-                    visIndex = _this.slides.length - _this.loopedSlides*2 - visIndex;
-                    visIndex = Math.abs(visIndex)
-                }
-                visibleIndexes.push( visIndex )
-            }
-            
-            for (i=0; i<visibleIndexes.length; i++) {
-                if (pagers[ visibleIndexes[i] ]) pagers[ visibleIndexes[i] ].className += ' ' + params.paginationVisibleClass;
-            }
-            
-            if (params.loop) {
-                pagers[ _this.activeLoopIndex ].className += ' ' + params.paginationActiveClass;
-            }
-            else {
-                pagers[ _this.activeIndex ].className += ' ' + params.paginationActiveClass;
-            }
-            
-        }
-        else {
-            if (params.loop) {
-                pagers[ _this.activeLoopIndex ].className+=' '+params.paginationActiveClass+' '+params.paginationVisibleClass;
-            }
-            else {
-                pagers[ _this.activeIndex ].className+=' '+params.paginationActiveClass+' '+params.paginationVisibleClass;
-            }
-
-        }
-
-    }
-    _this.calcVisibleSlides = function(position){
-        var visibleSlides = [];
-        var _slideLeft = 0, _slideSize = 0, _slideRight = 0;
-        if (isH && _this.wrapperLeft>0) position = position+_this.wrapperLeft;
-        if (!isH && _this.wrapperTop>0) position = position+_this.wrapperTop;
-
-        for (var i=0; i<_this.slides.length; i++) {
-            _slideLeft += _slideSize;
-            if (params.slidesPerView == 'auto')
-                _slideSize  = isH ? _this.h.getWidth(_this.slides[i],true) : _this.h.getHeight(_this.slides[i],true);
-            else _slideSize = slideSize;
-
-            _slideRight = _slideLeft + _slideSize;
-            var isVisibile = false;
-            if (params.visibilityFullFit) {
-                if (_slideLeft >= -position && _slideRight <= -position+containerSize) isVisibile = true;
-                if (_slideLeft <= -position && _slideRight >= -position+containerSize) isVisibile = true;
-            }
-            else {
-
-                if (_slideRight > -position && _slideRight <= ((-position+containerSize))) isVisibile = true;
-                if (_slideLeft >= -position && _slideLeft < ((-position+containerSize))) isVisibile = true;
-                if (_slideLeft < -position && _slideRight > ((-position+containerSize))) isVisibile = true;
-            }
-
-            if (isVisibile) visibleSlides.push(_this.slides[i])
-
-        }
-        if (visibleSlides.length==0) visibleSlides = [ _this.slides[ _this.activeIndex ] ]
-
-        _this.visibleSlides = visibleSlides;
-    }
-
-    /*==========================================
-        Autoplay
-    ============================================*/
-    var autoplayTimeoutId = undefined;
-    _this.startAutoplay = function () {
-        if (typeof autoplayTimeoutId !== 'undefined') return false;
-        if (!params.autoplay) return;
-        _this.callPlugins('onAutoplayStart');
-        autoplay();
-    }
-    _this.stopAutoplay = function (internal) {
-        if (autoplayTimeoutId) clearTimeout(autoplayTimeoutId);
-        autoplayTimeoutId = undefined;
-        if (internal && !params.autoplayDisableOnInteraction) {
-            _this.wrapperTransitionEnd(function(){
-                autoplay();
-            })
-        }
-        _this.callPlugins('onAutoplayStop');
-    }
-    function autoplay(){
-        autoplayTimeoutId = setTimeout(function(){
-            if(params.loop) {
-                _this.fixLoop();
-                _this.swipeNext(true);
-            }
-            else if (!_this.swipeNext(true)) _this.swipeTo(0);
-            _this.wrapperTransitionEnd(function(){
-                if (typeof autoplayTimeoutId !== 'undefined') autoplay();
-            })
-        },params.autoplay)
-    }
-    /*==================================================
-        Loop
-    ====================================================*/
-    _this.loopCreated = false;
-    _this.removeLoopedSlides = function(){
-        if (_this.loopCreated) {
-            for (var i=0; i<_this.slides.length; i++) {
-                if (_this.slides[i].getData('looped')===true) _this.wrapper.removeChild(_this.slides[i]);
-            }
-        }
-    }
-    
-    _this.createLoop = function() {
-        if (_this.slides.length==0) return;
-        if (params.slidesPerView=='auto') {
-            _this.loopedSlides = params.loopedSlides||1;
-        }
-        else {
-            _this.loopedSlides = params.slidesPerView + params.loopAdditionalSlides;    
-        }
-        
-        if (_this.loopedSlides > _this.slides.length) {
-            _this.loopedSlides = _this.slides.length;
-        }
-        
-        var slideFirstHTML = '',
-            slideLastHTML = '',
-            i;
-        var slidesSetFullHTML = '';
-        /**
-                loopedSlides is too large if loopAdditionalSlides are set.
-                Need to divide the slides by maximum number of slides existing.
-                
-                @author        Tomaz Lovrec <tomaz.lovrec@blanc-noir.at>
-        */
-        var numSlides = _this.slides.length;
-        var fullSlideSets = Math.floor(_this.loopedSlides / numSlides);
-        var remainderSlides = _this.loopedSlides % numSlides;
-        // assemble full sets of slides
-        for (i = 0; i<(fullSlideSets*numSlides);i++) {
-                var j = i;
-                if (i >= numSlides) {
-                        var over = Math.floor(i / numSlides);
-                        j = i - (numSlides * over);
-                }
-                slidesSetFullHTML+=_this.slides[j].outerHTML;
-        }
-        // assemble remainder slides
-        // assemble remainder appended to existing slides
-        for(i = 0;i<remainderSlides;i++) {
-                slideLastHTML+=_this.slides[i].outerHTML;
-        }
-        // assemble slides that get preppended to existing slides
-        for(i = numSlides - remainderSlides;i<numSlides;i++) {
-                slideFirstHTML+=_this.slides[i].outerHTML;
-        }
-        // assemble all slides
-        var slides = slideFirstHTML + slidesSetFullHTML + wrapper.innerHTML + slidesSetFullHTML + slideLastHTML;
-        // set the slides
-        wrapper.innerHTML = slides;
-
-        _this.loopCreated = true;
-        _this.calcSlides();
-
-        //Update Looped Slides with special class
-        for (i=0; i<_this.slides.length; i++) {
-            if (i<_this.loopedSlides || i>=_this.slides.length-_this.loopedSlides) _this.slides[i].setData('looped', true);
-        }
-        _this.callPlugins('onCreateLoop');
-
-    }
-    
-    _this.fixLoop = function() {
-        var newIndex;
-        //Fix For Negative Oversliding
-        if (_this.activeIndex < _this.loopedSlides) {
-            newIndex = _this.slides.length - _this.loopedSlides*3 + _this.activeIndex;
-            _this.swipeTo(newIndex, 0, false);
-        }
-        //Fix For Positive Oversliding
-        else if (_this.activeIndex > _this.slides.length - params.slidesPerView*2) {
-            newIndex = -_this.slides.length + _this.activeIndex + _this.loopedSlides
-            _this.swipeTo(newIndex, 0, false);
-        }
-    }
-    
-    /*==================================================
-        Slides Loader
-    ====================================================*/
-    _this.loadSlides = function(){
-        var slidesHTML = '';
-        _this.activeLoaderIndex = 0;
-        var slides = params.loader.slides;
-        var slidesToLoad = params.loader.loadAllSlides ? slides.length : params.slidesPerView*(1+params.loader.surroundGroups);
-        for (var i=0; i< slidesToLoad; i++) {
-            if (params.loader.slidesHTMLType=='outer') slidesHTML+=slides[i];
-            else {
-                slidesHTML+='<'+params.slideElement+' class="'+params.slideClass+'" data-swiperindex="'+i+'">'+slides[i]+'</'+params.slideElement+'>';
-            }
-        }
-        _this.wrapper.innerHTML = slidesHTML;
-        _this.calcSlides(true);
-        //Add permanent transitionEnd callback
-        if (!params.loader.loadAllSlides) {
-            _this.wrapperTransitionEnd(_this.reloadSlides, true);
-        }
-    }
-    
-    _this.reloadSlides = function(){
-        var slides = params.loader.slides;
-        var newActiveIndex = parseInt(_this.activeSlide().data('swiperindex'),10)
-        if (newActiveIndex<0 || newActiveIndex>slides.length-1) return //<-- Exit
-        _this.activeLoaderIndex = newActiveIndex;
-        var firstIndex = Math.max(0, newActiveIndex - params.slidesPerView*params.loader.surroundGroups)
-        var lastIndex = Math.min(newActiveIndex+params.slidesPerView*(1+params.loader.surroundGroups)-1, slides.length-1)
-        //Update Transforms
-        if (newActiveIndex>0) {
-            var newTransform = -slideSize*(newActiveIndex-firstIndex)
-            _this.setWrapperTranslate(newTransform);
-            _this.setWrapperTransition(0);
-        }
-        //New Slides
-        if (params.loader.logic==='reload') {
-            _this.wrapper.innerHTML = '';
-            var slidesHTML = '';
-            for (var i = firstIndex; i<=lastIndex; i++) {
-                slidesHTML += params.loader.slidesHTMLType == 'outer' ? slides[i] : '<'+params.slideElement+' class="'+params.slideClass+'" data-swiperindex="'+i+'">'+slides[i]+'</'+params.slideElement+'>';
-            }
-            _this.wrapper.innerHTML = slidesHTML;
-        }
-        else {
-            var minExistIndex=1000;
-            var maxExistIndex=0;
-            for (var i=0; i<_this.slides.length; i++) {
-                var index = _this.slides[i].data('swiperindex');
-                if (index<firstIndex || index>lastIndex) {
-                    _this.wrapper.removeChild(_this.slides[i]);
-                }
-                else {
-                    minExistIndex = Math.min(index, minExistIndex)
-                    maxExistIndex = Math.max(index, maxExistIndex)
-                }
-            }
-            for (var i=firstIndex; i<=lastIndex; i++) {
-                if (i<minExistIndex) {
-                    var newSlide = document.createElement(params.slideElement);
-                    newSlide.className = params.slideClass;
-                    newSlide.setAttribute('data-swiperindex',i);
-                    newSlide.innerHTML = slides[i];
-                    _this.wrapper.insertBefore(newSlide, _this.wrapper.firstChild);
-                }
-                if (i>maxExistIndex) {
-                    var newSlide = document.createElement(params.slideElement);
-                    newSlide.className = params.slideClass;
-                    newSlide.setAttribute('data-swiperindex',i);
-                    newSlide.innerHTML = slides[i];
-                    _this.wrapper.appendChild(newSlide);
-                }
-            }
-        }
-        //reInit
-        _this.reInit(true);
-    }
-    
-    /*==================================================
-        Make Swiper
-    ====================================================*/
-    function makeSwiper(){
-        _this.calcSlides();
-        if (params.loader.slides.length>0 && _this.slides.length==0) {
-            _this.loadSlides();
-        }
-        if (params.loop) {
-            _this.createLoop();
-        }
-        _this.init();
-        initEvents();
-        if (params.pagination) {
-            _this.createPagination(true);
-        }
-
-        if (params.loop || params.initialSlide>0) {
-            _this.swipeTo( params.initialSlide, 0, false );
-        }
-        else {
-            _this.updateActiveSlide(0);
-        }
-        if (params.autoplay) {
-            _this.startAutoplay();
-        }
-        /**
-         * Set center slide index.
-         * 
-         * @author        Tomaz Lovrec <tomaz.lovrec@gmail.com> 
-         */
-        _this.centerIndex = _this.activeIndex;
-
-        // Callbacks
-        if (params.onSwiperCreated) _this.fireCallback(params.onSwiperCreated, _this);
-        _this.callPlugins('onSwiperCreated');
-    }
-    
-    makeSwiper();
-}
-
-Swiper.prototype = {
-    plugins : {},
-    
-    /*==================================================
-        Wrapper Operations
-    ====================================================*/
-    wrapperTransitionEnd : function(callback, permanent) {
-        var a = this,
-            el = a.wrapper,
-            events = ['webkitTransitionEnd', 'transitionend', 'oTransitionEnd', 'MSTransitionEnd', 'msTransitionEnd'],
-            i;
-        
-        function fireCallBack() {
-            callback(a);
-            if (a.params.queueEndCallbacks) a._queueEndCallbacks = false;
-            if (!permanent) {
-                for (i=0; i<events.length; i++) {
-                    a.h.removeEventListener(el, events[i], fireCallBack);
-                }
-            }
-        }
-        
-        if (callback) {
-            for (i=0; i<events.length; i++) {
-                a.h.addEventListener(el, events[i], fireCallBack);
-            }
-        }
-    },
-
-    getWrapperTranslate : function (axis) {
-        var el = this.wrapper,
-            matrix, curTransform, curStyle, transformMatrix;
-        
-        // automatic axis detection
-        if (typeof axis == 'undefined') {
-            axis = this.params.mode == 'horizontal' ? 'x' : 'y';
-        }
-        
-        if (this.support.transforms && this.params.useCSS3Transforms) {
-            curStyle = window.getComputedStyle(el, null);
-            if (window.WebKitCSSMatrix) {
-                transformMatrix = new WebKitCSSMatrix(curStyle.webkitTransform);
-            }
-            else {
-                transformMatrix = curStyle.MozTransform || curStyle.OTransform || curStyle.MsTransform || curStyle.msTransform  || curStyle.transform || curStyle.getPropertyValue("transform").replace("translate(", "matrix(1, 0, 0, 1,");
-                matrix = transformMatrix.toString().split(',');
-            }
-            
-            if (axis=='x') {
-                //Latest Chrome and webkits Fix
-                if (window.WebKitCSSMatrix)
-                    curTransform = transformMatrix.m41;
-                //Crazy IE10 Matrix
-                else if (matrix.length==16)
-                    curTransform = parseFloat( matrix[12] );
-                //Normal Browsers
-                else
-                    curTransform = parseFloat( matrix[4] );
-            }
-            if (axis=='y') {
-                //Latest Chrome and webkits Fix
-                if (window.WebKitCSSMatrix)
-                    curTransform = transformMatrix.m42;
-                //Crazy IE10 Matrix
-                else if (matrix.length==16)
-                    curTransform = parseFloat( matrix[13] );
-                //Normal Browsers
-                else
-                    curTransform = parseFloat( matrix[5] );
-            }
-        }
-        else {
-            if (axis=='x') curTransform = parseFloat(el.style.left,10) || 0;
-            if (axis=='y') curTransform = parseFloat(el.style.top,10) || 0;
-        }
-        return curTransform || 0;
-    },
-
-    setWrapperTranslate : function (x, y, z) {
-        var es = this.wrapper.style,
-            coords = {x: 0, y: 0, z: 0},
-            translate;
-
-        // passed all coordinates
-        if (arguments.length == 3) {
-            coords.x = x;
-            coords.y = y;
-            coords.z = z;
-        }
-        
-        // passed one coordinate and optional axis
-        else {
-            if (typeof y == 'undefined') {
-                y = this.params.mode == 'horizontal' ? 'x' : 'y';
-            }
-            coords[y] = x;
-        }
-
-        if (this.support.transforms && this.params.useCSS3Transforms) {
-            translate = this.support.transforms3d ? 'translate3d(' + coords.x + 'px, ' + coords.y + 'px, ' + coords.z + 'px)' : 'translate(' + coords.x + 'px, ' + coords.y + 'px)';
-            es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = translate;
-        }
-        else {
-            es.left = coords.x + 'px';
-            es.top  = coords.y + 'px';
-        }
-        this.callPlugins('onSetWrapperTransform', coords);
-        if (this.params.onSetWrapperTransform) this.fireCallback(this.params.onSetWrapperTransform, this, coords);
-    },
-
-    setWrapperTransition : function (duration) {
-        var es = this.wrapper.style;
-        es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = (duration / 1000) + 's';
-        this.callPlugins('onSetWrapperTransition', {duration: duration});
-        if (this.params.onSetWrapperTransition) this.fireCallback(this.params.onSetWrapperTransition, this, duration);
-        
-    },
-
-    /*==================================================
-        Helpers
-    ====================================================*/
-    h : {
-        getWidth: function (el, outer) {
-            var width = window.getComputedStyle(el, null).getPropertyValue('width')
-            var returnWidth = parseFloat(width);
-            //IE Fixes
-            if(isNaN(returnWidth) || width.indexOf('%')>0) {
-                returnWidth = el.offsetWidth - parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-left')) - parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-right'));
-            }
-            if (outer) returnWidth += parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-left')) + parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-right'))
-
-            return returnWidth;
-        },
-        getHeight: function(el, outer) {
-            if (outer) return el.offsetHeight;
-
-            var height = window.getComputedStyle(el, null).getPropertyValue('height')
-            var returnHeight = parseFloat(height);
-            //IE Fixes
-            if(isNaN(returnHeight) || height.indexOf('%')>0) {
-                returnHeight = el.offsetHeight - parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-top')) - parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-bottom'));
-            }
-            if (outer) returnHeight += parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-top')) + parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-bottom'))
-            return returnHeight;
-        },
-        getOffset: function(el) {
-            var box = el.getBoundingClientRect();
-            var body = document.body;
-            var clientTop  = el.clientTop  || body.clientTop  || 0;
-            var clientLeft = el.clientLeft || body.clientLeft || 0;
-            var scrollTop  = window.pageYOffset || el.scrollTop;
-            var scrollLeft = window.pageXOffset || el.scrollLeft;
-            if (document.documentElement && !window.pageYOffset) {
-                //IE7-8
-                scrollTop  = document.documentElement.scrollTop;
-                scrollLeft = document.documentElement.scrollLeft;
-            }
-            return {
-                top: box.top  + scrollTop  - clientTop,
-                left: box.left + scrollLeft - clientLeft
-            };
-        },
-        windowWidth : function() {
-            if (window.innerWidth) return window.innerWidth
-            else if (document.documentElement && document.documentElement.clientWidth) return document.documentElement.clientWidth;
-        },
-        windowHeight : function() {
-            if (window.innerHeight) return window.innerHeight
-            else if (document.documentElement && document.documentElement.clientHeight) return document.documentElement.clientHeight;
-        },
-        windowScroll : function() {
-            var left=0, top=0;
-            if (typeof pageYOffset != 'undefined') {
-                return {
-                    left: window.pageXOffset,
-                    top: window.pageYOffset
-                }
-            }
-            else if (document.documentElement) {
-                return {
-                    left: document.documentElement.scrollLeft,
-                    top: document.documentElement.scrollTop
-                }
-            }
-        },
-
-        addEventListener : function (el, event, listener, useCapture) {
-            if (typeof useCapture == 'undefined') {
-                useCapture = false;
-            }
-            
-            if (el.addEventListener) {
-                el.addEventListener(event, listener, useCapture);
-            }
-            else if (el.attachEvent) {
-                el.attachEvent('on' + event, listener);
-            }
-        },
-        
-        removeEventListener : function (el, event, listener, useCapture) {
-            if (typeof useCapture == 'undefined') {
-                useCapture = false;
-            }
-            
-            if (el.removeEventListener) {
-                el.removeEventListener(event, listener, useCapture);
-            }
-            else if (el.detachEvent) {
-                el.detachEvent('on' + event, listener);
-            }
-        }
-    },
-    setTransform : function (el, transform) {
-        var es = el.style
-        es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = transform
-    },
-    setTranslate : function (el, translate) {
-        var es = el.style
-        var pos = {
-            x : translate.x || 0,
-            y : translate.y || 0,
-            z : translate.z || 0
-        };
-        var transformString = this.support.transforms3d ? 'translate3d('+(pos.x)+'px,'+(pos.y)+'px,'+(pos.z)+'px)' : 'translate('+(pos.x)+'px,'+(pos.y)+'px)';
-        es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = transformString;
-        if (!this.support.transforms) {
-            es.left = pos.x+'px'
-            es.top = pos.y+'px'
-        }
-    },
-    setTransition : function (el, duration) {
-        var es = el.style
-        es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = duration+'ms';
-    },
-    /*==================================================
-        Feature Detection
-    ====================================================*/
-    support: {
-
-        touch : (window.Modernizr && Modernizr.touch===true) || (function() {
-            return !!(("ontouchstart" in window) || window.DocumentTouch && document instanceof DocumentTouch);
-        })(),
-
-        transforms3d : (window.Modernizr && Modernizr.csstransforms3d===true) || (function() {
-            var div = document.createElement('div').style;
-            return ("webkitPerspective" in div || "MozPerspective" in div || "OPerspective" in div || "MsPerspective" in div || "perspective" in div);
-        })(),
-
-        transforms : (window.Modernizr && Modernizr.csstransforms===true) || (function(){
-            var div = document.createElement('div').style;
-            return ('transform' in div || 'WebkitTransform' in div || 'MozTransform' in div || 'msTransform' in div || 'MsTransform' in div || 'OTransform' in div);
-        })(),
-
-        transitions : (window.Modernizr && Modernizr.csstransitions===true) || (function(){
-            var div = document.createElement('div').style;
-            return ('transition' in div || 'WebkitTransition' in div || 'MozTransition' in div || 'msTransition' in div || 'MsTransition' in div || 'OTransition' in div);
-        })()
-    },
-
-    browser : {
-
-        ie8 : (function(){
-            var rv = -1; // Return value assumes failure.
-            if (navigator.appName == 'Microsoft Internet Explorer') {
-                var ua = navigator.userAgent;
-                var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-                if (re.exec(ua) != null)
-                    rv = parseFloat(RegExp.$1);
-            }
-            return rv != -1 && rv < 9;
-        })(),
-
-        ie10 : window.navigator.msPointerEnabled
-    }
-}
-
-/*=========================
-  jQuery & Zepto Plugins
-  ===========================*/
-if (window.jQuery||window.Zepto) {
-    (function($){
-        $.fn.swiper = function(params) {
-            var s = new Swiper($(this)[0], params)
-            $(this).data('swiper',s);
-            return s;
-        }
-    })(window.jQuery||window.Zepto)
-}
-
-// component
-if ( typeof( module ) !== 'undefined' )
-{
-    module.exports = Swiper;
-}
-;/*
- * Swiper Smooth Progress 1.0+
- * Plugin for Swiper 2.3+
- * http://www.idangero.us/sliders/swiper/
- *
- * Copyright 2012-2013, Vladimir Kharlampidi
- * The iDangero.us
- * http://www.idangero.us/
- *
- * Licensed under GPL & MIT
- *
- * Released on: November 2, 2013
-*/
-
-Swiper.prototype.plugins.progress = function(swiper, params) {
-	var isH = swiper.params.mode == 'horizontal';
-	var wrapperMaxPosition;
-	function initSlides(){
-		for (var i=0; i<swiper.slides.length; i++) {
-			var slide = swiper.slides[i];
-			slide.progressSlideSize = isH ? swiper.h.getWidth(slide) : swiper.h.getHeight(slide);
-			if ('offsetLeft' in slide) {
-				slide.progressSlideOffset = isH ? slide.offsetLeft : slide.offsetTop;
-			}
-			else {
-				slide.progressSlideOffset = isH ? slide.getOffset().left - swiper.h.getOffset(swiper.container).left : slide.getOffset().top - swiper.h.getOffset(swiper.container).top;	
-			}
-		}
-		if (isH) {
-			wrapperMaxPosition = swiper.h.getWidth(swiper.wrapper) + swiper.wrapperLeft + swiper.wrapperRight - swiper.width;
-		}
-		else {
-			wrapperMaxPosition = swiper.h.getHeight(swiper.wrapper) + swiper.wrapperTop + swiper.wrapperBottom - swiper.height;
-		}
-	}
-	function calcProgress(transform) {
-		var transform = transform || {x:0, y:0, z:0};
-		var offsetCenter;
-		if(swiper.params.centeredSlides==true) offsetCenter = isH ? -transform.x+swiper.width/2 : -transform.y+swiper.height/2 ;
-		else offsetCenter = isH ? -transform.x : -transform.y ;
-		//Each slide offset from offset center
-		for (var i=0; i<swiper.slides.length; i++) {
-			var slide = swiper.slides[i];
-			var slideCenterOffset = (swiper.params.centeredSlides==true) ? slide.progressSlideSize/2 : 0;
-
-			var offsetMultiplier = (offsetCenter - slide.progressSlideOffset - slideCenterOffset)/slide.progressSlideSize;
-			slide.progress = offsetMultiplier;
-
-		}
-		// Global Swiper Progress
-		swiper.progress = isH ? -transform.x/wrapperMaxPosition : -transform.y/wrapperMaxPosition;
-		
-		if(swiper.params.onProgressChange) swiper.params.onProgressChange(swiper);
-	}
-	
-	//Plugin Hooks
-	var hooks = {
-		onFirstInit : function(args){
-			initSlides()
-			calcProgress({
-				x: swiper.getWrapperTranslate('x'),
-				y: swiper.getWrapperTranslate('y')
-			});
-		},
-		onInit : function(args) {
-			initSlides()
-		},
-		onSetWrapperTransform: function(transform){
-			calcProgress(transform);
-		}
-	}
-	return hooks
-}
-;//! moment.js
+var Swiper=function(a,b){function c(a,b){return document.querySelectorAll?(b||document).querySelectorAll(a):jQuery(a,b)}function d(a){"use strict";return"[object Array]"===Object.prototype.toString.apply(a)?!0:!1}function e(){var a=F-I;return b.freeMode&&(a=F-I),b.slidesPerView>C.slides.length&&(a=0),0>a&&(a=0),a}function f(){function a(a){var c=new Image;c.onload=function(){C.imagesLoaded++,C.imagesLoaded==C.imagesToLoad.length&&(C.reInit(),b.onImagesReady&&C.fireCallback(b.onImagesReady,C))},c.src=a}var d=C.h.addEventListener,e="wrapper"==b.eventTarget?C.wrapper:C.container;if(C.browser.ie10||C.browser.ie11?(d(e,C.touchEvents.touchStart,p),d(document,C.touchEvents.touchMove,q),d(document,C.touchEvents.touchEnd,r)):(C.support.touch&&(d(e,"touchstart",p),d(e,"touchmove",q),d(e,"touchend",r)),b.simulateTouch&&(d(e,"mousedown",p),d(document,"mousemove",q),d(document,"mouseup",r))),b.autoResize&&d(window,"resize",C.resizeFix),g(),C._wheelEvent=!1,b.mousewheelControl){void 0!==document.onmousewheel&&(C._wheelEvent="mousewheel");try{WheelEvent("wheel"),C._wheelEvent="wheel"}catch(f){}C._wheelEvent||(C._wheelEvent="DOMMouseScroll"),C._wheelEvent&&d(C.container,C._wheelEvent,j)}if(b.keyboardControl&&d(document,"keydown",i),b.updateOnImagesReady){C.imagesToLoad=c("img",C.container);for(var h=0;h<C.imagesToLoad.length;h++)a(C.imagesToLoad[h].getAttribute("src"))}}function g(){var a,d=C.h.addEventListener;if(b.preventLinks){var e=c("a",C.container);for(a=0;a<e.length;a++)d(e[a],"click",n)}if(b.releaseFormElements){var f=c("input, textarea, select",C.container);for(a=0;a<f.length;a++)d(f[a],C.touchEvents.touchStart,o,!0)}if(b.onSlideClick)for(a=0;a<C.slides.length;a++)d(C.slides[a],"click",k);if(b.onSlideTouch)for(a=0;a<C.slides.length;a++)d(C.slides[a],C.touchEvents.touchStart,l)}function h(){var a,d=C.h.removeEventListener;if(b.onSlideClick)for(a=0;a<C.slides.length;a++)d(C.slides[a],"click",k);if(b.onSlideTouch)for(a=0;a<C.slides.length;a++)d(C.slides[a],C.touchEvents.touchStart,l);if(b.releaseFormElements){var e=c("input, textarea, select",C.container);for(a=0;a<e.length;a++)d(e[a],C.touchEvents.touchStart,o,!0)}if(b.preventLinks){var f=c("a",C.container);for(a=0;a<f.length;a++)d(f[a],"click",n)}}function i(a){var b=a.keyCode||a.charCode;if(37==b||39==b||38==b||40==b){for(var c=!1,d=C.h.getOffset(C.container),e=C.h.windowScroll().left,f=C.h.windowScroll().top,g=C.h.windowWidth(),h=C.h.windowHeight(),i=[[d.left,d.top],[d.left+C.width,d.top],[d.left,d.top+C.height],[d.left+C.width,d.top+C.height]],j=0;j<i.length;j++){var k=i[j];k[0]>=e&&k[0]<=e+g&&k[1]>=f&&k[1]<=f+h&&(c=!0)}if(!c)return}M?((37==b||39==b)&&(a.preventDefault?a.preventDefault():a.returnValue=!1),39==b&&C.swipeNext(),37==b&&C.swipePrev()):((38==b||40==b)&&(a.preventDefault?a.preventDefault():a.returnValue=!1),40==b&&C.swipeNext(),38==b&&C.swipePrev())}function j(a){var c=C._wheelEvent,d=0;if(a.detail)d=-a.detail;else if("mousewheel"==c)if(b.mousewheelControlForceToAxis)if(M){if(!(Math.abs(a.wheelDeltaX)>Math.abs(a.wheelDeltaY)))return;d=a.wheelDeltaX}else{if(!(Math.abs(a.wheelDeltaY)>Math.abs(a.wheelDeltaX)))return;d=a.wheelDeltaY}else d=a.wheelDelta;else if("DOMMouseScroll"==c)d=-a.detail;else if("wheel"==c)if(b.mousewheelControlForceToAxis)if(M){if(!(Math.abs(a.deltaX)>Math.abs(a.deltaY)))return;d=-a.deltaX}else{if(!(Math.abs(a.deltaY)>Math.abs(a.deltaX)))return;d=-a.deltaY}else d=Math.abs(a.deltaX)>Math.abs(a.deltaY)?-a.deltaX:-a.deltaY;if(b.freeMode){var f=C.getWrapperTranslate()+d;if(f>0&&(f=0),f<-e()&&(f=-e()),C.setWrapperTransition(0),C.setWrapperTranslate(f),C.updateActiveSlide(f),0==f||f==-e())return}else(new Date).getTime()-U>60&&(0>d?C.swipeNext():C.swipePrev()),U=(new Date).getTime();return b.autoplay&&C.stopAutoplay(!0),a.preventDefault?a.preventDefault():a.returnValue=!1,!1}function k(a){C.allowSlideClick&&(m(a),C.fireCallback(b.onSlideClick,C,a))}function l(a){m(a),C.fireCallback(b.onSlideTouch,C,a)}function m(a){if(a.currentTarget)C.clickedSlide=a.currentTarget;else{var c=a.srcElement;do if(c.className.indexOf(b.slideClass)>-1)break;while(c=c.parentNode);C.clickedSlide=c}C.clickedSlideIndex=C.slides.indexOf(C.clickedSlide),C.clickedSlideLoopIndex=C.clickedSlideIndex-(C.loopedSlides||0)}function n(a){return C.allowLinks?void 0:(a.preventDefault?a.preventDefault():a.returnValue=!1,b.preventLinksPropagation&&"stopPropagation"in a&&a.stopPropagation(),!1)}function o(a){return a.stopPropagation?a.stopPropagation():a.returnValue=!1,!1}function p(a){if(b.preventLinks&&(C.allowLinks=!0),C.isTouched||b.onlyExternal)return!1;if(b.noSwiping&&(a.target||a.srcElement)&&s(a.target||a.srcElement))return!1;if($=!1,thresholdFirstMove=!1,C.isTouched=!0,Z="touchstart"==a.type,!Z||1==a.targetTouches.length){C.callPlugins("onTouchStartBegin"),Z||C.isAndroid||(a.preventDefault?a.preventDefault():a.returnValue=!1);var c=Z?a.targetTouches[0].pageX:a.pageX||a.clientX,d=Z?a.targetTouches[0].pageY:a.pageY||a.clientY;C.touches.startX=C.touches.currentX=c,C.touches.startY=C.touches.currentY=d,C.touches.start=C.touches.current=M?c:d,C.setWrapperTransition(0),C.positions.start=C.positions.current=C.getWrapperTranslate(),C.setWrapperTranslate(C.positions.start),C.times.start=(new Date).getTime(),H=void 0,b.moveStartThreshold>0&&(W=!1),b.onTouchStart&&C.fireCallback(b.onTouchStart,C),C.callPlugins("onTouchStartEnd")}}function q(a){if(C.isTouched&&!b.onlyExternal&&(!Z||"mousemove"!=a.type)){var c=Z?a.targetTouches[0].pageX:a.pageX||a.clientX,d=Z?a.targetTouches[0].pageY:a.pageY||a.clientY;if("undefined"==typeof H&&M&&(H=!!(H||Math.abs(d-C.touches.startY)>Math.abs(c-C.touches.startX))),"undefined"!=typeof H||M||(H=!!(H||Math.abs(d-C.touches.startY)<Math.abs(c-C.touches.startX))),H)return void(C.isTouched=!1);if(a.assignedToSwiper)return void(C.isTouched=!1);if(a.assignedToSwiper=!0,b.preventLinks&&(C.allowLinks=!1),b.onSlideClick&&(C.allowSlideClick=!1),b.autoplay&&C.stopAutoplay(!0),!Z||1==a.touches.length){if(C.isMoved||(C.callPlugins("onTouchMoveStart"),b.loop&&(C.fixLoop(),C.positions.start=C.getWrapperTranslate()),b.onTouchMoveStart&&C.fireCallback(b.onTouchMoveStart,C)),C.isMoved=!0,a.preventDefault?a.preventDefault():a.returnValue=!1,C.touches.current=M?c:d,C.positions.current=(C.touches.current-C.touches.start)*b.touchRatio+C.positions.start,C.positions.current>0&&b.onResistanceBefore&&C.fireCallback(b.onResistanceBefore,C,C.positions.current),C.positions.current<-e()&&b.onResistanceAfter&&C.fireCallback(b.onResistanceAfter,C,Math.abs(C.positions.current+e())),b.resistance&&"100%"!=b.resistance){if(C.positions.current>0){var f=1-C.positions.current/I/2;C.positions.current=.5>f?I/2:C.positions.current*f}if(C.positions.current<-e()){var g=(C.touches.current-C.touches.start)*b.touchRatio+(e()+C.positions.start),f=(I+g)/I,h=C.positions.current-g*(1-f)/2,i=-e()-I/2;C.positions.current=i>h||0>=f?i:h}}if(b.resistance&&"100%"==b.resistance&&(C.positions.current>0&&(!b.freeMode||b.freeModeFluid)&&(C.positions.current=0),C.positions.current<-e()&&(!b.freeMode||b.freeModeFluid)&&(C.positions.current=-e())),!b.followFinger)return;if(b.moveStartThreshold)if(Math.abs(C.touches.current-C.touches.start)>b.moveStartThreshold||W){if(!W)return W=!0,void(C.touches.start=C.touches.current);C.setWrapperTranslate(C.positions.current)}else C.positions.current=C.positions.start;else C.setWrapperTranslate(C.positions.current);return(b.freeMode||b.watchActiveIndex)&&C.updateActiveSlide(C.positions.current),b.grabCursor&&(C.container.style.cursor="move",C.container.style.cursor="grabbing",C.container.style.cursor="-moz-grabbin",C.container.style.cursor="-webkit-grabbing"),X||(X=C.touches.current),Y||(Y=(new Date).getTime()),C.velocity=(C.touches.current-X)/((new Date).getTime()-Y)/2,Math.abs(C.touches.current-X)<2&&(C.velocity=0),X=C.touches.current,Y=(new Date).getTime(),C.callPlugins("onTouchMoveEnd"),b.onTouchMove&&C.fireCallback(b.onTouchMove,C),!1}}}function r(){if(H&&C.swipeReset(),!b.onlyExternal&&C.isTouched){C.isTouched=!1,b.grabCursor&&(C.container.style.cursor="move",C.container.style.cursor="grab",C.container.style.cursor="-moz-grab",C.container.style.cursor="-webkit-grab"),C.positions.current||0===C.positions.current||(C.positions.current=C.positions.start),b.followFinger&&C.setWrapperTranslate(C.positions.current),C.times.end=(new Date).getTime(),C.touches.diff=C.touches.current-C.touches.start,C.touches.abs=Math.abs(C.touches.diff),C.positions.diff=C.positions.current-C.positions.start,C.positions.abs=Math.abs(C.positions.diff);var a=C.positions.diff,c=C.positions.abs,d=C.times.end-C.times.start;5>c&&300>d&&0==C.allowLinks&&(b.freeMode||0==c||C.swipeReset(),b.preventLinks&&(C.allowLinks=!0),b.onSlideClick&&(C.allowSlideClick=!0)),setTimeout(function(){b.preventLinks&&(C.allowLinks=!0),b.onSlideClick&&(C.allowSlideClick=!0)},100);var f=e();if(!C.isMoved&&b.freeMode)return C.isMoved=!1,b.onTouchEnd&&C.fireCallback(b.onTouchEnd,C),void C.callPlugins("onTouchEnd");if(!C.isMoved||C.positions.current>0||C.positions.current<-f)return C.swipeReset(),b.onTouchEnd&&C.fireCallback(b.onTouchEnd,C),void C.callPlugins("onTouchEnd");if(C.isMoved=!1,b.freeMode){if(b.freeModeFluid){var g,h=1e3*b.momentumRatio,i=C.velocity*h,j=C.positions.current+i,k=!1,l=20*Math.abs(C.velocity)*b.momentumBounceRatio;-f>j&&(b.momentumBounce&&C.support.transitions?(-l>j+f&&(j=-f-l),g=-f,k=!0,$=!0):j=-f),j>0&&(b.momentumBounce&&C.support.transitions?(j>l&&(j=l),g=0,k=!0,$=!0):j=0),0!=C.velocity&&(h=Math.abs((j-C.positions.current)/C.velocity)),C.setWrapperTranslate(j),C.setWrapperTransition(h),b.momentumBounce&&k&&C.wrapperTransitionEnd(function(){$&&(b.onMomentumBounce&&C.fireCallback(b.onMomentumBounce,C),C.callPlugins("onMomentumBounce"),C.setWrapperTranslate(g),C.setWrapperTransition(300))}),C.updateActiveSlide(j)}return(!b.freeModeFluid||d>=300)&&C.updateActiveSlide(C.positions.current),b.onTouchEnd&&C.fireCallback(b.onTouchEnd,C),void C.callPlugins("onTouchEnd")}G=0>a?"toNext":"toPrev","toNext"==G&&300>=d&&(30>c||!b.shortSwipes?C.swipeReset():C.swipeNext(!0)),"toPrev"==G&&300>=d&&(30>c||!b.shortSwipes?C.swipeReset():C.swipePrev(!0));var m=0;if("auto"==b.slidesPerView){for(var n,o=Math.abs(C.getWrapperTranslate()),p=0,q=0;q<C.slides.length;q++)if(n=M?C.slides[q].getWidth(!0):C.slides[q].getHeight(!0),p+=n,p>o){m=n;break}m>I&&(m=I)}else m=E*b.slidesPerView;"toNext"==G&&d>300&&(c>=m*b.longSwipesRatio?C.swipeNext(!0):C.swipeReset()),"toPrev"==G&&d>300&&(c>=m*b.longSwipesRatio?C.swipePrev(!0):C.swipeReset()),b.onTouchEnd&&C.fireCallback(b.onTouchEnd,C),C.callPlugins("onTouchEnd")}}function s(a){var c=!1;do a.className.indexOf(b.noSwipingClass)>-1&&(c=!0),a=a.parentElement;while(!c&&a.parentElement&&-1==a.className.indexOf(b.wrapperClass));return!c&&a.className.indexOf(b.wrapperClass)>-1&&a.className.indexOf(b.noSwipingClass)>-1&&(c=!0),c}function t(a,b){var c,d=document.createElement("div");return d.innerHTML=b,c=d.firstChild,c.className+=" "+a,c.outerHTML}function u(a,c,d){function e(){var c=+new Date,d=c-g;h+=i*d/(1e3/60),k="toNext"==j?h>a:a>h,k?(C.setWrapperTranslate(Math.round(h)),C._DOMAnimating=!0,window.setTimeout(function(){e()},1e3/60)):(b.onSlideChangeEnd&&C.fireCallback(b.onSlideChangeEnd,C),C.setWrapperTranslate(a),C._DOMAnimating=!1)}var f="to"==c&&d.speed>=0?d.speed:b.speed,g=+new Date;if(C.support.transitions||!b.DOMAnimation)C.setWrapperTranslate(a),C.setWrapperTransition(f);else{var h=C.getWrapperTranslate(),i=Math.ceil((a-h)/f*(1e3/60)),j=h>a?"toNext":"toPrev",k="toNext"==j?h>a:a>h;if(C._DOMAnimating)return;e()}C.updateActiveSlide(a),b.onSlideNext&&"next"==c&&C.fireCallback(b.onSlideNext,C,a),b.onSlidePrev&&"prev"==c&&C.fireCallback(b.onSlidePrev,C,a),b.onSlideReset&&"reset"==c&&C.fireCallback(b.onSlideReset,C,a),("next"==c||"prev"==c||"to"==c&&1==d.runCallbacks)&&v(c)}function v(a){if(C.callPlugins("onSlideChangeStart"),b.onSlideChangeStart)if(b.queueStartCallbacks&&C.support.transitions){if(C._queueStartCallbacks)return;C._queueStartCallbacks=!0,C.fireCallback(b.onSlideChangeStart,C,a),C.wrapperTransitionEnd(function(){C._queueStartCallbacks=!1})}else C.fireCallback(b.onSlideChangeStart,C,a);if(b.onSlideChangeEnd)if(C.support.transitions)if(b.queueEndCallbacks){if(C._queueEndCallbacks)return;C._queueEndCallbacks=!0,C.wrapperTransitionEnd(function(c){C.fireCallback(b.onSlideChangeEnd,c,a)})}else C.wrapperTransitionEnd(function(c){C.fireCallback(b.onSlideChangeEnd,c,a)});else b.DOMAnimation||setTimeout(function(){C.fireCallback(b.onSlideChangeEnd,C,a)},10)}function w(){for(var a=C.paginationButtons,b=0;b<a.length;b++)C.h.removeEventListener(a[b],"click",y)}function x(){for(var a=C.paginationButtons,b=0;b<a.length;b++)C.h.addEventListener(a[b],"click",y)}function y(a){for(var b,c=a.target||a.srcElement,d=C.paginationButtons,e=0;e<d.length;e++)c===d[e]&&(b=e);C.swipeTo(b)}function z(){_=setTimeout(function(){b.loop?(C.fixLoop(),C.swipeNext(!0)):C.swipeNext(!0)||(b.autoplayStopOnLast?(clearTimeout(_),_=void 0):C.swipeTo(0)),C.wrapperTransitionEnd(function(){"undefined"!=typeof _&&z()})},b.autoplay)}function A(){C.calcSlides(),b.loader.slides.length>0&&0==C.slides.length&&C.loadSlides(),b.loop&&C.createLoop(),C.init(),f(),b.pagination&&C.createPagination(!0),b.loop||b.initialSlide>0?C.swipeTo(b.initialSlide,0,!1):C.updateActiveSlide(0),b.autoplay&&C.startAutoplay(),C.centerIndex=C.activeIndex,b.onSwiperCreated&&C.fireCallback(b.onSwiperCreated,C),C.callPlugins("onSwiperCreated")}if(document.body.__defineGetter__&&HTMLElement){var B=HTMLElement.prototype;B.__defineGetter__&&B.__defineGetter__("outerHTML",function(){return(new XMLSerializer).serializeToString(this)})}if(window.getComputedStyle||(window.getComputedStyle=function(a){return this.el=a,this.getPropertyValue=function(b){var c=/(\-([a-z]){1})/g;return"float"===b&&(b="styleFloat"),c.test(b)&&(b=b.replace(c,function(){return arguments[2].toUpperCase()})),a.currentStyle[b]?a.currentStyle[b]:null},this}),Array.prototype.indexOf||(Array.prototype.indexOf=function(a,b){for(var c=b||0,d=this.length;d>c;c++)if(this[c]===a)return c;return-1}),(document.querySelectorAll||window.jQuery)&&"undefined"!=typeof a&&(a.nodeType||0!==c(a).length)){var C=this;C.touches={start:0,startX:0,startY:0,current:0,currentX:0,currentY:0,diff:0,abs:0},C.positions={start:0,abs:0,diff:0,current:0},C.times={start:0,end:0},C.id=(new Date).getTime(),C.container=a.nodeType?a:c(a)[0],C.isTouched=!1,C.isMoved=!1,C.activeIndex=0,C.centerIndex=0,C.activeLoaderIndex=0,C.activeLoopIndex=0,C.previousIndex=null,C.velocity=0,C.snapGrid=[],C.slidesGrid=[],C.imagesToLoad=[],C.imagesLoaded=0,C.wrapperLeft=0,C.wrapperRight=0,C.wrapperTop=0,C.wrapperBottom=0,C.isAndroid=navigator.userAgent.toLowerCase().indexOf("android")>=0;var D,E,F,G,H,I,J={eventTarget:"wrapper",mode:"horizontal",touchRatio:1,speed:300,freeMode:!1,freeModeFluid:!1,momentumRatio:1,momentumBounce:!0,momentumBounceRatio:1,slidesPerView:1,slidesPerGroup:1,simulateTouch:!0,followFinger:!0,shortSwipes:!0,longSwipesRatio:.5,moveStartThreshold:!1,onlyExternal:!1,createPagination:!0,pagination:!1,paginationElement:"span",paginationClickable:!1,paginationAsRange:!0,resistance:!0,scrollContainer:!1,preventLinks:!0,preventLinksPropagation:!1,noSwiping:!1,noSwipingClass:"swiper-no-swiping",initialSlide:0,keyboardControl:!1,mousewheelControl:!1,mousewheelControlForceToAxis:!1,useCSS3Transforms:!0,autoplay:!1,autoplayDisableOnInteraction:!0,autoplayStopOnLast:!1,loop:!1,loopAdditionalSlides:0,calculateHeight:!1,cssWidthAndHeight:!1,updateOnImagesReady:!0,releaseFormElements:!0,watchActiveIndex:!1,visibilityFullFit:!1,offsetPxBefore:0,offsetPxAfter:0,offsetSlidesBefore:0,offsetSlidesAfter:0,centeredSlides:!1,queueStartCallbacks:!1,queueEndCallbacks:!1,autoResize:!0,resizeReInit:!1,DOMAnimation:!0,loader:{slides:[],slidesHTMLType:"inner",surroundGroups:1,logic:"reload",loadAllSlides:!1},slideElement:"div",slideClass:"swiper-slide",slideActiveClass:"swiper-slide-active",slideVisibleClass:"swiper-slide-visible",slideDuplicateClass:"swiper-slide-duplicate",wrapperClass:"swiper-wrapper",paginationElementClass:"swiper-pagination-switch",paginationActiveClass:"swiper-active-switch",paginationVisibleClass:"swiper-visible-switch"};b=b||{};for(var K in J)if(K in b&&"object"==typeof b[K])for(var L in J[K])L in b[K]||(b[K][L]=J[K][L]);else K in b||(b[K]=J[K]);C.params=b,b.scrollContainer&&(b.freeMode=!0,b.freeModeFluid=!0),b.loop&&(b.resistance="100%");var M="horizontal"===b.mode,N=["mousedown","mousemove","mouseup"];C.browser.ie10&&(N=["MSPointerDown","MSPointerMove","MSPointerUp"]),C.browser.ie11&&(N=["pointerdown","pointermove","pointerup"]),C.touchEvents={touchStart:C.support.touch||!b.simulateTouch?"touchstart":N[0],touchMove:C.support.touch||!b.simulateTouch?"touchmove":N[1],touchEnd:C.support.touch||!b.simulateTouch?"touchend":N[2]};for(var O=C.container.childNodes.length-1;O>=0;O--)if(C.container.childNodes[O].className)for(var P=C.container.childNodes[O].className.split(" "),Q=0;Q<P.length;Q++)P[Q]===b.wrapperClass&&(D=C.container.childNodes[O]);C.wrapper=D,C._extendSwiperSlide=function(a){return a.append=function(){return b.loop?a.insertAfter(C.slides.length-C.loopedSlides):(C.wrapper.appendChild(a),C.reInit()),a},a.prepend=function(){return b.loop?(C.wrapper.insertBefore(a,C.slides[C.loopedSlides]),C.removeLoopedSlides(),C.calcSlides(),C.createLoop()):C.wrapper.insertBefore(a,C.wrapper.firstChild),C.reInit(),a},a.insertAfter=function(c){if("undefined"==typeof c)return!1;var d;return b.loop?(d=C.slides[c+1+C.loopedSlides],d?C.wrapper.insertBefore(a,d):C.wrapper.appendChild(a),C.removeLoopedSlides(),C.calcSlides(),C.createLoop()):(d=C.slides[c+1],C.wrapper.insertBefore(a,d)),C.reInit(),a},a.clone=function(){return C._extendSwiperSlide(a.cloneNode(!0))},a.remove=function(){C.wrapper.removeChild(a),C.reInit()},a.html=function(b){return"undefined"==typeof b?a.innerHTML:(a.innerHTML=b,a)},a.index=function(){for(var b,c=C.slides.length-1;c>=0;c--)a===C.slides[c]&&(b=c);return b},a.isActive=function(){return a.index()===C.activeIndex?!0:!1},a.swiperSlideDataStorage||(a.swiperSlideDataStorage={}),a.getData=function(b){return a.swiperSlideDataStorage[b]},a.setData=function(b,c){return a.swiperSlideDataStorage[b]=c,a},a.data=function(b,c){return c?(a.setAttribute("data-"+b,c),a):a.getAttribute("data-"+b)},a.getWidth=function(b){return C.h.getWidth(a,b)},a.getHeight=function(b){return C.h.getHeight(a,b)},a.getOffset=function(){return C.h.getOffset(a)},a},C.calcSlides=function(a){var c=C.slides?C.slides.length:!1;C.slides=[],C.displaySlides=[];for(var d=0;d<C.wrapper.childNodes.length;d++)if(C.wrapper.childNodes[d].className)for(var e=C.wrapper.childNodes[d].className,f=e.split(" "),i=0;i<f.length;i++)f[i]===b.slideClass&&C.slides.push(C.wrapper.childNodes[d]);for(d=C.slides.length-1;d>=0;d--)C._extendSwiperSlide(C.slides[d]);c!==!1&&(c!==C.slides.length||a)&&(h(),g(),C.updateActiveSlide(),C.params.pagination&&C.createPagination(),C.callPlugins("numberOfSlidesChanged"))},C.createSlide=function(a,c,d){var c=c||C.params.slideClass,d=d||b.slideElement,e=document.createElement(d);return e.innerHTML=a||"",e.className=c,C._extendSwiperSlide(e)},C.appendSlide=function(a,b,c){return a?a.nodeType?C._extendSwiperSlide(a).append():C.createSlide(a,b,c).append():void 0},C.prependSlide=function(a,b,c){return a?a.nodeType?C._extendSwiperSlide(a).prepend():C.createSlide(a,b,c).prepend():void 0},C.insertSlideAfter=function(a,b,c,d){return"undefined"==typeof a?!1:b.nodeType?C._extendSwiperSlide(b).insertAfter(a):C.createSlide(b,c,d).insertAfter(a)},C.removeSlide=function(a){if(C.slides[a]){if(b.loop){if(!C.slides[a+C.loopedSlides])return!1;C.slides[a+C.loopedSlides].remove(),C.removeLoopedSlides(),C.calcSlides(),C.createLoop()}else C.slides[a].remove();return!0}return!1},C.removeLastSlide=function(){return C.slides.length>0?(b.loop?(C.slides[C.slides.length-1-C.loopedSlides].remove(),C.removeLoopedSlides(),C.calcSlides(),C.createLoop()):C.slides[C.slides.length-1].remove(),!0):!1},C.removeAllSlides=function(){for(var a=C.slides.length-1;a>=0;a--)C.slides[a].remove()},C.getSlide=function(a){return C.slides[a]},C.getLastSlide=function(){return C.slides[C.slides.length-1]},C.getFirstSlide=function(){return C.slides[0]},C.activeSlide=function(){return C.slides[C.activeIndex]},C.fireCallback=function(){var a=arguments[0];if("[object Array]"===Object.prototype.toString.call(a))for(var c=0;c<a.length;c++)"function"==typeof a[c]&&a[c](arguments[1],arguments[2],arguments[3],arguments[4],arguments[5]);else"[object String]"===Object.prototype.toString.call(a)?b["on"+a]&&C.fireCallback(b["on"+a]):a(arguments[1],arguments[2],arguments[3],arguments[4],arguments[5])},C.addCallback=function(a,b){"use strict";var c,e=this;return e.params["on"+a]?d(this.params["on"+a])?this.params["on"+a].push(b):"function"==typeof this.params["on"+a]?(c=this.params["on"+a],this.params["on"+a]=[],this.params["on"+a].push(c),this.params["on"+a].push(b)):void 0:(this.params["on"+a]=[],this.params["on"+a].push(b))},C.removeCallbacks=function(a){return C.params["on"+a]?C.params["on"+a]=null:void 0};var R=[];for(var S in C.plugins)if(b[S]){var T=C.plugins[S](C,b[S]);T&&R.push(T)}C.callPlugins=function(a,b){b||(b={});for(var c=0;c<R.length;c++)a in R[c]&&R[c][a](b)},!C.browser.ie10&&!C.browser.ie11||b.onlyExternal||C.wrapper.classList.add("swiper-wp8-"+(M?"horizontal":"vertical")),b.freeMode&&(C.container.className+=" swiper-free-mode"),C.initialized=!1,C.init=function(a,c){var d=C.h.getWidth(C.container),e=C.h.getHeight(C.container);if(d!==C.width||e!==C.height||a){C.width=d,C.height=e,I=M?d:e;var f=C.wrapper;if(a&&C.calcSlides(c),"auto"===b.slidesPerView){var g=0,h=0;b.slidesOffset>0&&(f.style.paddingLeft="",f.style.paddingRight="",f.style.paddingTop="",f.style.paddingBottom=""),f.style.width="",f.style.height="",b.offsetPxBefore>0&&(M?C.wrapperLeft=b.offsetPxBefore:C.wrapperTop=b.offsetPxBefore),b.offsetPxAfter>0&&(M?C.wrapperRight=b.offsetPxAfter:C.wrapperBottom=b.offsetPxAfter),b.centeredSlides&&(M?(C.wrapperLeft=(I-this.slides[0].getWidth(!0))/2,C.wrapperRight=(I-C.slides[C.slides.length-1].getWidth(!0))/2):(C.wrapperTop=(I-C.slides[0].getHeight(!0))/2,C.wrapperBottom=(I-C.slides[C.slides.length-1].getHeight(!0))/2)),M?(C.wrapperLeft>=0&&(f.style.paddingLeft=C.wrapperLeft+"px"),C.wrapperRight>=0&&(f.style.paddingRight=C.wrapperRight+"px")):(C.wrapperTop>=0&&(f.style.paddingTop=C.wrapperTop+"px"),C.wrapperBottom>=0&&(f.style.paddingBottom=C.wrapperBottom+"px"));var i=0,j=0;C.snapGrid=[],C.slidesGrid=[];for(var k=0,l=0;l<C.slides.length;l++){var m=C.slides[l].getWidth(!0),n=C.slides[l].getHeight(!0);b.calculateHeight&&(k=Math.max(k,n));var o=M?m:n;if(b.centeredSlides){var p=l===C.slides.length-1?0:C.slides[l+1].getWidth(!0),q=l===C.slides.length-1?0:C.slides[l+1].getHeight(!0),r=M?p:q;if(o>I){for(var s=0;s<=Math.floor(o/(I+C.wrapperLeft));s++)C.snapGrid.push(0===s?i+C.wrapperLeft:i+C.wrapperLeft+I*s);C.slidesGrid.push(i+C.wrapperLeft)}else C.snapGrid.push(j),C.slidesGrid.push(j);j+=o/2+r/2}else{if(o>I)for(var s=0;s<=Math.floor(o/I);s++)C.snapGrid.push(i+I*s);else C.snapGrid.push(i);C.slidesGrid.push(i)}i+=o,g+=m,h+=n}b.calculateHeight&&(C.height=k),M?(F=g+C.wrapperRight+C.wrapperLeft,f.style.width=g+"px",f.style.height=C.height+"px"):(F=h+C.wrapperTop+C.wrapperBottom,f.style.width=C.width+"px",f.style.height=h+"px")}else if(b.scrollContainer){f.style.width="",f.style.height="";var t=C.slides[0].getWidth(!0),u=C.slides[0].getHeight(!0);F=M?t:u,f.style.width=t+"px",f.style.height=u+"px",E=M?t:u}else{if(b.calculateHeight){var k=0,u=0;M||(C.container.style.height=""),f.style.height="";for(var l=0;l<C.slides.length;l++)C.slides[l].style.height="",k=Math.max(C.slides[l].getHeight(!0),k),M||(u+=C.slides[l].getHeight(!0));var n=k;C.height=n,M?u=n:(I=n,C.container.style.height=I+"px")}else var n=M?C.height:C.height/b.slidesPerView,u=M?C.height:C.slides.length*n;var m=M?C.width/b.slidesPerView:C.width,t=M?C.slides.length*m:C.width;E=M?m:n,b.offsetSlidesBefore>0&&(M?C.wrapperLeft=E*b.offsetSlidesBefore:C.wrapperTop=E*b.offsetSlidesBefore),b.offsetSlidesAfter>0&&(M?C.wrapperRight=E*b.offsetSlidesAfter:C.wrapperBottom=E*b.offsetSlidesAfter),b.offsetPxBefore>0&&(M?C.wrapperLeft=b.offsetPxBefore:C.wrapperTop=b.offsetPxBefore),b.offsetPxAfter>0&&(M?C.wrapperRight=b.offsetPxAfter:C.wrapperBottom=b.offsetPxAfter),b.centeredSlides&&(M?(C.wrapperLeft=(I-E)/2,C.wrapperRight=(I-E)/2):(C.wrapperTop=(I-E)/2,C.wrapperBottom=(I-E)/2)),M?(C.wrapperLeft>0&&(f.style.paddingLeft=C.wrapperLeft+"px"),C.wrapperRight>0&&(f.style.paddingRight=C.wrapperRight+"px")):(C.wrapperTop>0&&(f.style.paddingTop=C.wrapperTop+"px"),C.wrapperBottom>0&&(f.style.paddingBottom=C.wrapperBottom+"px")),F=M?t+C.wrapperRight+C.wrapperLeft:u+C.wrapperTop+C.wrapperBottom,b.cssWidthAndHeight||(parseFloat(t)>0&&(f.style.width=t+"px"),parseFloat(u)>0&&(f.style.height=u+"px"));var i=0;C.snapGrid=[],C.slidesGrid=[];for(var l=0;l<C.slides.length;l++)C.snapGrid.push(i),C.slidesGrid.push(i),i+=E,b.cssWidthAndHeight||(parseFloat(m)>0&&(C.slides[l].style.width=m+"px"),parseFloat(n)>0&&(C.slides[l].style.height=n+"px"))}C.initialized?(C.callPlugins("onInit"),b.onInit&&C.fireCallback(b.onInit,C)):(C.callPlugins("onFirstInit"),b.onFirstInit&&C.fireCallback(b.onFirstInit,C)),C.initialized=!0}},C.reInit=function(a){C.init(!0,a)},C.resizeFix=function(a){C.callPlugins("beforeResizeFix"),C.init(b.resizeReInit||a),b.freeMode?C.getWrapperTranslate()<-e()&&(C.setWrapperTransition(0),C.setWrapperTranslate(-e())):(C.swipeTo(b.loop?C.activeLoopIndex:C.activeIndex,0,!1),b.autoplay&&(C.support.transitions&&"undefined"!=typeof _?"undefined"!=typeof _&&(clearTimeout(_),_=void 0,C.startAutoplay()):"undefined"!=typeof ab&&(clearInterval(ab),ab=void 0,C.startAutoplay()))),C.callPlugins("afterResizeFix")},C.destroy=function(){var a=C.h.removeEventListener,c="wrapper"==b.eventTarget?C.wrapper:C.container;C.browser.ie10||C.browser.ie11?(a(c,C.touchEvents.touchStart,p),a(document,C.touchEvents.touchMove,q),a(document,C.touchEvents.touchEnd,r)):(C.support.touch&&(a(c,"touchstart",p),a(c,"touchmove",q),a(c,"touchend",r)),b.simulateTouch&&(a(c,"mousedown",p),a(document,"mousemove",q),a(document,"mouseup",r))),b.autoResize&&a(window,"resize",C.resizeFix),h(),b.paginationClickable&&w(),b.mousewheelControl&&C._wheelEvent&&a(C.container,C._wheelEvent,j),b.keyboardControl&&a(document,"keydown",i),b.autoplay&&C.stopAutoplay(),C.callPlugins("onDestroy"),C=null};var U=(new Date).getTime();if(b.grabCursor){var V=C.container.style;V.cursor="move",V.cursor="grab",V.cursor="-moz-grab",V.cursor="-webkit-grab"}C.allowSlideClick=!0,C.allowLinks=!0;var W,X,Y,Z=!1,$=!0;C.swipeNext=function(a){!a&&b.loop&&C.fixLoop(),!a&&b.autoplay&&C.stopAutoplay(!0),C.callPlugins("onSwipeNext");var c=C.getWrapperTranslate(),d=c;if("auto"==b.slidesPerView){for(var f=0;f<C.snapGrid.length;f++)if(-c>=C.snapGrid[f]&&-c<C.snapGrid[f+1]){d=-C.snapGrid[f+1];break}}else{var g=E*b.slidesPerGroup;d=-(Math.floor(Math.abs(c)/Math.floor(g))*g+g)}return d<-e()&&(d=-e()),d==c?!1:(u(d,"next"),!0)},C.swipePrev=function(a){!a&&b.loop&&C.fixLoop(),!a&&b.autoplay&&C.stopAutoplay(!0),C.callPlugins("onSwipePrev");var c,d=Math.ceil(C.getWrapperTranslate());if("auto"==b.slidesPerView){c=0;for(var e=1;e<C.snapGrid.length;e++){if(-d==C.snapGrid[e]){c=-C.snapGrid[e-1];break}if(-d>C.snapGrid[e]&&-d<C.snapGrid[e+1]){c=-C.snapGrid[e];break}}}else{var f=E*b.slidesPerGroup;c=-(Math.ceil(-d/f)-1)*f}return c>0&&(c=0),c==d?!1:(u(c,"prev"),!0)},C.swipeReset=function(){C.callPlugins("onSwipeReset");{var a,c=C.getWrapperTranslate(),d=E*b.slidesPerGroup;-e()}if("auto"==b.slidesPerView){a=0;for(var f=0;f<C.snapGrid.length;f++){if(-c===C.snapGrid[f])return;if(-c>=C.snapGrid[f]&&-c<C.snapGrid[f+1]){a=C.positions.diff>0?-C.snapGrid[f+1]:-C.snapGrid[f];break}}-c>=C.snapGrid[C.snapGrid.length-1]&&(a=-C.snapGrid[C.snapGrid.length-1]),c<=-e()&&(a=-e())}else a=0>c?Math.round(c/d)*d:0;return b.scrollContainer&&(a=0>c?c:0),a<-e()&&(a=-e()),b.scrollContainer&&I>E&&(a=0),a==c?!1:(u(a,"reset"),!0)},C.swipeTo=function(a,c,d){a=parseInt(a,10),C.callPlugins("onSwipeTo",{index:a,speed:c}),b.loop&&(a+=C.loopedSlides);var f=C.getWrapperTranslate();if(!(a>C.slides.length-1||0>a)){var g;return g="auto"==b.slidesPerView?-C.slidesGrid[a]:-a*E,g<-e()&&(g=-e()),g==f?!1:(d=d===!1?!1:!0,u(g,"to",{index:a,speed:c,runCallbacks:d}),!0)}},C._queueStartCallbacks=!1,C._queueEndCallbacks=!1,C.updateActiveSlide=function(a){if(C.initialized&&0!=C.slides.length){if(C.previousIndex=C.activeIndex,"undefined"==typeof a&&(a=C.getWrapperTranslate()),a>0&&(a=0),"auto"==b.slidesPerView){if(C.activeIndex=C.slidesGrid.indexOf(-a),C.activeIndex<0){for(var c=0;c<C.slidesGrid.length-1&&!(-a>C.slidesGrid[c]&&-a<C.slidesGrid[c+1]);c++);var d=Math.abs(C.slidesGrid[c]+a),e=Math.abs(C.slidesGrid[c+1]+a);C.activeIndex=e>=d?c:c+1}}else C.activeIndex=Math[b.visibilityFullFit?"ceil":"round"](-a/E);if(C.activeIndex==C.slides.length&&(C.activeIndex=C.slides.length-1),C.activeIndex<0&&(C.activeIndex=0),C.slides[C.activeIndex]){C.calcVisibleSlides(a);for(var f=new RegExp("\\s*"+b.slideActiveClass),g=new RegExp("\\s*"+b.slideVisibleClass),c=0;c<C.slides.length;c++)C.slides[c].className=C.slides[c].className.replace(f,"").replace(g,""),C.visibleSlides.indexOf(C.slides[c])>=0&&(C.slides[c].className+=" "+b.slideVisibleClass);if(C.slides[C.activeIndex].className+=" "+b.slideActiveClass,b.loop){var h=C.loopedSlides;C.activeLoopIndex=C.activeIndex-h,C.activeLoopIndex>=C.slides.length-2*h&&(C.activeLoopIndex=C.slides.length-2*h-C.activeLoopIndex),C.activeLoopIndex<0&&(C.activeLoopIndex=C.slides.length-2*h+C.activeLoopIndex),C.activeLoopIndex<0&&(C.activeLoopIndex=0)}else C.activeLoopIndex=C.activeIndex;b.pagination&&C.updatePagination(a)}}},C.createPagination=function(a){if(b.paginationClickable&&C.paginationButtons&&w(),C.paginationContainer=b.pagination.nodeType?b.pagination:c(b.pagination)[0],b.createPagination){var d="",e=C.slides.length,f=e;b.loop&&(f-=2*C.loopedSlides);for(var g=0;f>g;g++)d+="<"+b.paginationElement+' class="'+b.paginationElementClass+'"></'+b.paginationElement+">";C.paginationContainer.innerHTML=d}C.paginationButtons=c("."+b.paginationElementClass,C.paginationContainer),a||C.updatePagination(),C.callPlugins("onCreatePagination"),b.paginationClickable&&x()},C.updatePagination=function(a){if(b.pagination&&!(C.slides.length<1)){var d=c("."+b.paginationActiveClass,C.paginationContainer);if(d){var e=C.paginationButtons;if(0!=e.length){for(var f=0;f<e.length;f++)e[f].className=b.paginationElementClass;var g=b.loop?C.loopedSlides:0;if(b.paginationAsRange){C.visibleSlides||C.calcVisibleSlides(a);for(var h=[],f=0;f<C.visibleSlides.length;f++){var i=C.slides.indexOf(C.visibleSlides[f])-g;b.loop&&0>i&&(i=C.slides.length-2*C.loopedSlides+i),b.loop&&i>=C.slides.length-2*C.loopedSlides&&(i=C.slides.length-2*C.loopedSlides-i,i=Math.abs(i)),h.push(i)}for(f=0;f<h.length;f++)e[h[f]]&&(e[h[f]].className+=" "+b.paginationVisibleClass);b.loop?e[C.activeLoopIndex].className+=" "+b.paginationActiveClass:e[C.activeIndex].className+=" "+b.paginationActiveClass}else b.loop?e[C.activeLoopIndex]&&(e[C.activeLoopIndex].className+=" "+b.paginationActiveClass+" "+b.paginationVisibleClass):e[C.activeIndex].className+=" "+b.paginationActiveClass+" "+b.paginationVisibleClass}}}},C.calcVisibleSlides=function(a){var c=[],d=0,e=0,f=0;M&&C.wrapperLeft>0&&(a+=C.wrapperLeft),!M&&C.wrapperTop>0&&(a+=C.wrapperTop);for(var g=0;g<C.slides.length;g++){d+=e,e="auto"==b.slidesPerView?M?C.h.getWidth(C.slides[g],!0):C.h.getHeight(C.slides[g],!0):E,f=d+e;var h=!1;b.visibilityFullFit?(d>=-a&&-a+I>=f&&(h=!0),-a>=d&&f>=-a+I&&(h=!0)):(f>-a&&-a+I>=f&&(h=!0),d>=-a&&-a+I>d&&(h=!0),-a>d&&f>-a+I&&(h=!0)),h&&c.push(C.slides[g])}0==c.length&&(c=[C.slides[C.activeIndex]]),C.visibleSlides=c};var _=void 0,ab=void 0;C.startAutoplay=function(){if(C.support.transitions){if("undefined"!=typeof _)return!1;if(!b.autoplay)return;C.callPlugins("onAutoplayStart"),z()
+}else{if("undefined"!=typeof ab)return!1;if(!b.autoplay)return;C.callPlugins("onAutoplayStart"),ab=setInterval(function(){b.loop?(C.fixLoop(),C.swipeNext(!0)):C.swipeNext(!0)||(b.autoplayStopOnLast?(clearInterval(ab),ab=void 0):C.swipeTo(0))},b.autoplay)}},C.stopAutoplay=function(a){if(C.support.transitions){if(!_)return;_&&clearTimeout(_),_=void 0,a&&!b.autoplayDisableOnInteraction&&C.wrapperTransitionEnd(function(){z()}),C.callPlugins("onAutoplayStop")}else ab&&clearInterval(ab),ab=void 0,C.callPlugins("onAutoplayStop")},C.loopCreated=!1,C.removeLoopedSlides=function(){if(C.loopCreated)for(var a=0;a<C.slides.length;a++)C.slides[a].getData("looped")===!0&&C.wrapper.removeChild(C.slides[a])},C.createLoop=function(){if(0!=C.slides.length){C.loopedSlides="auto"==b.slidesPerView?b.loopedSlides||1:b.slidesPerView+b.loopAdditionalSlides,C.loopedSlides>C.slides.length&&(C.loopedSlides=C.slides.length);var a,c="",d="",e="",f=C.slides.length,g=Math.floor(C.loopedSlides/f),h=C.loopedSlides%f;for(a=0;g*f>a;a++){var i=a;if(a>=f){var j=Math.floor(a/f);i=a-f*j}e+=C.slides[i].outerHTML}for(a=0;h>a;a++)d+=t(b.slideDuplicateClass,C.slides[a].outerHTML);for(a=f-h;f>a;a++)c+=t(b.slideDuplicateClass,C.slides[a].outerHTML);var k=c+e+D.innerHTML+e+d;for(D.innerHTML=k,C.loopCreated=!0,C.calcSlides(),a=0;a<C.slides.length;a++)(a<C.loopedSlides||a>=C.slides.length-C.loopedSlides)&&C.slides[a].setData("looped",!0);C.callPlugins("onCreateLoop")}},C.fixLoop=function(){var a;C.activeIndex<C.loopedSlides?(a=C.slides.length-3*C.loopedSlides+C.activeIndex,C.swipeTo(a,0,!1)):("auto"==b.slidesPerView&&C.activeIndex>=2*C.loopedSlides||C.activeIndex>C.slides.length-2*b.slidesPerView)&&(a=-C.slides.length+C.activeIndex+C.loopedSlides,C.swipeTo(a,0,!1))},C.loadSlides=function(){var a="";C.activeLoaderIndex=0;for(var c=b.loader.slides,d=b.loader.loadAllSlides?c.length:b.slidesPerView*(1+b.loader.surroundGroups),e=0;d>e;e++)a+="outer"==b.loader.slidesHTMLType?c[e]:"<"+b.slideElement+' class="'+b.slideClass+'" data-swiperindex="'+e+'">'+c[e]+"</"+b.slideElement+">";C.wrapper.innerHTML=a,C.calcSlides(!0),b.loader.loadAllSlides||C.wrapperTransitionEnd(C.reloadSlides,!0)},C.reloadSlides=function(){var a=b.loader.slides,c=parseInt(C.activeSlide().data("swiperindex"),10);if(!(0>c||c>a.length-1)){C.activeLoaderIndex=c;var d=Math.max(0,c-b.slidesPerView*b.loader.surroundGroups),e=Math.min(c+b.slidesPerView*(1+b.loader.surroundGroups)-1,a.length-1);if(c>0){var f=-E*(c-d);C.setWrapperTranslate(f),C.setWrapperTransition(0)}if("reload"===b.loader.logic){C.wrapper.innerHTML="";for(var g="",h=d;e>=h;h++)g+="outer"==b.loader.slidesHTMLType?a[h]:"<"+b.slideElement+' class="'+b.slideClass+'" data-swiperindex="'+h+'">'+a[h]+"</"+b.slideElement+">";C.wrapper.innerHTML=g}else{for(var i=1e3,j=0,h=0;h<C.slides.length;h++){var k=C.slides[h].data("swiperindex");d>k||k>e?C.wrapper.removeChild(C.slides[h]):(i=Math.min(k,i),j=Math.max(k,j))}for(var h=d;e>=h;h++){if(i>h){var l=document.createElement(b.slideElement);l.className=b.slideClass,l.setAttribute("data-swiperindex",h),l.innerHTML=a[h],C.wrapper.insertBefore(l,C.wrapper.firstChild)}if(h>j){var l=document.createElement(b.slideElement);l.className=b.slideClass,l.setAttribute("data-swiperindex",h),l.innerHTML=a[h],C.wrapper.appendChild(l)}}}C.reInit(!0)}},A()}};Swiper.prototype={plugins:{},wrapperTransitionEnd:function(a,b){function c(){if(a(e),e.params.queueEndCallbacks&&(e._queueEndCallbacks=!1),!b)for(d=0;d<g.length;d++)e.h.removeEventListener(f,g[d],c)}var d,e=this,f=e.wrapper,g=["webkitTransitionEnd","transitionend","oTransitionEnd","MSTransitionEnd","msTransitionEnd"];if(a)for(d=0;d<g.length;d++)e.h.addEventListener(f,g[d],c)},getWrapperTranslate:function(a){var b,c,d,e,f=this.wrapper;return"undefined"==typeof a&&(a="horizontal"==this.params.mode?"x":"y"),this.support.transforms&&this.params.useCSS3Transforms?(d=window.getComputedStyle(f,null),window.WebKitCSSMatrix?e=new WebKitCSSMatrix(d.webkitTransform):(e=d.MozTransform||d.OTransform||d.MsTransform||d.msTransform||d.transform||d.getPropertyValue("transform").replace("translate(","matrix(1, 0, 0, 1,"),b=e.toString().split(",")),"x"==a&&(c=window.WebKitCSSMatrix?e.m41:parseFloat(16==b.length?b[12]:b[4])),"y"==a&&(c=window.WebKitCSSMatrix?e.m42:parseFloat(16==b.length?b[13]:b[5]))):("x"==a&&(c=parseFloat(f.style.left,10)||0),"y"==a&&(c=parseFloat(f.style.top,10)||0)),c||0},setWrapperTranslate:function(a,b,c){var d,e=this.wrapper.style,f={x:0,y:0,z:0};3==arguments.length?(f.x=a,f.y=b,f.z=c):("undefined"==typeof b&&(b="horizontal"==this.params.mode?"x":"y"),f[b]=a),this.support.transforms&&this.params.useCSS3Transforms?(d=this.support.transforms3d?"translate3d("+f.x+"px, "+f.y+"px, "+f.z+"px)":"translate("+f.x+"px, "+f.y+"px)",e.webkitTransform=e.MsTransform=e.msTransform=e.MozTransform=e.OTransform=e.transform=d):(e.left=f.x+"px",e.top=f.y+"px"),this.callPlugins("onSetWrapperTransform",f),this.params.onSetWrapperTransform&&this.fireCallback(this.params.onSetWrapperTransform,this,f)},setWrapperTransition:function(a){var b=this.wrapper.style;b.webkitTransitionDuration=b.MsTransitionDuration=b.msTransitionDuration=b.MozTransitionDuration=b.OTransitionDuration=b.transitionDuration=a/1e3+"s",this.callPlugins("onSetWrapperTransition",{duration:a}),this.params.onSetWrapperTransition&&this.fireCallback(this.params.onSetWrapperTransition,this,a)},h:{getWidth:function(a,b){var c=window.getComputedStyle(a,null).getPropertyValue("width"),d=parseFloat(c);return(isNaN(d)||c.indexOf("%")>0)&&(d=a.offsetWidth-parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-left"))-parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-right"))),b&&(d+=parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-left"))+parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-right"))),d},getHeight:function(a,b){if(b)return a.offsetHeight;var c=window.getComputedStyle(a,null).getPropertyValue("height"),d=parseFloat(c);return(isNaN(d)||c.indexOf("%")>0)&&(d=a.offsetHeight-parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-top"))-parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-bottom"))),b&&(d+=parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-top"))+parseFloat(window.getComputedStyle(a,null).getPropertyValue("padding-bottom"))),d},getOffset:function(a){var b=a.getBoundingClientRect(),c=document.body,d=a.clientTop||c.clientTop||0,e=a.clientLeft||c.clientLeft||0,f=window.pageYOffset||a.scrollTop,g=window.pageXOffset||a.scrollLeft;return document.documentElement&&!window.pageYOffset&&(f=document.documentElement.scrollTop,g=document.documentElement.scrollLeft),{top:b.top+f-d,left:b.left+g-e}},windowWidth:function(){return window.innerWidth?window.innerWidth:document.documentElement&&document.documentElement.clientWidth?document.documentElement.clientWidth:void 0},windowHeight:function(){return window.innerHeight?window.innerHeight:document.documentElement&&document.documentElement.clientHeight?document.documentElement.clientHeight:void 0},windowScroll:function(){return"undefined"!=typeof pageYOffset?{left:window.pageXOffset,top:window.pageYOffset}:document.documentElement?{left:document.documentElement.scrollLeft,top:document.documentElement.scrollTop}:void 0},addEventListener:function(a,b,c,d){"undefined"==typeof d&&(d=!1),a.addEventListener?a.addEventListener(b,c,d):a.attachEvent&&a.attachEvent("on"+b,c)},removeEventListener:function(a,b,c,d){"undefined"==typeof d&&(d=!1),a.removeEventListener?a.removeEventListener(b,c,d):a.detachEvent&&a.detachEvent("on"+b,c)}},setTransform:function(a,b){var c=a.style;c.webkitTransform=c.MsTransform=c.msTransform=c.MozTransform=c.OTransform=c.transform=b},setTranslate:function(a,b){var c=a.style,d={x:b.x||0,y:b.y||0,z:b.z||0},e=this.support.transforms3d?"translate3d("+d.x+"px,"+d.y+"px,"+d.z+"px)":"translate("+d.x+"px,"+d.y+"px)";c.webkitTransform=c.MsTransform=c.msTransform=c.MozTransform=c.OTransform=c.transform=e,this.support.transforms||(c.left=d.x+"px",c.top=d.y+"px")},setTransition:function(a,b){var c=a.style;c.webkitTransitionDuration=c.MsTransitionDuration=c.msTransitionDuration=c.MozTransitionDuration=c.OTransitionDuration=c.transitionDuration=b+"ms"},support:{touch:window.Modernizr&&Modernizr.touch===!0||function(){return!!("ontouchstart"in window||window.DocumentTouch&&document instanceof DocumentTouch)}(),transforms3d:window.Modernizr&&Modernizr.csstransforms3d===!0||function(){var a=document.createElement("div").style;return"webkitPerspective"in a||"MozPerspective"in a||"OPerspective"in a||"MsPerspective"in a||"perspective"in a}(),transforms:window.Modernizr&&Modernizr.csstransforms===!0||function(){var a=document.createElement("div").style;return"transform"in a||"WebkitTransform"in a||"MozTransform"in a||"msTransform"in a||"MsTransform"in a||"OTransform"in a}(),transitions:window.Modernizr&&Modernizr.csstransitions===!0||function(){var a=document.createElement("div").style;return"transition"in a||"WebkitTransition"in a||"MozTransition"in a||"msTransition"in a||"MsTransition"in a||"OTransition"in a}()},browser:{ie8:function(){var a=-1;if("Microsoft Internet Explorer"==navigator.appName){var b=navigator.userAgent,c=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");null!=c.exec(b)&&(a=parseFloat(RegExp.$1))}return-1!=a&&9>a}(),ie10:window.navigator.msPointerEnabled,ie11:window.navigator.pointerEnabled}},(window.jQuery||window.Zepto)&&!function(a){a.fn.swiper=function(b){var c=new Swiper(a(this)[0],b);return a(this).data("swiper",c),c}}(window.jQuery||window.Zepto),"undefined"!=typeof module&&(module.exports=Swiper);;//! moment.js
 //! version : 2.4.0
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
@@ -9545,14 +6918,19 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     plo = {};
     plo.log = function(str) { if(plo.config.dev) console.log(str); };
 
-    var dev = window.location.hostname == "localhost";
-
     var defaults = {
-        dev: dev,
-        baseUrl:        dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-        throttleDelay:  2000
+        dev: false,
+        baseUrl:        "http://beta.parismappartient.fr",
+        throttleDelay:  2000,
+        clusterize:     false,
+        bounce:         true,
+        initZoom:   15,
+        minZoom:    13,
+        maxZoom:    17,
+        isMobile:   $(document).width()<900
     };
     plo.config = _.extend(defaults,options);
+    plo.config.bounce = !plo.config.clusterize;
 
     plo.map = null;
     plo.swiper = null;
@@ -9567,19 +6945,23 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
 
     plo.w = $("body").width();
-    plo.log("width:"+plo.w);
+    //plo.log("width:"+plo.w);
 
-    // extend normal marker to store data for each
+    // extend marker objects to store data for each
     // be careful to put here all what you need !
     plo.Marker = L.Marker.extend({
-        options : {
-            ploufs: [],
-            seen:   "no",
-            bounceOnAdd: true,
-            bounceOnAddDuration: 300, //||1000
-            bounceOnAddHeight: 40
+        options : { // really need to peuplate options {} ? don't think so
+            //ploufs: [],
+            bounceOnAdd:            plo.config.bounce,
+            bounceOnAddDuration:    900, //||1000
+            bounceOnAddHeight:      40
         }
     });
+    // also prepare the MarkerCLuster marker to receive options !
+    // L.MarkerCluster = L.MarkerCluster.extend({
+    //     ploufdata: {} // just need to declare it
+    // });
+
     //////////////////////////////////////////////////////
     plo.init = function() {
       plo.log("Init all.");
@@ -9624,60 +7006,46 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     //////////////////////////////////////////////////////
      plo.swiperInit = function() {
         plo.swiper = new Swiper("#swiper",{
-            mode:               'horizontal',
+            mode: 'horizontal',
+            slidesPerView: plo.config.isMobile ? 1 : 1.85,
+            freeMode: false,
+            //slidesPerView: 'auto',
             keyboardControl:    true,
             centeredSlides:     true,
-            offsetSlidesBefore:     1,
-            offsetSlidesAfter:      1,
-            initialSlide: 0,
+            //offsetSlidesBefore:     1,
+            //offsetSlidesAfter:      1,
+            //initialSlide: 0,
+
+            watchActiveIndex: true,
+
             onSlideChangeStart: function(swiper,direction) {
                 var i = plo.swiper.activeIndex;
-                plo.log("now looking at: "+i);
+                //plo.log("(start "+direction+") now looking at: "+i);
                 if(direction=='prev') {
-                  //plo.log("panning to:"+plo.slides[i].options.text+plo.slides[i].options.lat);
-                  plo.map.panTo(plo.slides[i].options);
+                    plo.swiperLookAt(plo.slides[i]);
                 } else {
-                  //plo.log("panning to:"+plo.next.options.text+plo.next.options.lat);
-
-                  plo.map.panTo(plo.next.options);
-                  if(i==plo.slides.length-1) {
-                    plo.log("! need to load next slide");
-                    plo.swiperNextLoaded();
-                  }
+                    plo.swiperLookAt(plo.next);
                 }
             },
-            onSetWrapperTransform:  plo.throttleInterpolater,
+            onSlideChangeEnd : function(swiper) {
+                var i = plo.swiper.activeIndex;
+                //plo.log("(end) now looking at: "+i);
+                if(i==plo.slides.length-1) {
+                    //plo.log("! need to load next slide");
+                    plo.swiperNextPass();
+                }
+            },
+            //onSetWrapperTransform:  plo.throttleInterpolater,
             //onResistanceBefore:     plo.swiperInterpolate,
             //onResistanceAfter:      plo.swiperInterpolate,
-
-            // following is swiper progress plugin
-
-            progress: true,
-            onProgressChange: function(swiper){
-              for (var i = 0; i < swiper.slides.length; i++){
-              var slide = swiper.slides[i];
-              var progress = slide.progress;
-              swiper.setTransform(slide,'translate3d(0px,0,'+(-Math.abs(progress*1500))+'px)');
-            }
-            },
-            onTouchStart:function(swiper){
-              for (var i = 0; i < swiper.slides.length; i++){
-              swiper.setTransition(swiper.slides[i], 0);
-            }
-            },
-            onSetWrapperTransition: function(swiper) {
-              for (var i = 0; i < swiper.slides.length; i++){
-              swiper.setTransition(swiper.slides[i], swiper.params.speed);
-            }
-            }
         });
     };
-    // if you want to try to move map interpolated based on swipe
+    // if you want to try to move map interpolated based on swipe-x
     plo.swiperInterpolate = function(sw,p) {
         var k = -p.x/plo.w;
         //plo.log(k,p);
-        var a = plo.current.options;
-        var b = plo.next.options;
+        var a = plo.current.ploufdata;
+        var b = plo.next.ploufdata;
         var lat = (a.lat*k + b.lat*(1-k));
         var lng = (a.lng*k + b.lng*(1-k));
         var tp = [lat,lng];
@@ -9685,17 +7053,31 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         //plo.map.panTo(tp);
     };
     plo.swiperToggle = function(show) {
-        if(!show) $(".focused").addClass("visited").removeClass("focused");
-        $("#swiper").attr("show", show ? "on" : "off");
+        if(!show) $(".focused").removeClass("visited").removeClass("focused");
+        if(show)
+            $(".container").addClass("paneled");
+        else
+            $(".container").removeClass("paneled");
+        plo.map.invalidateSize(true);
     };
     plo.swiperIsActive = function() {
         return $("#swiper").attr("show")=='on';
     };
-    plo.swiperNextLoaded = function() {
+    plo.swiperLookAt = function(p) {
+        plo.log("------ panning to:"+p.ploufdata.text+p.ploufdata.lat);
+        plo.map.panTo(p.ploufdata);
+        plo.setMarkerStatus(p,"focused");
+        console.log(p);
+    }
+    plo.swiperNextPass = function() {
         // update last marker class
-        plo.setMarkerStatus(plo.current,"visited");
+        //plo.setMarkerStatus(plo.current,"visited");
 
         plo.current = plo.next ;
+
+        var isCluster = plo.current.hasOwnProperty('parentMarker');
+        // if(isCluster) plo.log("PASS: yourra, a cluster");
+        // else plo.log("PASS: just a marker");
 
         plo.setMarkerStatus(plo.current,"focused");
 
@@ -9703,12 +7085,14 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         plo.swiperAppend( plo.next );
     };
     plo.swiperAppend = function(m) {
-        var data = m.options;
+        var data = m.ploufdata;
         var mtype = plo.config.markers[data.ptype];
         var html = plo.config.templates[mtype](data);
-        var newSlide = plo.swiper.createSlide(html);
-        newSlide.append();
-        //plo.log("Swiper appended: "+data.pid);
+        //var newSlide = plo.swiper.createSlide(html);
+        //newSlide.append();
+        plo.swiper.appendSlide(html);
+        //plo.swiper.calcSlides(true);
+        //plo.log("swiper appended slide: "+data.title);
     };
     plo.swiperReloadWith = function(list) {
         plo.log("reload swiper");
@@ -9725,15 +7109,50 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     plo.getNext = function() {
         var md = null;
         var next = null;
-        _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
+        
+        var neighbors = null;
+
+        //console.log(plo.markerLayer(plo.current.ploufdata));
+
+        if(plo.config.clusterize) {
+            //neighbors = plo.markerLayer(plo.current.ploufdata)._map._layers;
+            var neighbors_tmp = plo.markerLayer(plo.current.ploufdata)._featureGroup._layers;
+            neighbors = [];
+            _.each(neighbors_tmp, function(e) {
+                var iscluster = !e.hasOwnProperty("ploufdata");
+                if(iscluster) {
+                    // for each children marker, store the parent, to be able to style it on swipes
+                    var children = e.getAllChildMarkers();
+                    children = _.map(children, function(c) {
+                        c.ploufdata.parentMarker = e;
+                        return c;
+                    });
+                    neighbors = neighbors.concat(children);
+                } else 
+                    neighbors.push(e);
+                // now we have an array with all the neighbors markers
+                // (keeping memory of the parentMarker(s) if there is) !
+            });
+        } else
+            neighbors = plo.markerLayer(plo.current.ploufdata)._layers;
+
+        //plo.tt = neighbors_tmp;
+        //console.log(neighbors.length);
+
+        _.each(neighbors, function(e) {
             var d = plo.anchor._latlng.distanceTo(e._latlng);
-            if(md===null || (d<md && e!=plo.anchor && e.options.seen=="no")) {
-              md = d;
-              next = e;
+            var iscluster = !e.hasOwnProperty("ploufdata");
+            if(!iscluster && ( (d<md || md===null) && e!=plo.anchor && e.ploufdata.seen=="no") ) {
+                md = d;
+                next = e;
             }
         });
-        next.options.seen = "loaded";
+
+        plo.anchor = next;
+        next.ploufdata.seen = "loaded";
         plo.slides.push(next);
+
+        if(next==null) plo.log("!! null next !!");
         return next;
     };
 
@@ -9741,7 +7160,7 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     // will POST down/up vote and swipe to next
     plo.voteAndSwipe = function(vote) {
       data = {
-        pid: plo.current.options.pid,
+        pid: plo.current.ploufdata.pid,
         vote:vote ? 1 : -1
       };
       $.post( plo.config.baseUrl+"/p/vote", data, function(response) {
@@ -9752,21 +7171,35 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     };
 
     plo.setMarkerStatus = function(m,status) {
+        // we may be being setting a cluster !
+        if(m.ploufdata.hasOwnProperty('parentMarker')) {
+            m = m.ploufdata.parentMarker;
+        }
+
         if(status=="focused") {
-          $(".leaflet-div-icon").removeClass("focused");
-          $(m._icon).addClass("focused");
+            $(".leaflet-div-icon").removeClass("focused");
+            $(m._icon).addClass("focused");
         }
         if(status=="visited") {
-          $(m._icon).removeClass("focused");
-          $(m._icon).addClass("visited");
+            $(m._icon).removeClass("focused");
+            $(m._icon).addClass("visited");
+        }
+        if(status=="reset") {
+            $(".leaflet-div-icon").removeClass("focused").removeClass("visited");   
         }
     };
 
     //////////////////////////////////////////////////////
-    plo.clickMarker = function(event) {
-        plo.log("marker clicked");
+    plo.clickMarker = function(event,type) {
+
+        plo.log(type+" clicked");
+
+        //console.log('cluster ' + a.layer.getAllChildMarkers().length);
+
+        //console.log(event);
+
         var marker = event.target;
-        
+
         plo.current = marker;
         plo.anchor = marker;
         plo.slides = [marker];
@@ -9774,8 +7207,8 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         plo.setMarkerStatus(plo.current,"focused");
 
         // reset: all markers can be seen again
-        _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
-          e.options.seen = "no";
+        _.each(plo.markerLayer(plo.current.ploufdata)._layers, function(e) {
+          e.ploufdata.seen = "no";
         });
 
         plo.current.seen = "loaded";
@@ -9784,11 +7217,12 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         //plo.log("current index: "+plo.swiper.activeIndex);
         plo.swiper.swipeTo(0);
         plo.swiperToggle(true);
-        plo.map.panTo(plo.current.options);
+        plo.map.panTo(plo.current.ploufdata);
     };
     plo.clickMap = function(event) {
         plo.log("map clicked");
         plo.swiperToggle(false);
+        plo.setMarkerStatus(null,"reset");
     };
 
     //////////////////////////////////////////////////////
@@ -9806,7 +7240,7 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
 
     //////////////////////////////////////////////////////
     plo.initMap = function() {
-        var baseLayer = plo.config.baseLayer;
+        var baseLayer = plo.config.baseLayer;    
 
         // NB: following can help you build different marker/base layers
 
@@ -9814,10 +7248,67 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         //var groupedOverlays = {};
         plo.layers = {};
         _.each(plo.config.markers, function(markertype,plouftype) {
-          plo.layers[markertype] = new L.LayerGroup();
+            var markerLayer = null;
+            if(plo.config.clusterize) {
+                markerLayer = new L.MarkerClusterGroup({
+                    //spiderfyOnMaxZoom: false,
+                    //showCoverageOnHover: false,
+                    //zoomToBoundsOnClick: false,
+
+                    //animateAddingMarkers:true, // default true
+
+                    // If set, at this zoom level and below markers will not be clustered.
+                    //disableClusteringAtZoom: 10, 
+                    
+                    // Default 80px. Decreasing will make more smaller clusters. You can also use a function
+                    maxClusterRadius: 60, 
+                    
+                    //polygonOptions: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster
+
+                    // If set to true, overrides the icon for all added markers to make them appear as a 1 size cluster
+                    singleMarkerMode: true,
+
+                    // Increase from 1 to increase the distance away from the center that spiderfied markers are placed.
+                    // Use if you are using big marker icons (Default:1)
+                    spiderfyDistanceMultiplier: 5,
+
+                    // here we can define which marker will be visible as the cluster head !
+                    iconCreateFunction: function(cluster) {
+                        var children = cluster.getAllChildMarkers();
+
+                        var p = children[0].ploufdata; // data of choosen one
+
+                        // icon
+                        var marker = plo.config.markers[p.ptype];
+                        var i = plo.config.icons[marker](p,children.length);
+                        return i;
+                        //return new L.DivIcon({ html: '<b>' + "oui"+cluster.getChildCount() + '</b>' });
+                    }
+                });
+            } else {
+                markerLayer = new L.LayerGroup();
+            }
+            
+            // if clusterization, we need to set click events here
+            if(plo.config.clusterize) {
+                // click events
+                markerLayer.on('click', function (a) {
+                    //console.log("CLICK!");
+                    //console.log(a);
+                    //plo.clickMarker(a,"marker");
+                });
+                markerLayer.on('clusterclick', function (a) {
+                    //console.log("CLICK!");
+                    //console.log(a);
+                    //plo.clickMarker(a,"cluster");
+                });
+            }
+
+            plo.layers[markertype] = markerLayer;
+
           //groupedOverlays[apitype] = {};
           //_.each(apis, function(api,key) {
-            //var marks = [ L.marker(plo.options.initCenter) ];
+            //var marks = [ L.marker(plo.ploufdata.initCenter) ];
             //plo.markerLayer = L.layerGroup(marks);
             //plo.layers[api] = new L.LayerGroup();
             //groupedOverlays[apitype][key] = plo.layers[api];
@@ -9827,12 +7318,15 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         //console.log(plo.layers);
         //plo.log("groupedOverlays:",groupedOverlays);
 
+
+
         plo.map = L.map(plo.config.map, {
+            attributionControl: false,
             keyboard: false,
             center: plo.config.initCenter,
             zoom: plo.config.initZoom,
-            maxZoom: 17,
-            minZoom: 13,
+            minZoom: plo.config.minZoom,
+            maxZoom: plo.config.maxZoom,
             icons: plo.config.icons,
             layers: [baseLayer].concat(_.values(plo.layers))
         });
@@ -9840,9 +7334,22 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         // optional control to select visible layers
         //L.control.groupedLayers(baseLayers, groupedOverlays).addTo(plo.map);
 
+        L.control.attribution({position:'topright'}).addTo(plo.map);
+
         plo.map.on('click', plo.clickMap);
-        plo.map.on('move', plo.throttleFetch);
-        plo.map.on('moveEnd', plo.throttleFetch);
+        plo.map.on('move', function(e) {
+            //plo.log("! moved");
+            plo.throttleFetch();
+        });
+        plo.map.on("zoomstart", function(e) {
+            plo.log("! zoomedStart");
+            plo.swiperToggle(false);
+        });
+        plo.map.on('moveEnd', function(e) {
+            plo.log("! movedEnd");
+            plo.throttleFetch();
+            plo.swiperToggle(false);
+        });
 
         var lc = L.control.locate({
             position: 'topleft',  // set the location of the control
@@ -9905,18 +7412,31 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
         var i = plo.config.icons[marker](p);
 
         var ltln = new L.LatLng(p.lat, p.lng);
-        var f = _.find(markLayer._layers, function(e){
-            return e.options.pid == p.pid;
-        });
+        
+        // ! no need to check if already here, cause we now fetch with a "ya-here-blacklisted-ids"
+        //var f = _.find(markLayer._layers, function(e){ return e.ploufdata.pid == p.pid; });
+        var f = false;
+
         if(!f) {
-            var newM = new plo.Marker(ltln, _.extend({
+            var newM = new plo.Marker(ltln,{
                 icon: i,
                 draggable: false
-            },p));
-            newM.on('click', plo.clickMarker);
+            });
+
+            newM.ploufdata = _.extend(p,{
+                seen: 'no'
+            });
+            
+            // we used to set listener here, but better to plug it on layer creation
+            // todo: verify it works with new added markers ?
+            newM.on('click', function(a) {
+                plo.clickMarker(a,"marker");
+            });
+
             newM.addTo(markLayer);
+
         } else {
-            //plo.log("already here");
+            //plo.log("marker was already here");
         }
     };
 
@@ -9924,31 +7444,43 @@ Swiper.prototype.plugins.progress = function(swiper, params) {
     plo.fetchPloufs = function() {
         var bounds = plo.map.getBounds();
         var center = plo.map.getCenter();
+
         var data = {
             without: plo.already,
             ptypes: _.keys(plo.config.markers),
             zoom: plo.map.getZoom(),
             center: [center.lat,center.lng],
             bounds: [[bounds._southWest.lat,bounds._southWest.lng] , [bounds._northEast.lat,bounds._northEast.lng]]
+            //zoomAttribute: true,
+            //screen: [$(document).width(),$(document).height()]
         };
 
         //plo.log(data);
         $.post( plo.config.baseUrl+"/p/get", data, function(response) {
             var data = JSON.parse(response);
-            plo.log(Object.keys(data).length+" ploufs received !");
+            //plo.log(Object.keys(data).length+" ploufs received !");
             //plo.log(data);
             _.each(data,function(p) {
                 plo.already.push(p._id);
                 p.markertype = plo.config.markers[p.ptype];
                 try {
-                  //p.text = $(p.text).text();
+                    //p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
+                    p.text = $('<div>'+p.text+'</div>').text();
                 } catch(err) {
-                  plo.log("html>text error: "+err);
-                  plo.log(p);
+                    p.text = "[error texting html]";
+                    plo.log("!! html>text error: "+err);
+                    plo.log(p);
                 }
                 plo.addPlouf(p);  
             });
         });
+    };
+
+    //////////////////////////////////////////////////////
+    plo.truncate = function(str,count) {
+        if(str.length<count) return str;
+        else if(str.length<3) return "[-]";
+        else return str.slice(0,count) + "..";
     };
 
     //////////////////////////////////////////////////////

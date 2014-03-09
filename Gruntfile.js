@@ -17,6 +17,17 @@ module.exports = function(grunt) {
       }
     },
 
+    less: {
+      prod: {
+        options: {
+          paths: ["assets"]
+        },
+        files: {
+          "src/css/style.css": "src/css/style.less"
+        }
+      }
+    },
+
     concat: {
       options: {
         separator: ';'
@@ -25,8 +36,9 @@ module.exports = function(grunt) {
         src: [
           'vendor/leaflet/leaflet.css',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
+          //'vendor/leaflet.markercluster/dist/MarkerCluster.css', // included in our style.less
           //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.css',
-          //'vendor/font-awesome/css/font-awesome.css',
+          'vendor/font-awesome/css/font-awesome.css',
           'vendor/swiper/dist/idangerous.swiper.css',
           'src/css/style.css'
         ],
@@ -42,9 +54,9 @@ module.exports = function(grunt) {
           'vendor/leaflet/leaflet.js',
           'vendor/leaflet.bouncemarker/bouncemarker.js',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.js',
+          'vendor/leaflet.markercluster/dist/leaflet.markercluster.js',
           //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.js',
-          'vendor/swiper/dist/idangerous.swiper-2.4.js',
-          'vendor/swiper/plugins/smooth-progress/idangerous.swiper.progress.js',
+          'vendor/swiper/dist/idangerous.swiper.min.js',
           'vendor/moment/moment.js',
           'src/**/*.js'
         ],
@@ -69,7 +81,7 @@ module.exports = function(grunt) {
                 {
                     expand: true,
                     flatten: true,
-                    src: [ 
+                    src: [
                         'vendor/font-awesome/fonts/**'
                     ],
                     dest: 'dist/fonts/',
@@ -78,7 +90,7 @@ module.exports = function(grunt) {
                 {
                     expand: true,
                     flatten: true,
-                    src: [ 
+                    src: [
                         'vendor/leaflet.locatecontrol/src/images/**'
                     ],
                     dest: 'dist/css/images/',
@@ -87,7 +99,7 @@ module.exports = function(grunt) {
                 {
                     expand: true,
                     flatten: true,
-                    src: [ 
+                    src: [
                         'vendor/font-awesome/css/**'
                     ],
                     dest: 'dist/css/',
@@ -117,7 +129,7 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+      files: ['Gruntfile.js', 'src/plouf.js'],
       options: {
         // options here to override JSHint defaults
         globals: {
@@ -133,9 +145,10 @@ module.exports = function(grunt) {
       tasks: ['jshint', 'qunit']
     }
   });
-  
+
   grunt.loadNpmTasks('grunt-contrib-copy' );
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -143,6 +156,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-preprocess');
   //grunt.loadNpmTasks('grunt-contrib-less');
 
-  grunt.registerTask('default', ['jshint','env:prod','concat','concat:build_css','copy','uglify','preprocess:prod','preprocess:config','preprocess:icon']);
+  grunt.registerTask('default', ['jshint','env:prod','less:prod','concat','concat:build_css','copy','uglify','preprocess:prod','preprocess:config','preprocess:icon']);
 
 };

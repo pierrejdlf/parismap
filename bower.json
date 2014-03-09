@@ -2,17 +2,18 @@
   "name": "parismap client",
   "version": "0.3.2",
   "devDependencies": {
+    "less":"latest",
     "moment": "~2.4.0",
     "zepto":"http://github.com/madrobby/zepto/archive/master.zip",
     "handlebars":"1.1.2",
     "underscore":"1.5.2",
-    "swiper":"2.4.1",
+    "swiper":"latest",
+    "eshq":"http://app.eventsourcehq.com/es.js",
     "leaflet": "http://leaflet-cdn.s3.amazonaws.com/build/leaflet-0.7.zip",
     "leaflet.markercluster": "latest",
     "leaflet.bouncemarker":"https://github.com/maximeh/leaflet.bouncemarker/archive/master.zip",
     "leaflet.locatecontrol":"https://github.com/domoritz/leaflet-locatecontrol/archive/gh-pages.zip",
-    "leaflet.groupedlayercontrol":"https://github.com/ismyrnow/Leaflet.groupedlayercontrol/archive/master.zip",
-    "font-awesome":"4.0.3",
+    "Font-Awesome":"4.0.3",
     "leaflet-font-awesome":"http://github.com/lvoogdt/Leaflet.awesome-markers/archive/2.0/develop.zip"
   }
 }
