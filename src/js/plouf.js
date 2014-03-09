@@ -45,7 +45,8 @@ function Ploufmap(options) {
     // also prepare the MarkerCLuster marker to receive options !
     L.MarkerCluster = L.MarkerCluster.extend({
         options: {
-            thiscanbeempty:"yes"
+            seen:   "no", //////// ?
+            thiscanbeempty:"not sure"
         }
     });
 
@@ -195,16 +196,14 @@ function Ploufmap(options) {
         var md = null;
         var next = null;
         
-        if(plo.config.clusterize)
-            var layer = plo.markerLayer(plo.current.options)._map._layers;
-        else
-            var layer = plo.markerLayer(plo.current.options)._layers;
+        var allMarkers = plo.getAllMarkers();
 
-        _.each(layer, function(e) {
-            var d = plo.anchor._latlng.distanceTo(e._latlng);
-            if(md===null || (d<md && e!=plo.anchor && e.options.seen=="no")) {
+        console.log("Looking over "+allMarkers.length+" neighbors");
+        _.each(allMarkers, function(m) {
+            var d = plo.anchor._latlng.distanceTo(m._latlng);
+            if(md===null || (d<md && m!=plo.anchor && m.options.seen=="no")) {
               md = d;
-              next = e;
+              next = m;
             }
         });
         next.options.seen = "loaded";
@@ -240,7 +239,7 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     plo.clickMarker = function(event) {
         plo.log("marker clicked");
-        console.log(event);
+        //console.log(event);
 
         var marker = event.target;
 
@@ -251,12 +250,18 @@ function Ploufmap(options) {
         plo.setMarkerStatus(plo.current,"focused");
 
         // reset: all markers can be seen again
-        _.each(plo.markerLayer(plo.current.options)._layers, function(e) {
-          e.options.seen = "no";
+        all = plo.getAllMarkers();
+        console.log(all);
+        _.each(all, function(m) {
+            console.log(m);
+            m.options.seen = "no";
         });
 
         plo.current.seen = "loaded";
         plo.next = plo.getNext();
+
+        console.log("got current and next");
+
         plo.swiperReloadWith([plo.current,plo.next]);
         //plo.log("current index: "+plo.swiper.activeIndex);
         plo.swiper.swipeTo(0);
@@ -274,6 +279,14 @@ function Ploufmap(options) {
             leading:false,
             trailing:false
         });
+    };
+
+    //////////////////////////////////////////////////////
+    plo.getAllMarkers = function() {
+        if(plo.config.clusterize)
+            return plo.markerLayer(plo.current.options)._topClusterLevel.getAllChildMarkers();
+        else
+            return plo.markerLayer(plo.current.options)._layers;
     };
 
     //////////////////////////////////////////////////////

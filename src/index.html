@@ -182,11 +182,11 @@
           map: "map", // map div id (carefull with css !)
           initCenter:  L.latLng(48.87,2.347),
           initZoom: 14,
-          //minZoom: 7,
-          //maxZoom: 30,
+          minZoom: 7,
+          maxZoom: 20,
 
           baseLayer: baseLayer,
-          clusterize: false,
+          clusterize: true,
 
           // which type will be fetched from server. and wich icon it will have
           markers: markers,
@@ -232,16 +232,21 @@
               var ic = ev_icons[data.ptype];
               var interval = false ; //data.date.start!=data.date.end;
               var ti = moment(data.date.start).format("HH:mm");
+              // also end date ?
               if(interval)
                 ti += " - "+moment(data.date.end).format("HH:mm");
-              if(clustCount)
+              // cluster count
+              if(clustCount) {
                 ti += "•"+clustCount;
+              }
               var w = interval? 115 : 68;
               w += clustCount? 15 : 0;
 
+              var counthtml = "<div class=>"+clustCount+"</div>";
+              var eventhtml = "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>";
               return L.divIcon({
                 iconSize: [w,10],
-                html: "<div class='evt'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>",
+                html: clustCount ? counthtml : counthtml + eventhtml,
                 popupAnchor:  [0, 0]
               });
             }
