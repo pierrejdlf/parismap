@@ -55,6 +55,9 @@ function Ploufmap(options) {
 
         plo.initMap();
         plo.throttleFetch();
+
+        plo.fetchGeoJson();
+
         plo.swiperToggle(false);
         plo.swiperInit();
         var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;
@@ -170,12 +173,10 @@ function Ploufmap(options) {
         plo.swiperAppend( plo.next );
     };
     plo.swiperAppend = function(m) {
-        var data = m.ploufdata;
-        var mtype = plo.config.markers[data.ptype];
-        var html = plo.config.templates[mtype](data);
+        var html = plo.getHtml(m.ploufdata);
         //var newSlide = plo.swiper.createSlide(html);
         //newSlide.append();
-        plo.swiper.appendSlide(html);
+        plo.swiper.appendSlide( html );
         //plo.swiper.calcSlides(true);
         //plo.log("swiper appended slide: "+data.title);
     };
@@ -197,11 +198,11 @@ function Ploufmap(options) {
         
         var neighbors = null;
 
-        //console.log(plo.markerLayer(plo.current.ploufdata));
+        //console.log(plo.getMarkerLayer(plo.current.ploufdata));
 
         if(plo.config.clusterize) {
-            //neighbors = plo.markerLayer(plo.current.ploufdata)._map._layers;
-            var neighbors_tmp = plo.markerLayer(plo.current.ploufdata)._featureGroup._layers;
+            //neighbors = plo.getMarkerLayer(plo.current.ploufdata)._map._layers;
+            var neighbors_tmp = plo.getMarkerLayer(plo.current.ploufdata)._featureGroup._layers;
             neighbors = [];
             _.each(neighbors_tmp, function(e) {
                 var iscluster = !e.hasOwnProperty("ploufdata");
@@ -219,7 +220,7 @@ function Ploufmap(options) {
                 // (keeping memory of the parentMarker(s) if there is) !
             });
         } else
-            neighbors = plo.markerLayer(plo.current.ploufdata)._layers;
+            neighbors = plo.getMarkerLayer(plo.current.ploufdata)._layers;
 
         //plo.tt = neighbors_tmp;
         //console.log(neighbors.length);
@@ -292,7 +293,7 @@ function Ploufmap(options) {
         plo.setMarkerStatus(plo.current,"focused");
 
         // reset: all markers can be seen again
-        _.each(plo.markerLayer(plo.current.ploufdata)._layers, function(e) {
+        _.each(plo.getMarkerLayer(plo.current.ploufdata)._layers, function(e) {
           e.ploufdata.seen = "no";
         });
 
@@ -324,15 +325,35 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     plo.getAllMarkers = function() {
         if(plo.config.clusterize)
-            return plo.markerLayer(plo.current.options)._topClusterLevel.getAllChildMarkers();
+            return plo.getMarkerLayer(plo.current.options)._topClusterLevel.getAllChildMarkers();
         else
-            return plo.markerLayer(plo.current.options)._layers;
+            return plo.getMarkerLayer(plo.current.options)._layers;
     };
 
     //////////////////////////////////////////////////////
-    plo.markerLayer = function(plouf) {
-      return plo.layers[plouf.markertype];
+    //////////////////////////////////////////////////////
+    plo.getMarkerLayer = function(p) {
+      return plo.layers[p.markertype];
     };
+    plo.getMarkerMapType = function(p) {
+        if(p.geojson) {
+            // then the geojson url is the key ! (see index.html)
+            return plo.config.markers[p.geojson];
+        } else {
+            // then the plouf ptype (from our server) is the key !
+            return plo.config.markers[p.ptype];
+        }
+    };
+    plo.getIcon = function(p) {
+        var mtype = plo.getMarkerMapType(p);
+        return plo.config.icons[mtype];
+    };
+    plo.getHtml = function(p) {
+        var mtype = plo.getMarkerMapType(p);
+        return plo.config.templates[mtype](p);
+    }
+    //////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////
     plo.initMap = function() {
@@ -374,10 +395,8 @@ function Ploufmap(options) {
 
                         var p = children[0].ploufdata; // data of choosen one
 
-                        // icon
-                        var marker = plo.config.markers[p.ptype];
-                        var i = plo.config.icons[marker](p,children.length);
-                        return i;
+                        // return icon
+                        return plo.getIcon(p)(p,children.length);;
                         //return new L.DivIcon({ html: '<b>' + "oui"+cluster.getChildCount() + '</b>' });
                     }
                 });
@@ -405,7 +424,7 @@ function Ploufmap(options) {
           //groupedOverlays[apitype] = {};
           //_.each(apis, function(api,key) {
             //var marks = [ L.marker(plo.ploufdata.initCenter) ];
-            //plo.markerLayer = L.layerGroup(marks);
+            //plo.getMarkerLayer = L.layerGroup(marks);
             //plo.layers[api] = new L.LayerGroup();
             //groupedOverlays[apitype][key] = plo.layers[api];
             //markGroup.on('click', plo.clickMarker);
@@ -414,7 +433,8 @@ function Ploufmap(options) {
         //console.log(plo.layers);
         //plo.log("groupedOverlays:",groupedOverlays);
 
-
+        console.log("We have layers:");
+        console.log(plo.layers);
 
         plo.map = L.map(plo.config.map, {
             attributionControl: false,
@@ -503,10 +523,8 @@ function Ploufmap(options) {
     
     //////////////////////////////////////////////////////
     plo.addPlouf = function(p) {
-        var markLayer = plo.markerLayer(p);
-        var marker = plo.config.markers[p.ptype];
-        var i = plo.config.icons[marker](p);
-
+        var markLayer = plo.getMarkerLayer(p);
+        var i = plo.getIcon(p)(p);
         var ltln = new L.LatLng(p.lat, p.lng);
         
         // ! no need to check if already here, cause we now fetch with a "ya-here-blacklisted-ids"
@@ -528,12 +546,36 @@ function Ploufmap(options) {
             newM.on('click', function(a) {
                 plo.clickMarker(a,"marker");
             });
-
             newM.addTo(markLayer);
 
         } else {
             //plo.log("marker was already here");
         }
+    };
+
+    //////////////////////////////////////////////////////
+    // will check at start if there is geojson markers to load, and fetch them once !
+    plo.fetchGeoJson = function() {
+        _.each(plo.config.markers, function(m,k) {
+            // if starts by "http://", then try to load geojson feed
+            if(/^http/.test(k)) {
+                console.log("Adding geojson feed: "+k);
+                $.get(k, function(response) {
+                    _.each(response.features, function(d) {
+                        var p = {
+                            lat:        d.geometry.coordinates[1],
+                            lng:        d.geometry.coordinates[0],
+                            title:      d.properties.title,
+                            description:d.properties.description,
+                            ptype:      m, // icon type
+                            markertype: m, // icon type
+                            geojson:    k, // url of the feed
+                        };
+                        plo.addPlouf(p);  
+                    });
+                });
+            }
+        });
     };
 
     //////////////////////////////////////////////////////

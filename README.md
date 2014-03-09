@@ -28,6 +28,10 @@ Both parismap client and server are MIT Licensed
 
   var p = Ploufmap(options)
 
+* `markers`
+	* can either be: [from our parismap server] which marker type will be fetched from server. and wich icon 'type' [aka msg,evt] it will have
+    * can either be: [from an external geojson feed]: the geojson feed(s) address and their marker 'type'
+
 * `ploufEndpoint=/p/get|/p/zoomed` (please see server)
   * `/p/get` all ploufs within the given rectangle
   * `/p/zoomed` all ploufs with a `onZoom` property to set their opacity depending on zoom

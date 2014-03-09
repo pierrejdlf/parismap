@@ -141,78 +141,106 @@
     function getURLParameter(name) {return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);}
 
     Handlebars.registerHelper('formatdate', function(date) {
-      var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
-      return new Handlebars.SafeString(datestr);
+      try {
+        var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
+        return new Handlebars.SafeString(datestr);
+      } catch(er) {
+        return "error";
+      }
     });
     Handlebars.registerHelper('splitype', function(type) {
       return type.split("_")[1];
     });
 
+    var EVENT_ICONS = {
+        'event_demosphere':     'bullhorn',
+        'event_lylo':           'eye',
+        'event_quefaire':       'home',
+        'event_sowprog':        'lock',
+        'event_cibul':          'flash',
+        'event_oneheart':       'globe',
+        'event_opendatasoft':   'gift',
+        'event_calenda':        'briefcase',
+        'event_linternaute':    'sort-amount-desc'
+    };
+
     $(function(){
-
-        var markers_msg = {
-            "tweet": 'msg',
-            "cdlm": 'msg',
-            "geolocate.csv": 'msg',
-            "sample.csv": 'msg',
-            "story.csv": 'msg',
-        };
-        var markers_evt = {
-            "event_cibul": 'evt',
-            "event_demosphere": 'evt',
-            "event_lylo": 'evt',
-            "event_oneheart": 'evt',
-            "event_opendatasoft": 'evt',
-            "event_quefaire": 'evt',
-            "event_sowprog": 'evt',
-            "event_calenda": 'evt',
-            "event_linternaute": 'evt'
-        };
-        var ev_icons = {
-            'event_demosphere':     'bullhorn',
-            'event_lylo':           'eye',
-            'event_quefaire':       'home',
-            'event_sowprog':        'lock',
-            'event_cibul':          'flash',
-            'event_oneheart':       'globe',
-            'event_opendatasoft':   'gift',
-            'event_calenda':        'briefcase',
-            'event_linternaute':    'sort-amount-desc'
-        };
-
-         
-        markers = markers_evt;
-        var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
-        var baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
         //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
 
-        // different configs
-        if(window.location.hash=='#msg') {
-          markers = markers_msg;
-          baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution});
-        }
+        var configs = {};
+
+        ////////////////////////////////////////////
+        configs['parisevents'] = {
+          baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
+          markers: {
+              "event_cibul": 'evt',
+              "event_demosphere": 'evt',
+              "event_lylo": 'evt',
+              "event_oneheart": 'evt',
+              "event_opendatasoft": 'evt',
+              "event_quefaire": 'evt',
+              "event_sowprog": 'evt',
+              "event_calenda": 'evt',
+              "event_linternaute": 'evt'
+          },
+          initCenter:  L.latLng(48.87,2.347),
+          initZoom: 13,
+        };
+
+
+        ////////////////////////////////////////////
+        configs['twitter'] = {
+          baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
+          markers: {
+              "tweet": 'msg',
+              "cdlm": 'msg',
+              "geolocate.csv": 'msg',
+              "sample.csv": 'msg',
+              "story.csv": 'msg',
+          },
+          initCenter:  L.latLng(48.87,2.347),
+          initZoom: 13,
+        };
+
+
+        ////////////////////////////////////////////
+        configs['europewords'] = {
+          baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
+          markers: {
+            'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'word'
+          },
+          initCenter:  L.latLng(47.975,12.129),
+          initZoom: 4,
+        };
+
+
+        ////////////////////////////////////////////
+        // which config to load ?
+        var options = {};
+        if(window.location.hash=='#msg')
+          options = configs['twitter'];
+        else if(window.location.hash=='#emi')
+          options = configs['europewords'];
+        else
+          options = configs['parisevents'];
         
+        ////////////////////////////////////////////
+        var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
         var dev = window.location.hostname == "localhost";
 
         // init map on div, with all required options
-        var p = Ploufmap({
+        var p = Ploufmap(_.extend(options, {
           map: "map", // map div id (carefull with css !)
           dev: dev,
           baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-          initCenter:  L.latLng(48.87,2.347),
-
-          initZoom: 12,
-          minZoom: 7,
+          minZoom: 2,
           maxZoom: 18,
 
-          baseLayer: baseLayer,
           clusterize: true,
-
-          // which type will be fetched from server. and wich icon it will have
-          markers: markers,
 
           // handlebar template for a slide showing a plouf
           templates: {
+            word: Handlebars.compile($("#plouf-template-msg").html()),
             msg: Handlebars.compile($("#plouf-template-msg").html()),
             evt: Handlebars.compile($("#plouf-template-evt").html())
           },
@@ -240,7 +268,20 @@
             //         //iconColor:#BBBBBB,
             //         //spin:true,
             //     });
-            msg: function(data,clustCount) {
+            ///////////////////////////////////////////////////
+            word: function(p,clustCount) {              
+              var cla = 'word';
+              if(clustCount>1) {
+                cla += " cluster";
+              }
+              return L.divIcon({
+                iconSize: [110, 50],
+                html: "<div class='"+cla+"'>"+p.title+"</div>",
+                popupAnchor: [0, 0]
+              });
+            },
+            ///////////////////////////////////////////////////
+            msg: function(p,clustCount) {
               var cla = 'msg';
               if(clustCount>1) {
                 cla += " cluster";
@@ -248,18 +289,19 @@
 
               return L.divIcon({
                 iconSize: [110, 50],
-                html: "<div class='"+cla+"'>"+data.words.join("<br>")+"</div>",
+                html: "<div class='"+cla+"'>"+p.words.join("<br>")+"</div>",
                 popupAnchor:  [0, 0]
               });
             },
-            evt: function(data,clustCount) {
+            ///////////////////////////////////////////////////
+            evt: function(p,clustCount) {
               var cla = 'evt';
-              var ic = ev_icons[data.ptype];
-              var interval = false ; //data.date.start!=data.date.end;
-              var ti = moment(data.date.start).format("HH:mm");
+              var ic = EVENT_ICONS[p.ptype];
+              var interval = false ; //p.date.start!=p.date.end;
+              var ti = moment(p.date.start).format("HH:mm");
               // also end date ?
               if(interval)
-                ti += " - "+moment(data.date.end).format("HH:mm");
+                ti += " - "+moment(p.date.end).format("HH:mm");
               var w = interval ? 115 : 68;
               
               html = "<div class='"+cla+"'><i class='fa fa-"+ic+"'></i><span>"+ti+"</span></div>";
@@ -278,8 +320,9 @@
                 popupAnchor:  [0, 0]
               });
             }
+            ///////////////////////////////////////////////////
           }
-        });
+        }));
     });
     </script>
 

@@ -476,7 +476,7 @@
 	background: #fff;
 	border: 1px solid #666;
 	}
-;/* Compatible with Leaflet 0.6 */
+;/* Compatible with Leaflet 0.7 */
 
 .leaflet-touch .leaflet-bar-part-single {
 	-webkit-border-radius: 7px 7px 7px 7px;
@@ -508,7 +508,8 @@
 
 .leaflet-touch .leaflet-control-locate {
 	box-shadow: none;
-	border: 4px solid rgba(0,0,0,0.3);
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
 }
 ;/*!
  *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
@@ -1849,7 +1850,7 @@
   content: "\f196";
 }
 ;/*
- * swiper 2.4.3
+ * swiper 2.5.0
  * Mobile touch slider and framework with hardware accelerated transitions
  *
  * http://www.idangero.us/sliders/swiper/
@@ -1860,7 +1861,7 @@
  *
  * Licensed under GPL & MIT
  *
- * Released on: January 29, 2014
+ * Released on: March 6, 2014
 */
 .swiper-container {
 	margin:0 auto;
@@ -2080,23 +2081,33 @@ body {
   -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
   transition: transform 0.3s ease-out, opacity 0.3s ease-in;
 }
-/* markers */
+/* MARKERS */
 .leaflet-div-icon {
   border: none;
   background: none;
 }
-.leaflet-div-icon .msg {
+.leaflet-div-icon .msg,
+.leaflet-div-icon .word {
   text-align: center;
-  font-size: 1.1em;
   font-family: georgia, serif;
+  font-size: 1.1em;
   line-height: 1.1em;
   text-transform: lowercase;
   font-style: italic;
   color: whitesmoke;
   /*text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);*/
 }
-.leaflet-div-icon .msg.cluster {
+.leaflet-div-icon .msg.cluster,
+.leaflet-div-icon .word.cluster {
   color: #E1DE98;
+}
+.leaflet-div-icon .word {
+  color: black;
+  font-size: 1.7em;
+  line-height: 1.7em;
+}
+.leaflet-div-icon .word.cluster {
+  color: darkred;
 }
 .leaflet-div-icon .evt {
   -moz-border-radius: 8px;
@@ -2128,7 +2139,7 @@ body {
 .leaflet-div-icon.focused .evt {
   background: #528fc7;
 }
-/* slides */
+/* SLIDES */
 .container.paneled .ellipsis {
   z-index: 60;
   position: fixed;
