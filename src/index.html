@@ -299,6 +299,8 @@
                 cla += " cluster";
               var ic = EVENT_ICONS[p.ptype];
               //ic = "circle";
+              var ti = moment(p.date.start).format("HH[h]mm");
+              ti = ti.replace(/h00$/,"h").replace(/^0/,"");
               var cclass = moment(p.date.start).format("[h]HH [m]mm");
               return L.divIcon({
                 iconSize:     [10, 10],
@@ -306,6 +308,11 @@
                           "<i class='fa fa-"+ic+"'></i>"+
                           "<div class='arro'></div>"+
                           "<div class='focus'><div class='line'></div></div>"+
+                          //"<div class='wrapper'>"+
+                          "    <div class='arc arc_start'></div>"+
+                          "    <div class='arc arc_end'></div>"+
+                          //"</div>"+
+                          "<div class='time'>"+ti+"</div>"+
                       "</div>",
                 //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
                 popupAnchor:  [0, 0],

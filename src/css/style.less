@@ -21,6 +21,14 @@ body {
   transition: @prop @duration;
 }
 
+.numeral {
+  font-feature-settings: "onum";
+  -moz-font-feature-settings: "onum";
+  -ms-font-feature-settings: "onum";
+  -webkit-font-feature-settings: "onum";
+  -o-font-feature-settings: "onum";
+}
+
 .container {
   width: 100%;
   height: 100%;
@@ -268,18 +276,52 @@ body {
       border-radius: @bigsize;
       box-shadow: 0px 0px 80px #64a1c3;
       /*background: @colclust;*/
-      .clock {
-        display: none;
-      }
-      i {
-        display: none;
-      }
       .arro {
-        display: none;
         border-top: @asizet solid @colclust;
       }
+      .clock, i, .arro, .time, .arc { display: none; }
     }
-
+    .time {
+      color: white;
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      text-align: left;
+      font-size: 14px;
+      width: 30px;
+      text-shadow: 1px 1px 2px rgb(65, 65, 65);
+      font-family: 'Arial, Arial, Helvetica, sans-serif';
+      .numeral();
+    }
+    .arc {
+      z-index: 7;
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      width: 24px;
+      height: 24px;
+      border-radius: 100%;
+      border: 2px solid;
+    }
+    @colarc: white;
+    @ang1: -70deg;
+    @ang2: 60deg;
+    .arc_start {
+        border-color:transparent @colarc @colarc @colarc;
+        -webkit-transform: rotate(@ang1);
+        -moz-transform: rotate(@ang1);
+        -ms-transform: rotate(@ang1);
+        -o-transform: rotate(@ang1);
+        transform: rotate(@ang1);
+    }
+    .arc_end {
+        border-color:@colarc @colarc @colarc transparent;
+        -webkit-transform: rotate(@ang2);
+        -moz-transform: rotate(@ang2);
+        -ms-transform: rotate(@ang2);
+        -o-transform: rotate(@ang2);
+        transform: rotate(@ang2);
+    }
     .focus {
       background: white;
       width: 8px;
