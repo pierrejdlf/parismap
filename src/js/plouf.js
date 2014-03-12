@@ -376,7 +376,7 @@ function Ploufmap(options) {
                     //disableClusteringAtZoom: 10, 
                     
                     // Default 80px. Decreasing will make more smaller clusters. You can also use a function
-                    maxClusterRadius: 60, 
+                    maxClusterRadius: 25, 
                     
                     //polygonOptions: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster
 

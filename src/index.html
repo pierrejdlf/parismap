@@ -109,8 +109,8 @@
           <div class="title">{{title}}</div>
           <div class="text">{{text}}</div>
 
-          <div class="seemore"><a href="{{link}}" target="_blank">read more @{{papi}}</a></div>
-          <div class="ellipsis"></div>
+<!--          <div class="seemore"><a href="{{link}}" target="_blank">read more @{{papi}}</a></div>
+          <div class="ellipsis"></div>-->
         </div>
 
       </div>
@@ -155,13 +155,13 @@
     var EVENT_ICONS = {
         'event_demosphere':     'bullhorn',
         'event_lylo':           'eye',
-        'event_quefaire':       'home',
-        'event_sowprog':        'lock',
+        'event_quefaire':       'calendar',
+        'event_sowprog':        'rss',
         'event_cibul':          'flash',
         'event_oneheart':       'globe',
-        'event_opendatasoft':   'gift',
-        'event_calenda':        'briefcase',
-        'event_linternaute':    'sort-amount-desc'
+        'event_opendatasoft':   'puzzle-piece',
+        'event_calenda':        'book',
+        'event_linternaute':    'unsorted'
     };
 
     $(function(){
@@ -294,6 +294,26 @@
             },
             ///////////////////////////////////////////////////
             evt: function(p,clustCount) {
+              var cla = "point"
+              if(clustCount>1)
+                cla += " cluster";
+              var ic = EVENT_ICONS[p.ptype];
+              //ic = "circle";
+              var cclass = moment(p.date.start).format("[h]HH [m]mm");
+              return L.divIcon({
+                iconSize:     [10, 10],
+                html: "<div class='"+cla+"'>"+
+                          "<i class='fa fa-"+ic+"'></i>"+
+                          "<div class='arro'></div>"+
+                          "<div class='focus'><div class='line'></div></div>"+
+                      "</div>",
+                //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
+                popupAnchor:  [0, 0],
+                className: clustCount>1 ? "divicon back" : "divicon front"
+              });
+            },
+            ///////////////////////////////////////////////////
+            evt_boxwithtime: function(p,clustCount) {
               var cla = 'evt';
               var ic = EVENT_ICONS[p.ptype];
               var interval = false ; //p.date.start!=p.date.end;

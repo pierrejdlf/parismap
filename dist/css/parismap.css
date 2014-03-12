@@ -476,7 +476,7 @@
 	background: #fff;
 	border: 1px solid #666;
 	}
-;/* Compatible with Leaflet 0.7 */
+;/* Compatible with Leaflet 0.6 */
 
 .leaflet-touch .leaflet-bar-part-single {
 	-webkit-border-radius: 7px 7px 7px 7px;
@@ -508,8 +508,7 @@
 
 .leaflet-touch .leaflet-control-locate {
 	box-shadow: none;
-	border: 2px solid rgba(0,0,0,0.2);
-	background-clip: padding-box;
+	border: 4px solid rgba(0,0,0,0.3);
 }
 ;/*!
  *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
@@ -1850,7 +1849,7 @@
   content: "\f196";
 }
 ;/*
- * swiper 2.5.0
+ * swiper 2.4.3
  * Mobile touch slider and framework with hardware accelerated transitions
  *
  * http://www.idangero.us/sliders/swiper/
@@ -1861,7 +1860,7 @@
  *
  * Licensed under GPL & MIT
  *
- * Released on: March 6, 2014
+ * Released on: January 29, 2014
 */
 .swiper-container {
 	margin:0 auto;

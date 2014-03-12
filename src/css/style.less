@@ -13,6 +13,14 @@ body {
 @swiperheigth: 65%;
 @duration: 200ms;
 
+.transition(@prop, @duration) {
+  -webkit-transition: @prop @duration;
+  -moz-transition: @prop @duration;
+  -ms-transition: @prop @duration;
+  -o-transition: @prop @duration;
+  transition: @prop @duration;
+}
+
 .container {
   width: 100%;
   height: 100%;
@@ -131,7 +139,10 @@ body {
 
 /* MARKERS */
 
-.leaflet-div-icon {
+/*.divicon.back { z-index: 998; }
+.divicon.front { z-index: 999; }*/
+
+.leaflet-div-icon, .divicon {
   border:none;
   background: none;
 
@@ -156,6 +167,148 @@ body {
       color: darkred;
     }
   }
+
+  /* simple point & arrow */
+  .point {
+    @size: 25px;
+    @bigsize: 50px;
+    @sizefont: 15px;
+    @colclust: #3B72A5;
+    @col: #64A1C3;
+    @atop: 16px;
+    @asize: 15px;
+    @asizet: 12px;
+
+    /* see http://stackoverflow.com/questions/13059190/html5-css3-circle-with-partial-border
+     TO MAKE 30 min 1h 2h 5h delay next event as a circle arc */
+    width: @size;
+    height: @size;
+    background: @col;
+    border-radius: 20px;
+    box-shadow: 3px 3px 10px rgb(143, 143, 143);
+
+    .clock-container {
+      position: absolute;
+    }
+    .clock {
+      z-index: 5;
+      @clock: 20px;
+      content: '';
+      width: @clock;
+      height: @clock;
+      border: 2px solid white;
+      display: inline-block;
+      border-radius: 16px;
+      position: relative;
+      &:after {
+        z-index: 2;
+        content: '';
+        position: absolute;
+        top: @clock / 2;
+        left: @clock / 2;
+        width: @clock / 2 - 3;
+        height: 2px;
+        background: lightgray;
+        display: inline-block;
+        /*transform: rotate(190deg);
+        transform-origin: 0 0.25em;
+        -ms-transform: rotate(190deg);
+        -ms-transform-origin:0 0.25em;*/
+        -webkit-transform-origin:0 0px;
+        /*-webkit-transform: rotate(10deg);*/
+      }
+      &.h6:after { -webkit-transform: rotate(180deg); }
+      &.h7:after { -webkit-transform: rotate(210deg); }
+      &.h8:after { -webkit-transform: rotate(240deg); }
+      &.h9:after { -webkit-transform: rotate(270deg); }
+
+      &:before {
+        z-index: 2;
+        content: '';
+        position: absolute;
+        top: @clock / 2;
+        left: @clock / 2;
+        width: @clock / 2 - 1;
+        height: 1px;
+        background: white;
+        display: inline-block;
+        -webkit-transform-origin:0 0px;
+        -webkit-transform: rotate(0deg);
+      }
+      &.m15:before { -webkit-transform: rotate(90deg); }
+      &.m30:before { -webkit-transform: rotate(180deg); }
+      &.m45:before { -webkit-transform: rotate(270deg); }
+    }
+  
+    i {
+      z-index: 5;
+      position: absolute;
+      color: white;
+      font-size: @sizefont;
+      margin-top: 4px;
+      text-shadow: 1px 1px 3px rgb(90, 90, 90);
+      width: @size;
+      text-align: center;
+    }
+    .arro {
+      z-index: 3;
+      position: absolute;
+      top: @atop;
+      width: 0; 
+      height: 0; 
+      border-left: @asizet solid transparent;
+      border-right: @asizet solid transparent;
+      border-top: @asize solid @col;
+    }
+
+    &.cluster {
+      width: @bigsize;
+      height: @bigsize;
+      background: rgba(100, 161, 195, 0.32);
+      border-radius: @bigsize;
+      box-shadow: 0px 0px 80px #64a1c3;
+      /*background: @colclust;*/
+      .clock {
+        display: none;
+      }
+      i {
+        display: none;
+      }
+      .arro {
+        display: none;
+        border-top: @asizet solid @colclust;
+      }
+    }
+
+    .focus {
+      background: white;
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      position: absolute;
+      top: 28px;
+      left: 8px;
+      z-index: 99;
+      opacity: 0;
+      .transition(opacity, 2s);
+      .line {
+        width: 2px;
+        height: 0px;
+        .transition(height, 2s);
+        background: white;
+        margin: 3px;
+      }
+    }
+  }
+  &.focused .point {
+    .focus {
+      opacity: 1;
+      .line {
+        height: 400px;
+      }
+    }
+  }
+
 
   .evt {
     -moz-border-radius:8px;
