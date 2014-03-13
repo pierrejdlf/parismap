@@ -4,6 +4,7 @@ function Ploufmap(options) {
     plo.log = function(str) { if(plo.config.dev) console.log(str); };
 
     var defaults = {
+        useServer: true,
         dev: false,
         baseUrl:        "http://beta.parismappartient.fr",
         throttleDelay:  2000,
@@ -66,27 +67,32 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     plo.initConfig = function(callb) {
       //var menuTemplate = Handlebars.compile($("#menu-template").html());
-      $.get( plo.config.baseUrl+"/config", function(response) {
-          // rather extend ?
-          plo.config.apis = response.apis;
-          plo.config.esHQ = response.esHQ;
-          plo.config.esChannel = response.esChannel;
-          callb(plo.config);
-          // $("#menu").html( menuTemplate({categories:response}) );
-          // plo.nav = responsiveNav("#menu", { // Selector
-          //   animate: true, // Boolean: Use CSS3 transitions, true or false
-          //   transition: 250, // Integer: Speed of the transition, in milliseconds
-          //   label: "Menu", // String: Label for the navigation toggle
-          //   insert: "after", // String: Insert the toggle before or after the navigation
-          //   customToggle: "", // Selector: Specify the ID of a custom toggle
-          //   openPos: "relative", // String: Position of the opened nav, relative or static
-          //   //navClass: "nav-collapse", // String: Default CSS class. If changed, you need to edit the CSS too!
-          //   jsClass: "js", // String: 'JS enabled' class which is added to <html> element
-          //   init: function(){}, // Function: Init callback
-          //   open: function(){}, // Function: Open callback
-          //   close: function(){} // Function: Close callback
-          //});
-      });
+
+        if(plo.config.useServer) {
+            $.get( plo.config.baseUrl+"/config", function(response) {
+                // rather extend ?
+                plo.config.apis = response.apis;
+                plo.config.esHQ = response.esHQ;
+                plo.config.esChannel = response.esChannel;
+                callb(plo.config);
+                // $("#menu").html( menuTemplate({categories:response}) );
+                // plo.nav = responsiveNav("#menu", { // Selector
+                //   animate: true, // Boolean: Use CSS3 transitions, true or false
+                //   transition: 250, // Integer: Speed of the transition, in milliseconds
+                //   label: "Menu", // String: Label for the navigation toggle
+                //   insert: "after", // String: Insert the toggle before or after the navigation
+                //   customToggle: "", // Selector: Specify the ID of a custom toggle
+                //   openPos: "relative", // String: Position of the opened nav, relative or static
+                //   //navClass: "nav-collapse", // String: Default CSS class. If changed, you need to edit the CSS too!
+                //   jsClass: "js", // String: 'JS enabled' class which is added to <html> element
+                //   init: function(){}, // Function: Init callback
+                //   open: function(){}, // Function: Open callback
+                //   close: function(){} // Function: Close callback
+                //});
+          });
+        } else {
+            callb(plo.config);
+        }
     };
 
     //////////////////////////////////////////////////////

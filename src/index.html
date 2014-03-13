@@ -225,6 +225,8 @@
         // init map on div, with all required options
         var p = Ploufmap(_.extend(options, {
           map: "map", // map div id (carefull with css !)
+
+          useServer: false,
           dev: dev,
           baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
 
