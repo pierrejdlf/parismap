@@ -476,7 +476,7 @@
 	background: #fff;
 	border: 1px solid #666;
 	}
-;/* Compatible with Leaflet 0.6 */
+;/* Compatible with Leaflet 0.7 */
 
 .leaflet-touch .leaflet-bar-part-single {
 	-webkit-border-radius: 7px 7px 7px 7px;
@@ -508,7 +508,8 @@
 
 .leaflet-touch .leaflet-control-locate {
 	box-shadow: none;
-	border: 4px solid rgba(0,0,0,0.3);
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
 }
 ;/*!
  *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
@@ -1849,7 +1850,7 @@
   content: "\f196";
 }
 ;/*
- * swiper 2.4.3
+ * swiper 2.5.0
  * Mobile touch slider and framework with hardware accelerated transitions
  *
  * http://www.idangero.us/sliders/swiper/
@@ -1860,7 +1861,7 @@
  *
  * Licensed under GPL & MIT
  *
- * Released on: January 29, 2014
+ * Released on: March 6, 2014
 */
 .swiper-container {
 	margin:0 auto;
@@ -1976,6 +1977,13 @@ body {
   padding: 0px;
   overflow: hidden;
 }
+.numeral {
+  font-feature-settings: "onum";
+  -moz-font-feature-settings: "onum";
+  -ms-font-feature-settings: "onum";
+  -webkit-font-feature-settings: "onum";
+  -o-font-feature-settings: "onum";
+}
 .container {
   width: 100%;
   height: 100%;
@@ -2081,12 +2089,18 @@ body {
   transition: transform 0.3s ease-out, opacity 0.3s ease-in;
 }
 /* MARKERS */
-.leaflet-div-icon {
+/*.divicon.back { z-index: 998; }
+.divicon.front { z-index: 999; }*/
+.leaflet-div-icon,
+.divicon {
   border: none;
   background: none;
+  /* simple point & arrow */
 }
 .leaflet-div-icon .msg,
-.leaflet-div-icon .word {
+.divicon .msg,
+.leaflet-div-icon .word,
+.divicon .word {
   text-align: center;
   font-family: georgia, serif;
   font-size: 1.1em;
@@ -2097,18 +2111,238 @@ body {
   /*text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);*/
 }
 .leaflet-div-icon .msg.cluster,
-.leaflet-div-icon .word.cluster {
+.divicon .msg.cluster,
+.leaflet-div-icon .word.cluster,
+.divicon .word.cluster {
   color: #E1DE98;
 }
-.leaflet-div-icon .word {
+.leaflet-div-icon .word,
+.divicon .word {
   color: black;
   font-size: 1.7em;
   line-height: 1.7em;
 }
-.leaflet-div-icon .word.cluster {
+.leaflet-div-icon .word.cluster,
+.divicon .word.cluster {
   color: darkred;
 }
-.leaflet-div-icon .evt {
+.leaflet-div-icon .point,
+.divicon .point {
+  /* see http://stackoverflow.com/questions/13059190/html5-css3-circle-with-partial-border
+     TO MAKE 30 min 1h 2h 5h delay next event as a circle arc */
+  width: 25px;
+  height: 25px;
+  background: #64a1c3;
+  border-radius: 20px;
+  box-shadow: 3px 3px 10px #8f8f8f;
+}
+.leaflet-div-icon .point .clock-container,
+.divicon .point .clock-container {
+  position: absolute;
+}
+.leaflet-div-icon .point .clock,
+.divicon .point .clock {
+  z-index: 5;
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  display: inline-block;
+  border-radius: 16px;
+  position: relative;
+}
+.leaflet-div-icon .point .clock:after,
+.divicon .point .clock:after {
+  z-index: 2;
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 7px;
+  height: 2px;
+  background: lightgray;
+  display: inline-block;
+  /*transform: rotate(190deg);
+        transform-origin: 0 0.25em;
+        -ms-transform: rotate(190deg);
+        -ms-transform-origin:0 0.25em;*/
+  -webkit-transform-origin: 0 0px;
+  /*-webkit-transform: rotate(10deg);*/
+}
+.leaflet-div-icon .point .clock.h6:after,
+.divicon .point .clock.h6:after {
+  -webkit-transform: rotate(180deg);
+}
+.leaflet-div-icon .point .clock.h7:after,
+.divicon .point .clock.h7:after {
+  -webkit-transform: rotate(210deg);
+}
+.leaflet-div-icon .point .clock.h8:after,
+.divicon .point .clock.h8:after {
+  -webkit-transform: rotate(240deg);
+}
+.leaflet-div-icon .point .clock.h9:after,
+.divicon .point .clock.h9:after {
+  -webkit-transform: rotate(270deg);
+}
+.leaflet-div-icon .point .clock:before,
+.divicon .point .clock:before {
+  z-index: 2;
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 9px;
+  height: 1px;
+  background: white;
+  display: inline-block;
+  -webkit-transform-origin: 0 0px;
+  -webkit-transform: rotate(0deg);
+}
+.leaflet-div-icon .point .clock.m15:before,
+.divicon .point .clock.m15:before {
+  -webkit-transform: rotate(90deg);
+}
+.leaflet-div-icon .point .clock.m30:before,
+.divicon .point .clock.m30:before {
+  -webkit-transform: rotate(180deg);
+}
+.leaflet-div-icon .point .clock.m45:before,
+.divicon .point .clock.m45:before {
+  -webkit-transform: rotate(270deg);
+}
+.leaflet-div-icon .point i,
+.divicon .point i {
+  z-index: 5;
+  position: absolute;
+  color: white;
+  font-size: 15px;
+  margin-top: 4px;
+  text-shadow: 1px 1px 3px #5a5a5a;
+  width: 25px;
+  text-align: center;
+}
+.leaflet-div-icon .point .arro,
+.divicon .point .arro {
+  z-index: 3;
+  position: absolute;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 15px solid #64a1c3;
+}
+.leaflet-div-icon .point.cluster,
+.divicon .point.cluster {
+  width: 50px;
+  height: 50px;
+  background: rgba(100, 161, 195, 0.32);
+  border-radius: 50px;
+  box-shadow: 0px 0px 80px #64a1c3;
+  /*background: @colclust;*/
+}
+.leaflet-div-icon .point.cluster .arro,
+.divicon .point.cluster .arro {
+  border-top: 12px solid #3b72a5;
+}
+.leaflet-div-icon .point.cluster .clock,
+.divicon .point.cluster .clock,
+.leaflet-div-icon .point.cluster i,
+.divicon .point.cluster i,
+.leaflet-div-icon .point.cluster .arro,
+.divicon .point.cluster .arro,
+.leaflet-div-icon .point.cluster .time,
+.divicon .point.cluster .time,
+.leaflet-div-icon .point.cluster .arc,
+.divicon .point.cluster .arc {
+  display: none;
+}
+.leaflet-div-icon .point .time,
+.divicon .point .time {
+  color: white;
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  text-align: left;
+  font-size: 14px;
+  width: 30px;
+  text-shadow: 1px 1px 2px #414141;
+  font-family: 'Arial, Arial, Helvetica, sans-serif';
+  font-feature-settings: "onum";
+  -moz-font-feature-settings: "onum";
+  -ms-font-feature-settings: "onum";
+  -webkit-font-feature-settings: "onum";
+  -o-font-feature-settings: "onum";
+}
+.leaflet-div-icon .point .arc,
+.divicon .point .arc {
+  z-index: 7;
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  border: 2px solid;
+}
+.leaflet-div-icon .point .arc_start,
+.divicon .point .arc_start {
+  border-color: transparent #ffffff #ffffff #ffffff;
+  -webkit-transform: rotate(-70deg);
+  -moz-transform: rotate(-70deg);
+  -ms-transform: rotate(-70deg);
+  -o-transform: rotate(-70deg);
+  transform: rotate(-70deg);
+}
+.leaflet-div-icon .point .arc_end,
+.divicon .point .arc_end {
+  border-color: #ffffff #ffffff #ffffff transparent;
+  -webkit-transform: rotate(60deg);
+  -moz-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  -o-transform: rotate(60deg);
+  transform: rotate(60deg);
+}
+.leaflet-div-icon .point .focus,
+.divicon .point .focus {
+  background: white;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  position: absolute;
+  top: 28px;
+  left: 8px;
+  z-index: 99;
+  opacity: 0;
+  -webkit-transition: opacity 2s;
+  -moz-transition: opacity 2s;
+  -ms-transition: opacity 2s;
+  -o-transition: opacity 2s;
+  transition: opacity 2s;
+}
+.leaflet-div-icon .point .focus .line,
+.divicon .point .focus .line {
+  width: 2px;
+  height: 0px;
+  -webkit-transition: height 2s;
+  -moz-transition: height 2s;
+  -ms-transition: height 2s;
+  -o-transition: height 2s;
+  transition: height 2s;
+  background: white;
+  margin: 3px;
+}
+.leaflet-div-icon.focused .point .focus,
+.divicon.focused .point .focus {
+  opacity: 1;
+}
+.leaflet-div-icon.focused .point .focus .line,
+.divicon.focused .point .focus .line {
+  height: 400px;
+}
+.leaflet-div-icon .evt,
+.divicon .evt {
   -moz-border-radius: 8px;
   border-radius: 8px;
   padding: 6px;
@@ -2122,20 +2356,25 @@ body {
   background: rgba(0, 0, 0, 0.63);
   /*transition: background 0.1s linear;*/
 }
-.leaflet-div-icon .evt span {
+.leaflet-div-icon .evt span,
+.divicon .evt span {
   margin-left: 7px;
 }
-.leaflet-div-icon .evt.cluster span {
+.leaflet-div-icon .evt.cluster span,
+.divicon .evt.cluster span {
   margin-left: 0;
   margin-right: 7px;
 }
-.leaflet-div-icon .evt.cluster {
+.leaflet-div-icon .evt.cluster,
+.divicon .evt.cluster {
   background-color: #9E9E9E;
 }
-.leaflet-div-icon.visited .evt {
+.leaflet-div-icon.visited .evt,
+.divicon.visited .evt {
   background: rgba(126, 126, 126, 0.73);
 }
-.leaflet-div-icon.focused .evt {
+.leaflet-div-icon.focused .evt,
+.divicon.focused .evt {
   background: #528fc7;
 }
 /* SLIDES */
