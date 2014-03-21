@@ -1,7 +1,7 @@
 function Ploufmap(options) {
 
     plo = {};
-    plo.log = function(str) { if(plo.config.dev) console.log(str); };
+    plo.log = function(str) { console.log(str); }; //if(plo.config.dev) console.log(str); };
 
     var defaults = {
         useServer: true,
@@ -17,22 +17,15 @@ function Ploufmap(options) {
     plo.config.bounce = !plo.config.clusterize;
 
     plo.map = null;
-    plo.swiper = null;
     
-    plo.slides = []; // will store successive markers when looking swiper
-    plo.previous = null;
     plo.current = null;
-    plo.next = null;
-
-    plo.anchor = null; // first clicked marker, to be able to loop around based on distance to anchor
 
     plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
 
     plo.w = $("body").width();
     //plo.log("width:"+plo.w);
 
-    // extend marker objects to store data for each
-    // be careful to put here all what you need !
+    // extend marker objects to store data for each (be careful to put here all what you need !)
     plo.Marker = L.Marker.extend({
         options : { // really need to peuplate options {} ? don't think so
             //ploufs: [],
@@ -41,10 +34,6 @@ function Ploufmap(options) {
             bounceOnAddHeight:      40
         }
     });
-    // also prepare the MarkerCLuster marker to receive options !
-    // L.MarkerCluster = L.MarkerCluster.extend({
-    //     ploufdata: {} // just need to declare it
-    // });
 
     //////////////////////////////////////////////////////
     plo.init = function() {
@@ -54,11 +43,8 @@ function Ploufmap(options) {
 
         plo.initMap();
         plo.throttleFetch();
-
         plo.fetchGeoJson();
 
-        plo.swiperToggle(false);
-        plo.swiperInit();
         var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;
         plo.fadeOutMask();         
       });
@@ -75,20 +61,6 @@ function Ploufmap(options) {
                 plo.config.esHQ = response.esHQ;
                 plo.config.esChannel = response.esChannel;
                 callb(plo.config);
-                // $("#menu").html( menuTemplate({categories:response}) );
-                // plo.nav = responsiveNav("#menu", { // Selector
-                //   animate: true, // Boolean: Use CSS3 transitions, true or false
-                //   transition: 250, // Integer: Speed of the transition, in milliseconds
-                //   label: "Menu", // String: Label for the navigation toggle
-                //   insert: "after", // String: Insert the toggle before or after the navigation
-                //   customToggle: "", // Selector: Specify the ID of a custom toggle
-                //   openPos: "relative", // String: Position of the opened nav, relative or static
-                //   //navClass: "nav-collapse", // String: Default CSS class. If changed, you need to edit the CSS too!
-                //   jsClass: "js", // String: 'JS enabled' class which is added to <html> element
-                //   init: function(){}, // Function: Init callback
-                //   open: function(){}, // Function: Open callback
-                //   close: function(){} // Function: Close callback
-                //});
           });
         } else {
             callb(plo.config);
@@ -96,117 +68,15 @@ function Ploufmap(options) {
     };
 
     //////////////////////////////////////////////////////
-     plo.swiperInit = function() {
-        plo.swiper = new Swiper("#swiper",{
-            mode: 'horizontal',
-            slidesPerView: plo.config.isMobile ? 1 : 1.85,
-            freeMode: false,
-            //slidesPerView: 'auto',
-            keyboardControl:    true,
-            centeredSlides:     true,
-            //offsetSlidesBefore:     1,
-            //offsetSlidesAfter:      1,
-            //initialSlide: 0,
-
-            watchActiveIndex: true,
-
-            onSlideChangeStart: function(swiper,direction) {
-                var i = plo.swiper.activeIndex;
-                //plo.log("(start "+direction+") now looking at: "+i);
-                if(direction=='prev') {
-                    plo.swiperLookAt(plo.slides[i]);
-                } else {
-                    plo.swiperLookAt(plo.next);
-                }
-            },
-            onSlideChangeEnd : function(swiper) {
-                var i = plo.swiper.activeIndex;
-                //plo.log("(end) now looking at: "+i);
-                if(i==plo.slides.length-1) {
-                    //plo.log("! need to load next slide");
-                    plo.swiperNextPass();
-                }
-            },
-            //onSetWrapperTransform:  plo.throttleInterpolater,
-            //onResistanceBefore:     plo.swiperInterpolate,
-            //onResistanceAfter:      plo.swiperInterpolate,
-        });
-    };
-    // if you want to try to move map interpolated based on swipe-x
-    plo.swiperInterpolate = function(sw,p) {
-        var k = -p.x/plo.w;
-        //plo.log(k,p);
-        var a = plo.current.ploufdata;
-        var b = plo.next.ploufdata;
-        var lat = (a.lat*k + b.lat*(1-k));
-        var lng = (a.lng*k + b.lng*(1-k));
-        var tp = [lat,lng];
-        //plo.log(tp)
-        //plo.map.panTo(tp);
-    };
-    plo.swiperToggle = function(show) {
-        if(!show) $(".focused").removeClass("visited").removeClass("focused");
-        if(show)
-            $(".container").addClass("paneled");
-        else
-            $(".container").removeClass("paneled");
-        plo.map.invalidateSize(true);
-    };
-    plo.swiperIsActive = function() {
-        return $("#swiper").attr("show")=='on';
-    };
-    plo.swiperLookAt = function(p) {
-        plo.log("------ panning to:"+p.ploufdata.text+p.ploufdata.lat);
-        plo.map.panTo(p.ploufdata);
-        plo.setMarkerStatus(p,"focused");
-        console.log(p);
-    }
-    plo.swiperNextPass = function() {
-        // update last marker class
-        //plo.setMarkerStatus(plo.current,"visited");
-
-        plo.current = plo.next ;
-
-        var isCluster = plo.current.hasOwnProperty('parentMarker');
-        // if(isCluster) plo.log("PASS: yourra, a cluster");
-        // else plo.log("PASS: just a marker");
-
-        plo.setMarkerStatus(plo.current,"focused");
-
-        plo.next = plo.getNext();
-        plo.swiperAppend( plo.next );
-    };
-    plo.swiperAppend = function(m) {
-        var html = plo.getHtml(m.ploufdata);
-        //var newSlide = plo.swiper.createSlide(html);
-        //newSlide.append();
-        plo.swiper.appendSlide( html );
-        //plo.swiper.calcSlides(true);
-        //plo.log("swiper appended slide: "+data.title);
-    };
-    plo.swiperReloadWith = function(list) {
-        plo.log("reload swiper");
-        plo.swiper.reInit();
-        plo.swiper.removeAllSlides();
-        // let's load 2 at start
-        _.each(list, function(m) {
-            plo.swiperAppend(m);
-        });
-    };
-
-    //////////////////////////////////////////////////////
-    // return next marker wich was unseen
-    plo.getNext = function() {
-        var md = null;
-        var next = null;
-        
-        var neighbors = null;
-
-        //console.log(plo.getMarkerLayer(plo.current.ploufdata));
+    // get nearest marker in any layer
+    plo.getClosestMarker = function(latlng) {
+        var md = null,
+            closest = null,
+            neighbors = null;
 
         if(plo.config.clusterize) {
             //neighbors = plo.getMarkerLayer(plo.current.ploufdata)._map._layers;
-            var neighbors_tmp = plo.getMarkerLayer(plo.current.ploufdata)._featureGroup._layers;
+            var neighbors_tmp = plo.getMarkerLayer()._featureGroup._layers;
             neighbors = [];
             _.each(neighbors_tmp, function(e) {
                 var iscluster = !e.hasOwnProperty("ploufdata");
@@ -226,24 +96,16 @@ function Ploufmap(options) {
         } else
             neighbors = plo.getMarkerLayer(plo.current.ploufdata)._layers;
 
-        //plo.tt = neighbors_tmp;
-        //console.log(neighbors.length);
-
-        _.each(neighbors, function(e) {
-            var d = plo.anchor._latlng.distanceTo(e._latlng);
-            var iscluster = !e.hasOwnProperty("ploufdata");
-            if(!iscluster && ( (d<md || md===null) && e!=plo.anchor && e.ploufdata.seen=="no") ) {
+        _.each(neighbors, function(m) {
+            var d = latlng.distanceTo(m._latlng);
+            var iscluster = !m.hasOwnProperty("ploufdata");
+            if(!iscluster && (d<md || md===null)) {
                 md = d;
-                next = e;
+                closest = m;
             }
         });
-
-        plo.anchor = next;
-        next.ploufdata.seen = "loaded";
-        plo.slides.push(next);
-
-        if(next==null) plo.log("!! null next !!");
-        return next;
+        console.log("closest:",closest);
+        return closest;
     };
 
     //////////////////////////////////////////////////////
@@ -257,65 +119,32 @@ function Ploufmap(options) {
           //var res = JSON.parse(response);
           plo.log(response);
       });
-      plo.swiper.swipeNext();
     };
 
+    //////////////////////////////////////////////////////
     plo.setMarkerStatus = function(m,status) {
         // we may be being setting a cluster !
         if(m.ploufdata.hasOwnProperty('parentMarker')) {
             m = m.ploufdata.parentMarker;
         }
-
         if(status=="focused") {
             $(".leaflet-div-icon").removeClass("focused");
             $(m._icon).addClass("focused");
-        }
-        if(status=="visited") {
-            $(m._icon).removeClass("focused");
-            $(m._icon).addClass("visited");
-        }
-        if(status=="reset") {
-            $(".leaflet-div-icon").removeClass("focused").removeClass("visited");   
         }
     };
 
     //////////////////////////////////////////////////////
     plo.clickMarker = function(event,type) {
-
-        plo.log(type+" clicked");
-
+        plo.log(type+" clicked (centering.)");
         //console.log('cluster ' + a.layer.getAllChildMarkers().length);
-
         //console.log(event);
 
         var marker = event.target;
-
-        plo.current = marker;
-        plo.anchor = marker;
-        plo.slides = [marker];
-        
-        plo.setMarkerStatus(plo.current,"focused");
-
-        // reset: all markers can be seen again
-        _.each(plo.getMarkerLayer(plo.current.ploufdata)._layers, function(e) {
-          e.ploufdata.seen = "no";
-        });
-
-        plo.current.seen = "loaded";
-        plo.next = plo.getNext();
-
-        console.log("got current and next");
-
-        plo.swiperReloadWith([plo.current,plo.next]);
-        //plo.log("current index: "+plo.swiper.activeIndex);
-        plo.swiper.swipeTo(0);
-        plo.swiperToggle(true);
-        plo.map.panTo(plo.current.ploufdata);
+        plo.map.setView(marker._latlng);
+        //plo.map.panTo(plo.current.ploufdata);
     };
     plo.clickMap = function(event) {
         plo.log("map clicked");
-        plo.swiperToggle(false);
-        plo.setMarkerStatus(null,"reset");
     };
 
     //////////////////////////////////////////////////////
@@ -328,16 +157,20 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.getAllMarkers = function() {
+        var layer = plo.current ? plo.getMarkerLayer(plo.current.ploufdata) : plo.getMarkerLayer();
         if(plo.config.clusterize)
-            return plo.getMarkerLayer(plo.current.options)._topClusterLevel.getAllChildMarkers();
+            return layer._topClusterLevel.getAllChildMarkers();
         else
-            return plo.getMarkerLayer(plo.current.options)._layers;
+            return layer._layers;
     };
 
     //////////////////////////////////////////////////////
     //////////////////////////////////////////////////////
     plo.getMarkerLayer = function(p) {
-      return plo.layers[p.markertype];
+        if(p)
+            return plo.layers[p.markertype];
+        else
+            return plo.layers[_.keys(plo.layers)[0]];
     };
     plo.getMarkerMapType = function(p) {
         if(p.geojson) {
@@ -412,12 +245,12 @@ function Ploufmap(options) {
             if(plo.config.clusterize) {
                 // click events
                 markerLayer.on('click', function (a) {
-                    //console.log("CLICK!");
+                    console.log("CLICK!");
                     //console.log(a);
                     //plo.clickMarker(a,"marker");
                 });
                 markerLayer.on('clusterclick', function (a) {
-                    //console.log("CLICK!");
+                    console.log("CLUSTERCLICK!");
                     //console.log(a);
                     //plo.clickMarker(a,"cluster");
                 });
@@ -456,19 +289,24 @@ function Ploufmap(options) {
 
         L.control.attribution({position:'topright'}).addTo(plo.map);
 
-        plo.map.on('click', plo.clickMap);
-        plo.map.on('move', function(e) {
-            //plo.log("! moved");
-            plo.throttleFetch();
+        // map events
+        plo.map.on('click', function(e) {
+            plo.log("! map clicked");
         });
+        // plo.map.on('move', function(e) {
+        //     plo.log("! moved");
+        //     //plo.throttleFetch();
+        // });
         plo.map.on("zoomstart", function(e) {
             plo.log("! zoomedStart");
-            plo.swiperToggle(false);
         });
-        plo.map.on('moveEnd', function(e) {
+        plo.map.on('dragstart', function(e) {
+            plo.log("! dragstart");
+        });
+        plo.map.on('moveend', function(e) {
             plo.log("! movedEnd");
+            plo.refreshCurrent();
             plo.throttleFetch();
-            plo.swiperToggle(false);
         });
 
         if(plo.config.locateButton) {
@@ -517,6 +355,43 @@ function Ploufmap(options) {
             //lc.locate();
         }
     };
+    plo.refreshCurrent = function() {
+        console.log("refreshing current.");
+        var clo = plo.getClosestMarker( plo.map.getCenter() );
+        // moving box at center of screen
+        var e = $(clo._icon);
+        var t = plo.getTransform(e);
+        var tmap = plo.getTransform($(".leaflet-map-pane"));
+        if(t) {
+            var pad = 90;
+            var x = -t[0]-tmap[0]+pad,
+                y = -t[1]-tmap[1]+pad,
+                W = $(window).width(),
+                H = $(window).height();
+            e.css("z-index",9998);
+            e.find(".super").css({
+                "-webkit-transform": "translate3d("+x+"px, "+y+"px, 0px)",
+                "width": W-2*pad,
+                "height": H-2*pad,
+                "z-index": 9998,
+            });
+        }
+        plo.setMarkerStatus(clo,"focused");
+    };
+    //////////////////////////////////////////////////////
+    plo.getTransform = function(obj) {
+        var matrix = obj.css("-webkit-transform") ||
+            obj.css("-moz-transform")    ||
+            obj.css("-ms-transform")     ||
+            obj.css("-o-transform")      ||
+            obj.css("transform");
+        if(matrix) {
+            var values = matrix.match(/translate3d\(([-\d]*)px[, ]*([-\d]*)px/);
+            values.shift();
+            return values;
+        } else 
+            return null;
+    };
 
     plo.fadeOutMask = function() {
       var mask = $("#locateMask");
@@ -525,7 +400,7 @@ function Ploufmap(options) {
         mask.addClass("hidden");
       }, true);
     };
-    
+
     //////////////////////////////////////////////////////
     plo.addPlouf = function(p) {
         var markLayer = plo.getMarkerLayer(p);
@@ -539,7 +414,8 @@ function Ploufmap(options) {
         if(!f) {
             var newM = new plo.Marker(ltln,{
                 icon: i,
-                draggable: false
+                draggable: false,
+                zIndexOffset: 0,
             });
 
             newM.ploufdata = _.extend(p,{
@@ -697,7 +573,6 @@ function Ploufmap(options) {
     };
 
     plo.throttleFetcher = _.throttle(plo.fetchPloufs, plo.config.throttleDelay);
-    plo.throttleInterpolater = _.throttle(plo.swiperInterpolate, 200);
 
     document.onkeydown = function(e) {
       if(plo.swiperIsActive()) {

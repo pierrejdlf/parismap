@@ -46,9 +46,6 @@
     <link rel="stylesheet" type="text/css" href="../vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.css"/>
     -->
 
-    <script type="text/javascript" src="../vendor/swiper/dist/idangerous.swiper.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../vendor/swiper/dist/idangerous.swiper.css"/>
-
     <script type="text/javascript" src="../vendor/moment/moment.js"></script>
 
     <!-- <script src="../vendor/leaflet.groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script> -->
@@ -77,44 +74,10 @@
     </head>
 
     <body>
-    <!--
-      <div id="locateMask">
-        <div>please allow browser geoloc</div>
-        <i class="fa fa-spinner fa-spin fa-2x fa-inverse"></i>
-      </div>
-    -->
-
-      <!-- <div id="menu"></div> -->
       <div class="container">
-
         <div id="map"></div>
-
-        <div id="swiper" class="swiper-container">
-          <div class="swiper-wrapper"></div>
-        </div>
-
       </div>
     </body>
-
-    <script id="plouf-template-evt" type="text/x-handlebars-template">
-      <div class="plouf-container {{markertype}}">
-        <!--<div class="arrow"></div>-->
-
-        <div class="content">
-          <div class="meta">
-            <!--<i class="fa fa-location-arrow"></i>-->
-            <a class="link" href="{{link}}" target="_blank"><div class="address">{{place}} - {{address}}</div></a>
-          </div>
-
-          <div class="title">{{title}}</div>
-          <div class="text">{{text}}</div>
-
-<!--          <div class="seemore"><a href="{{link}}" target="_blank">read more @{{papi}}</a></div>
-          <div class="ellipsis"></div>-->
-        </div>
-
-      </div>
-    </script>
 
     <script id="plouf-template-msg" type="text/x-handlebars-template">
       <div class="plouf-container {{markertype}}">
@@ -243,7 +206,7 @@
           templates: {
             word: Handlebars.compile($("#plouf-template-msg").html()),
             msg: Handlebars.compile($("#plouf-template-msg").html()),
-            evt: Handlebars.compile($("#plouf-template-evt").html())
+            //evt: Handlebars.compile($("#plouf-template-evt").html())
           },
 
           // define icons
@@ -304,6 +267,17 @@
               var ti = moment(p.date.start).format("HH[h]mm");
               ti = ti.replace(/h00$/,"h").replace(/^0/,"");
               var cclass = moment(p.date.start).format("[h]HH [m]mm");
+
+              //<i class="fa fa-location-arrow"></i><div class="seemore"><a href="{{link}}" target="_blank">read more @{{papi}}</a></div> <div class="ellipsis"></div>-->
+              var ht = '<div class="plouf-container {{markertype}}">'+
+                '<div class="content">'+
+                  '<div class="meta">'+
+                    '<a class="link" href="{{link}}" target="_blank"><div class="address">{{place}} - {{address}}</div></a>'+
+                  '</div>'+
+                  '<div class="title">{{title}}</div>'+
+                  '<div class="text">{{text}}</div>'+
+                '</div></div>';
+              var html = Handlebars.compile(ht)(p);
               return L.divIcon({
                 iconSize:     [10, 10],
                 html: "<div class='"+cla+"'>"+
@@ -315,10 +289,13 @@
                           "    <div class='arc arc_end'></div>"+
                           //"</div>"+
                           "<div class='time'>"+ti+"</div>"+
+                          "<div class='super'>"+
+                            html+
+                          "</div>"+
                       "</div>",
                 //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
                 popupAnchor:  [0, 0],
-                className: clustCount>1 ? "divicon back" : "divicon front"
+                className: clustCount>1 ? "leaflet-div-icon back" : "leaflet-div-icon front"
               });
             },
             ///////////////////////////////////////////////////
