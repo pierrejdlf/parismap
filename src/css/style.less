@@ -20,6 +20,13 @@ body {
   -o-transition: @prop @duration;
   transition: @prop @duration;
 }
+.transitiondouble(@prop, @prob, @duration) {
+  -webkit-transition: @prop @duration, @prob @duration;
+  -moz-transition: @prop @duration, @prob @duration;
+  -ms-transition: @prop @duration, @prob @duration;
+  -o-transition: @prop @duration, @prob @duration;
+  transition: @prop @duration, @prob @duration;
+}
 
 .numeral {
   font-feature-settings: "onum";
@@ -40,103 +47,16 @@ body {
 }
 
 /* general */
-#map, #locateMask {
+#map {
   position:absolute;
   left:0px;
   top:0px;
   width:100%;
   height:100%;
   overflow:hidden;
-/*  transition: height @duration;
-  -moz-transition: height @duration;
-  -ms-transition: height @duration;
-  -o-transition: height @duration;
-  -webkit-transition: height @duration;*/
 }
-/*
-#locateMask {
-  background: black;
-  z-index: 200;
-  text-align: center;
-  padding-top: 35%;
-  opacity: 0.8;
-  transition: opacity 0.5s linear;
-}
-#locateMask.invisible {
-  opacity: 0;
-}
-#locateMask.invisible.hidden {
-  display: none;
-}*/
-
-#swiper {
-  position:absolute;
-  left:0px;
-  bottom: -@swiperheigth - 10%; /* not 40% aka same than height to QAD hide arrow */
-  width: 100%;
-  height: @swiperheigth;
-  /*background: white;*/
-  transition: bottom @duration;
-  -moz-transition: bottom @duration;
-  -ms-transition: bottom @duration;
-  -o-transition: bottom @duration;
-  -webkit-transition: bottom @duration;
-}
-
-.container.paneled {
-  #swiper {
-    bottom: 0%;
-  }
-  #map {
-    height: 100% - @swiperheigth;
-  }
-}
-
-
-/* swiper */
-.swiper-container {
-  overflow: visible;
-  background: #FAFAFA;
-}
-
-.swiper-slide {
-  /*overflow: hidden;*/
-  /*width: 400px;*/
-  opacity: 0.4;
-  -webkit-transition: 300ms;
-  -moz-transition: 300ms;
-  -ms-transition: 300ms;
-  -o-transition: 300ms;
-  transition: 300ms;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  -o-transform: scale(0);
-  transform: scale(0);
-}
-.swiper-slide-visible {
-  opacity: 0.5;
-  -webkit-transform: scale(0.8);
-  -moz-transform: scale(0.8);
-  -ms-transform: scale(0.8);
-  -o-transform: scale(0.8);
-  transform: scale(0.8);
-}
-.swiper-slide-active {
-  top: 0;
-  opacity: 1;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  -o-transform: scale(1);
-  transform: scale(1);
-}
-
-
-
 
 /* marker cluster */
-
 .leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
   -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
   -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
@@ -144,54 +64,36 @@ body {
   transition: transform 0.3s ease-out, opacity 0.3s ease-in;
 }
 
+@delayicon: 200ms;
+@delaytemplate: 600ms;
 
-/* MARKERS */
-
-/*.divicon.back { z-index: 998; }
-.divicon.front { z-index: 999; }*/
-
-.leaflet-div-icon, .divicon {
+/*
+  --------------------------
+  EVENT MARKERS
+  --------------------------
+*/
+.parismap-icon.event {
   border:none;
   background: none;
 
-  .msg, .word {
-    text-align: center;
-    font-family: georgia, serif;
-    font-size: 1.1em;
-    line-height: 1.1em;
-    text-transform: lowercase;
-    font-style: italic;
-    color:whitesmoke;
-    /*text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);*/
-    &.cluster {
-      color: #E1DE98;
-    }
-  }
-  .word {
-    color: black;
-    font-size: 1.7em;
-    line-height: 1.7em;
-    &.cluster {
-      color: darkred;
-    }
-  }
-
   /* simple point & arrow */
-  .point {
-    @size: 25px;
-    @bigsize: 50px;
-    @sizefont: 15px;
-    @colclust: #3B72A5;
-    @col: #64A1C3;
-    @atop: 16px;
-    @asize: 15px;
-    @asizet: 12px;
+  @size: 25px;
+  @bigsize: 40px; /* 70px is ok if you use gradient */
+  @sizefont: 15px;
+  @colclust: #3B72A5;
+  @colbase: #64A1C3;
+  @colfocused: #D13D3D;
+  @atop: 16px;
+  @asize: 15px;
+  @asizet: 12px;
 
+  .point {
     /* see http://stackoverflow.com/questions/13059190/html5-css3-circle-with-partial-border
      TO MAKE 30 min 1h 2h 5h delay next event as a circle arc */
     width: @size;
     height: @size;
-    background: @col;
+    background: @colbase;
+    .transition(background, @delayicon);
     border-radius: 20px;
     box-shadow: 3px 3px 10px rgb(143, 143, 143);
 
@@ -258,7 +160,7 @@ body {
       width: @size;
       text-align: center;
     }
-    .arro {
+    .arrow {
       z-index: 3;
       position: absolute;
       top: @atop;
@@ -266,32 +168,8 @@ body {
       height: 0; 
       border-left: @asizet solid transparent;
       border-right: @asizet solid transparent;
-      border-top: @asize solid @col;
-    }
-
-    &.cluster {
-      width: @bigsize;
-      height: @bigsize;
-      background: rgba(100, 161, 195, 0.32);
-      border-radius: @bigsize;
-      box-shadow: 0px 0px 80px #64a1c3;
-      /*background: @colclust;*/
-      .arro {
-        border-top: @asizet solid @colclust;
-      }
-      .clock, i, .arro, .time, .arc { display: none; }
-    }
-    .time {
-      color: white;
-      position: absolute;
-      left: 16px;
-      top: 18px;
-      text-align: left;
-      font-size: 14px;
-      width: 30px;
-      text-shadow: 1px 1px 2px rgb(65, 65, 65);
-      font-family: 'Arial, Arial, Helvetica, sans-serif';
-      .numeral();
+      border-top: @asize solid @colbase;
+      .transition(border-top, @delayicon);
     }
     .arc {
       z-index: 7;
@@ -322,100 +200,184 @@ body {
         -o-transform: rotate(@ang2);
         transform: rotate(@ang2);
     }
-    .focus {
-      background: white;
-      width: 8px;
-      height: 8px;
-      border-radius: 4px;
+    .time {
+      color: white;
       position: absolute;
-      top: 28px;
-      left: 8px;
-      z-index: 99;
-      opacity: 0;
-      .transition(opacity, 2s);
-      .line {
-        width: 2px;
-        height: 0px;
-        .transition(height, 2s);
-        background: white;
-        margin: 3px;
-      }
+      left: 16px;
+      top: 18px;
+      text-align: left;
+      font-size: 14px;
+      width: 30px;
+      text-shadow: 1px 1px 2px rgb(65, 65, 65);
+      font-family: 'Arial, Arial, Helvetica, sans-serif';
+      .numeral();
     }
-    .super {
-      .transition(opacity, 800ms);
+    .template {
+      .transition(opacity, @delaytemplate);
       opacity: 0;
-      background-color: rgba(255, 255, 255, 0.6);;
       position: fixed;
       display: table;
       pointer-events: none;
     }
+    /* ------------------------------ */
+    &.cluster {
+      width: @bigsize;
+      height: @bigsize;
+      border-radius: @bigsize;
+      .transitiondouble(background, box-shadow, @delaytemplate);
+      background: rgba(100, 161, 195, 0.21);
+      box-shadow: 0px 0px 80px #64a1c3;
+
+      /* you can try following, but gradient don't support css transitions yet */
+      /*box-shadow: none;
+      .transition(background, @delaytemplate);
+      @colcluster: rgba(108, 138, 182, 0.55);
+      background: -webkit-radial-gradient(@colcluster 2%, transparent 75%);
+      background: -o-radial-gradient(@colcluster 2%, transparent 75%);
+      background: -moz-radial-gradient(@colcluster 2%, transparent 75%);
+      background: radial-gradient(@colcluster 2%, transparent 75%);
+      background-opacity: 0.5;*/
+
+      .arrow, .clock, i, .time, .arc {
+        display: none;
+      }
+    }
   }
+  /* when clicking/dragging around */
   &.focused {
     .point {
-      background: red;
+      background: @colfocused;
+      .arrow {
+        border-top: @asize solid @colfocused;
+      }
     }
-    .super {
-      opacity:1;
+    .point.cluster {
+      background: rgba(213, 86, 86, 0.32);
+      box-shadow: 0px 0px 80px #FF1400;
+      /*
+      @colclusterfocused: rgba(138, 138, 182, 0.55);
+      background: -webkit-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: -o-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: -moz-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: radial-gradient(colclusterfocused 2%, transparent 75%);
+      */
+    }
+  }
+  .template {
+    background: rgba(245, 245, 245, 0.86);
+    box-shadow: 0px 0px 100px white;
+
+    .content {
+
+      height: 100%;
+      padding: 5px;
+      text-align: center;
+      /*font-family: 'Lato', sans-serif;*/
+      font-family: 'Source Sans Pro', sans-serif;
+
+      /* EVT */
+      .meta {
+        /*background: whitesmoke;*/
+        padding-top: 8px;
+        padding-bottom: 8px;
+        margin-bottom: 5px;
+        border-bottom: 1px solid lightgray;
+
+        .address {
+          display: inline-block;
+          font-size: 0.9em;
+          color: black;
+        }
+      }
+      .title {
+        margin-bottom: 4px;
+        font-size: 0.9em;
+        color: gray;
+      }
+      .text {
+        height: 100%;
+        padding:0 17% 0 17%;
+        text-align: center;
+        font-size: 1.4em;
+        overflow: hidden;
+        /*font-family: georgia, serif;*/
+        /*font-style: italic;*/
+      }
+      @media only screen and (max-width : 600px) {
+        .text {
+          font-size: 1.4em;
+          padding: 10px;
+        }
+      }
     }
   }
 }
 
-.leaflet-dragging .super {
+
+/*
+  --------------------------
+  WORD MARKERS
+  --------------------------
+*/
+.parismap-icon.msg {
+  border:none;
+  background: none;
+
+  /* words */
+  .word {
+    .transition(color, @delayicon);
+    width: 90px;
+    text-align: center;
+    font-family: georgia, serif;
+    font-size: 1.1em;
+    line-height: 1.1em;
+    text-transform: lowercase;
+    font-style: italic;
+    color:whitesmoke;
+    /*text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);*/
+    &.cluster {
+      color: #A3A3A3;
+    }
+  }
+  .template {
+    .transition(opacity, @delaytemplate);
+    opacity: 0;
+    position: fixed;
+    display: table;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.77);
+    box-shadow: 0px 0px 100px black;
+    .text {
+      padding-left: 10%;
+      padding-right: 10%;
+      text-align: center;
+      height: 100%;
+      width: 100%;
+      display: table-cell;
+      vertical-align: middle;
+      color: white;
+      text-shadow: 1px 1px 4px black;
+      font-size: 2.5em;
+      line-height: 1.1em;
+      font-style: initial;
+    }
+  }
+  &.focused .word {
+    color: rgb(255, 163, 0);
+  }
+}
+
+
+
+/*
+  --------------------------
+  FOR ALL SITUATIONS
+  --------------------------
+*/
+body .parismap-icon.opened .template {
+  opacity: 1 !important;
+}
+body.leaflet-dragging .parismap-icon .template,
+body.mousedown .parismap-icon .template {
   opacity: 0 !important;
 }
-
-.content {
-
-  height: 100%;
-  padding: 5px;
-  text-align: center;
-  /*font-family: 'Lato', sans-serif;*/
-  font-family: 'Source Sans Pro', sans-serif;
-
-  /* EVT */
-  .meta {
-    /*background: whitesmoke;*/
-    padding-top: 8px;
-    padding-bottom: 8px;
-    margin-bottom: 5px;
-    border-bottom: 1px solid lightgray;
-
-    .address {
-      display: inline-block;
-      font-size: 0.9em;
-      color: black;
-    }
-  }
-  .title {
-    margin-bottom: 4px;
-    font-size: 0.9em;
-    color: gray;
-  }
-
-  .text {
-
-    height: 100%;
-    padding:0 17% 0 17%;
-    text-align: center;
-    font-size: 1.4em;
-
-    overflow: hidden;
-    /*font-family: georgia, serif;*/
-    /*font-style: italic;*/
-  }
-  @media only screen and (max-width : 600px) {
-    .text {
-      font-size: 1.4em;
-      padding: 10px;
-    }
-  }
-
-  /* MSG */
-  .word {
-    padding:20px 17% 0 17%;
-    text-align: center;
-    font-size: 1.5em;
-  }
-}
-
-

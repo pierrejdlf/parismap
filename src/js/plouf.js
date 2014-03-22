@@ -4,11 +4,14 @@ function Ploufmap(options) {
     plo.log = function(str) { console.log(str); }; //if(plo.config.dev) console.log(str); };
 
     var defaults = {
+        eventSource: false,
         useServer: true,
         dev: false,
         baseUrl:        "http://beta.parismappartient.fr",
-        throttleDelay:  2000,
+        throttleDelay:  1000,
+        throttleCentererDelay:  400,
         clusterize:     false,
+        maxClusterRadius: 25,
         bounce:         true,
         locateButton:   true,
         isMobile:   $(document).width()<900
@@ -37,7 +40,6 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.init = function() {
-      plo.log("Init all.");
       plo.initConfig(function(conf) {
         plo.log(conf);
 
@@ -45,15 +47,13 @@ function Ploufmap(options) {
         plo.throttleFetch();
         plo.fetchGeoJson();
 
-        var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;
-        plo.fadeOutMask();         
+        if(plo.config.eventSource)
+            var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;       
       });
     };
 
     //////////////////////////////////////////////////////
     plo.initConfig = function(callb) {
-      //var menuTemplate = Handlebars.compile($("#menu-template").html());
-
         if(plo.config.useServer) {
             $.get( plo.config.baseUrl+"/config", function(response) {
                 // rather extend ?
@@ -61,98 +61,14 @@ function Ploufmap(options) {
                 plo.config.esHQ = response.esHQ;
                 plo.config.esChannel = response.esChannel;
                 callb(plo.config);
-          });
+            });
         } else {
             callb(plo.config);
         }
     };
 
-    //////////////////////////////////////////////////////
-    // get nearest marker in any layer
-    plo.getClosestMarker = function(latlng) {
-        var md = null,
-            closest = null,
-            neighbors = null;
-
-        if(plo.config.clusterize) {
-            //neighbors = plo.getMarkerLayer(plo.current.ploufdata)._map._layers;
-            var neighbors_tmp = plo.getMarkerLayer()._featureGroup._layers;
-            neighbors = [];
-            _.each(neighbors_tmp, function(e) {
-                var iscluster = !e.hasOwnProperty("ploufdata");
-                if(iscluster) {
-                    // for each children marker, store the parent, to be able to style it on swipes
-                    var children = e.getAllChildMarkers();
-                    children = _.map(children, function(c) {
-                        c.ploufdata.parentMarker = e;
-                        return c;
-                    });
-                    neighbors = neighbors.concat(children);
-                } else 
-                    neighbors.push(e);
-                // now we have an array with all the neighbors markers
-                // (keeping memory of the parentMarker(s) if there is) !
-            });
-        } else
-            neighbors = plo.getMarkerLayer(plo.current.ploufdata)._layers;
-
-        _.each(neighbors, function(m) {
-            var d = latlng.distanceTo(m._latlng);
-            var iscluster = !m.hasOwnProperty("ploufdata");
-            if(!iscluster && (d<md || md===null)) {
-                md = d;
-                closest = m;
-            }
-        });
-        console.log("closest:",closest);
-        return closest;
-    };
-
-    //////////////////////////////////////////////////////
-    // will POST down/up vote and swipe to next
-    plo.voteAndSwipe = function(vote) {
-      data = {
-        pid: plo.current.ploufdata.pid,
-        vote:vote ? 1 : -1
-      };
-      $.post( plo.config.baseUrl+"/p/vote", data, function(response) {
-          //var res = JSON.parse(response);
-          plo.log(response);
-      });
-    };
-
-    //////////////////////////////////////////////////////
-    plo.setMarkerStatus = function(m,status) {
-        // we may be being setting a cluster !
-        if(m.ploufdata.hasOwnProperty('parentMarker')) {
-            m = m.ploufdata.parentMarker;
-        }
-        if(status=="focused") {
-            $(".leaflet-div-icon").removeClass("focused");
-            $(m._icon).addClass("focused");
-        }
-    };
-
-    //////////////////////////////////////////////////////
-    plo.clickMarker = function(event,type) {
-        plo.log(type+" clicked (centering.)");
-        //console.log('cluster ' + a.layer.getAllChildMarkers().length);
-        //console.log(event);
-
-        var marker = event.target;
-        plo.map.setView(marker._latlng);
-        //plo.map.panTo(plo.current.ploufdata);
-    };
-    plo.clickMap = function(event) {
-        plo.log("map clicked");
-    };
-
-    //////////////////////////////////////////////////////
-    plo.throttleFetch = function() {
-        plo.throttleFetcher({
-            leading:false,
-            trailing:false
-        });
+    window.onresize = function(event) {
+        console.log("Window resized.");
     };
 
     //////////////////////////////////////////////////////
@@ -163,9 +79,6 @@ function Ploufmap(options) {
         else
             return layer._layers;
     };
-
-    //////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////
     plo.getMarkerLayer = function(p) {
         if(p)
             return plo.layers[p.markertype];
@@ -185,12 +98,136 @@ function Ploufmap(options) {
         var mtype = plo.getMarkerMapType(p);
         return plo.config.icons[mtype];
     };
-    plo.getHtml = function(p) {
-        var mtype = plo.getMarkerMapType(p);
-        return plo.config.templates[mtype](p);
-    }
+
     //////////////////////////////////////////////////////
+    // update focused marker
+    plo.updateFocused = function() {
+        plo.current = plo.getClosestMarker( plo.map.getCenter() );
+        plo.setMarkerStatus(plo.current,"focused");
+    };
+    // get nearest marker in any layer
+    plo.getClosestMarker = function(latlng) {
+        var md = null,
+            closest = null,
+            neighbors = null;
+
+        if(plo.config.clusterize) {
+            //neighbors = plo.getMarkerLayer(plo.current.ploufdata)._map._layers;
+            var neighbors_tmp = plo.getMarkerLayer()._featureGroup._layers;
+            neighbors = [];
+            _.each(neighbors_tmp, function(e) {
+                var iscluster = !e.hasOwnProperty("ploufdata");
+                if(iscluster) {
+                    // for each children marker, store the parent (icon & data), to be able to style it on swipes
+                    var children = e.getAllChildMarkers();
+                    children = _.map(children, function(c) {
+                        c.ploufdata.parentMarker = e;
+                        c._icon = e._icon;
+                        return c;
+                    });
+                    neighbors = neighbors.concat(children);
+                } else 
+                    neighbors.push(e);
+                // now we have an array with all the neighbors markers
+                // (keeping memory of the parentMarker(s) if there is) !
+            });
+        } else
+            neighbors = plo.getMarkerLayer(plo.current.ploufdata)._layers;
+
+        _.each(neighbors, function(m) {
+            var d = latlng.distanceTo(m._latlng);
+            var iscluster = !m.hasOwnProperty("ploufdata");
+            if(!iscluster && (d<md || md===null)) {
+                md = d;
+                closest = m;
+            }
+        });
+        //console.log("closest:",closest);
+        return closest;
+    };
     //////////////////////////////////////////////////////
+    plo.showCurrent = function() {
+        console.log("showing current.",plo.current);
+        // moving box at center of screen
+        var e = $(plo.current._icon);
+        var t = plo.getTransform(e);
+        var tmap = plo.getTransform($(".leaflet-map-pane"));
+        if(t) {
+            var pad = 0;
+            var x = -t[0]-tmap[0]+pad,
+                y = -t[1]-tmap[1]+pad,
+                W = $(window).width(),
+                H = $(window).height();
+            e.css("z-index",9992);
+            plo.setTransform(e.find(".template"), "translate3d("+x+"px, "+y+"px, 0px)")
+                .css({
+                    "width": W-2*pad,
+                    "height": H-2*pad,
+                    "z-index": 9998,
+                });
+        }
+        plo.setMarkerStatus(plo.current,"opened");
+        console.log("current showed.");
+    };
+    //////////////////////////////////////////////////////
+    plo.setTransform = function(obj,val) {
+        obj.css({
+            "-webkit-transform": val,
+            "-moz-transform": val,
+            "-ms-transform": val, 
+            "-o-transform": val,  
+            "transform": val,
+        });
+        return obj;
+    };
+    //////////////////////////////////////////////////////
+    plo.getTransform = function(obj) {
+        var matrix = obj.css("-webkit-transform") ||
+            obj.css("-moz-transform")    ||
+            obj.css("-ms-transform")     ||
+            obj.css("-o-transform")      ||
+            obj.css("transform");
+        if(matrix) {
+            var values = matrix.match(/translate3d\(([-\d]*)px[, ]*([-\d]*)px/);
+            values.shift();
+            return values;
+        } else 
+            return null;
+    };
+    //////////////////////////////////////////////////////
+    plo.setMarkerStatus = function(m,status) {
+        // we may be being setting a cluster !
+        if(m) {
+            isCluster = m.ploufdata.hasOwnProperty('parentMarker');
+            if(isCluster) {
+                m = m.ploufdata.parentMarker;
+            }
+            $(".parismap-icon")
+                .removeClass(status)
+                .css("z-index",isCluster ? 400 : 600);
+            $(m._icon)
+                .addClass(status)
+                .css("z-index", 800);
+        } else 
+            console.log("ERROR: no marker to set status.");
+    };
+
+    //////////////////////////////////////////////////////
+    plo.clickMarker = function(event,type) {
+        plo.log(type+" clicked (centering.)");
+        //console.log('cluster ' + a.layer.getAllChildMarkers().length);
+        //console.log(event);
+
+        var marker = event.target;
+        plo.map.setView(marker._latlng);
+        //plo.map.panTo(plo.current.ploufdata);
+    };
+    plo.clickMap = function(event) {
+        plo.log("map clicked");
+    };
+
+
+
 
     //////////////////////////////////////////////////////
     plo.initMap = function() {
@@ -215,7 +252,7 @@ function Ploufmap(options) {
                     //disableClusteringAtZoom: 10, 
                     
                     // Default 80px. Decreasing will make more smaller clusters. You can also use a function
-                    maxClusterRadius: 25, 
+                    maxClusterRadius: plo.config.maxClusterRadius, 
                     
                     //polygonOptions: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster
 
@@ -224,7 +261,7 @@ function Ploufmap(options) {
 
                     // Increase from 1 to increase the distance away from the center that spiderfied markers are placed.
                     // Use if you are using big marker icons (Default:1)
-                    spiderfyDistanceMultiplier: 5,
+                    spiderfyDistanceMultiplier: 2,
 
                     // here we can define which marker will be visible as the cluster head !
                     iconCreateFunction: function(cluster) {
@@ -274,6 +311,7 @@ function Ploufmap(options) {
         console.log(plo.layers);
 
         plo.map = L.map(plo.config.map, _.defaults(plo.config.leaflet, {
+            fullscreenControl: true,
             attributionControl: false,
             keyboard: false,
             icons: plo.config.icons,
@@ -293,21 +331,36 @@ function Ploufmap(options) {
         plo.map.on('click', function(e) {
             plo.log("! map clicked");
         });
-        // plo.map.on('move', function(e) {
-        //     plo.log("! moved");
-        //     //plo.throttleFetch();
-        // });
+        plo.map.on('mousedown', function(e) {
+            plo.log("! mousedown");
+            $('body').addClass("mousedown");
+        });
+        plo.map.on('mouseup', function(e) {
+            plo.log("! mouseup");
+            $('body').removeClass("mousedown");
+        });
+        plo.map.on('move', function(e) {
+            //plo.log("! moving");
+            plo.updateFocusedThrottled();
+            plo.throttleFetch();
+        });
+        plo.map.on('moveend', function(e) {
+            plo.log("! movedEnd");
+            plo.showCurrent();
+            plo.throttleFetch();
+        });
         plo.map.on("zoomstart", function(e) {
-            plo.log("! zoomedStart");
+            plo.log("! zoomstart");
+        });
+        plo.map.on("zoomend", function(e) {
+            plo.log("! zoomend");
+            plo.updateFocused();
+            plo.showCurrent();
         });
         plo.map.on('dragstart', function(e) {
             plo.log("! dragstart");
         });
-        plo.map.on('moveend', function(e) {
-            plo.log("! movedEnd");
-            plo.refreshCurrent();
-            plo.throttleFetch();
-        });
+
 
         if(plo.config.locateButton) {
             var lc = L.control.locate({
@@ -338,7 +391,7 @@ function Ploufmap(options) {
                   alert(err.message);
                 },  // define an error callback function
                 onLocationFound: function() {
-                  plo.fadeOutMask();
+                  //plo.fadeOutMask();
                 },
                 onLocationOutsideMapBounds:  function(context) { // called when outside map boundaries
                   alert(context.options.strings.outsideMapBoundsMsg);
@@ -354,51 +407,6 @@ function Ploufmap(options) {
             // start browser geoloc
             //lc.locate();
         }
-    };
-    plo.refreshCurrent = function() {
-        console.log("refreshing current.");
-        var clo = plo.getClosestMarker( plo.map.getCenter() );
-        // moving box at center of screen
-        var e = $(clo._icon);
-        var t = plo.getTransform(e);
-        var tmap = plo.getTransform($(".leaflet-map-pane"));
-        if(t) {
-            var pad = 90;
-            var x = -t[0]-tmap[0]+pad,
-                y = -t[1]-tmap[1]+pad,
-                W = $(window).width(),
-                H = $(window).height();
-            e.css("z-index",9998);
-            e.find(".super").css({
-                "-webkit-transform": "translate3d("+x+"px, "+y+"px, 0px)",
-                "width": W-2*pad,
-                "height": H-2*pad,
-                "z-index": 9998,
-            });
-        }
-        plo.setMarkerStatus(clo,"focused");
-    };
-    //////////////////////////////////////////////////////
-    plo.getTransform = function(obj) {
-        var matrix = obj.css("-webkit-transform") ||
-            obj.css("-moz-transform")    ||
-            obj.css("-ms-transform")     ||
-            obj.css("-o-transform")      ||
-            obj.css("transform");
-        if(matrix) {
-            var values = matrix.match(/translate3d\(([-\d]*)px[, ]*([-\d]*)px/);
-            values.shift();
-            return values;
-        } else 
-            return null;
-    };
-
-    plo.fadeOutMask = function() {
-      var mask = $("#locateMask");
-      mask.addClass("invisible");
-      mask.on("transitionend", function () {
-        mask.addClass("hidden");
-      }, true);
     };
 
     //////////////////////////////////////////////////////
@@ -555,6 +563,19 @@ function Ploufmap(options) {
     };
     
     //////////////////////////////////////////////////////
+    // will POST down/up vote and swipe to next
+    plo.voteAndSwipe = function(vote) {
+      data = {
+        pid: plo.current.ploufdata.pid,
+        vote:vote ? 1 : -1
+      };
+      $.post( plo.config.baseUrl+"/p/vote", data, function(response) {
+          //var res = JSON.parse(response);
+          plo.log(response);
+      });
+    };
+
+    //////////////////////////////////////////////////////
     plo.sendForm = function() {
         plo.log("Got form fields");
         var form = $("#form");
@@ -572,10 +593,19 @@ function Ploufmap(options) {
         });
     };
 
+    //////////////////////////////////////////////////////
+    plo.throttleFetch = function() {
+        plo.throttleFetcher({
+            leading:false,
+            trailing:false
+        });
+    };
+
     plo.throttleFetcher = _.throttle(plo.fetchPloufs, plo.config.throttleDelay);
+    plo.updateFocusedThrottled = _.throttle(plo.updateFocused, plo.config.throttleCentererDelay);
 
     document.onkeydown = function(e) {
-      if(plo.swiperIsActive()) {
+      if(43==23) {
         if (e.keyCode == '38') { // up arrow
           plo.voteAndSwipe(false);   
         }

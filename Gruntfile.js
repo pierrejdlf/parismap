@@ -36,10 +36,8 @@ module.exports = function(grunt) {
         src: [
           'vendor/leaflet/leaflet.css',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
-          //'vendor/leaflet.markercluster/dist/MarkerCluster.css', // included in our style.less
-          //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.css',
+          'vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.css',
           'vendor/font-awesome/css/font-awesome.css',
-          'vendor/swiper/dist/idangerous.swiper.css',
           'src/css/style.css'
         ],
         dest: 'dist/css/<%= pkg.name %>.css'
@@ -55,8 +53,7 @@ module.exports = function(grunt) {
           'vendor/leaflet.bouncemarker/bouncemarker.js',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.js',
           'vendor/leaflet.markercluster/dist/leaflet.markercluster.js',
-          //'vendor/leaflet-font-awesome/dist/leaflet.awesome-markers.js',
-          'vendor/swiper/dist/idangerous.swiper.min.js',
+          'vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.min.js',
           'vendor/moment/moment.js',
           'src/**/*.js'
         ],
@@ -100,9 +97,25 @@ module.exports = function(grunt) {
                     expand: true,
                     flatten: true,
                     src: [
+                        'vendor/leaflet.fullscreen/dist/fullscreen*'
+                    ],
+                    dest: 'dist/css/',
+                    filter: 'isFile'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: [
                         'vendor/font-awesome/css/**'
                     ],
                     dest: 'dist/css/',
+                    filter: 'isFile'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: ['src/js/loader_example.js'],
+                    dest: 'dist/js/',
                     filter: 'isFile'
                 }
             ]

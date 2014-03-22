@@ -13,6 +13,7 @@
     "leaflet.markercluster": "latest",
     "leaflet.bouncemarker":"https://github.com/maximeh/leaflet.bouncemarker/archive/master.zip",
     "leaflet.locatecontrol":"https://github.com/domoritz/leaflet-locatecontrol/archive/gh-pages.zip",
+    "leaflet.fullscreen":"https://github.com/Leaflet/Leaflet.fullscreen/archive/gh-pages.zip",
     "Font-Awesome":"4.0.3",
     "leaflet-font-awesome":"http://github.com/lvoogdt/Leaflet.awesome-markers/archive/2.0/develop.zip"
   }

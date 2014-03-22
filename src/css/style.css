@@ -25,91 +25,13 @@ body {
   /*pointer-events:none;*/
 }
 /* general */
-#map,
-#locateMask {
+#map {
   position: absolute;
   left: 0px;
   top: 0px;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /*  transition: height @duration;
-  -moz-transition: height @duration;
-  -ms-transition: height @duration;
-  -o-transition: height @duration;
-  -webkit-transition: height @duration;*/
-}
-/*
-#locateMask {
-  background: black;
-  z-index: 200;
-  text-align: center;
-  padding-top: 35%;
-  opacity: 0.8;
-  transition: opacity 0.5s linear;
-}
-#locateMask.invisible {
-  opacity: 0;
-}
-#locateMask.invisible.hidden {
-  display: none;
-}*/
-#swiper {
-  position: absolute;
-  left: 0px;
-  bottom: -75%;
-  /* not 40% aka same than height to QAD hide arrow */
-  width: 100%;
-  height: 65%;
-  /*background: white;*/
-  transition: bottom 200ms;
-  -moz-transition: bottom 200ms;
-  -ms-transition: bottom 200ms;
-  -o-transition: bottom 200ms;
-  -webkit-transition: bottom 200ms;
-}
-.container.paneled #swiper {
-  bottom: 0%;
-}
-.container.paneled #map {
-  height: 35%;
-}
-/* swiper */
-.swiper-container {
-  overflow: visible;
-  background: #FAFAFA;
-}
-.swiper-slide {
-  /*overflow: hidden;*/
-  /*width: 400px;*/
-  opacity: 0.4;
-  -webkit-transition: 300ms;
-  -moz-transition: 300ms;
-  -ms-transition: 300ms;
-  -o-transition: 300ms;
-  transition: 300ms;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  -o-transform: scale(0);
-  transform: scale(0);
-}
-.swiper-slide-visible {
-  opacity: 0.5;
-  -webkit-transform: scale(0.8);
-  -moz-transform: scale(0.8);
-  -ms-transform: scale(0.8);
-  -o-transform: scale(0.8);
-  transform: scale(0.8);
-}
-.swiper-slide-active {
-  top: 0;
-  opacity: 1;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  -o-transform: scale(1);
-  transform: scale(1);
 }
 /* marker cluster */
 .leaflet-cluster-anim .leaflet-marker-icon,
@@ -119,60 +41,37 @@ body {
   -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
   transition: transform 0.3s ease-out, opacity 0.3s ease-in;
 }
-/* MARKERS */
-/*.divicon.back { z-index: 998; }
-.divicon.front { z-index: 999; }*/
-.leaflet-div-icon,
-.divicon {
+/*
+  --------------------------
+  EVENT MARKERS
+  --------------------------
+*/
+.parismap-icon.event {
   border: none;
   background: none;
   /* simple point & arrow */
+  /* 70px is ok if you use gradient */
+  /* when clicking/dragging around */
 }
-.leaflet-div-icon .msg,
-.divicon .msg,
-.leaflet-div-icon .word,
-.divicon .word {
-  text-align: center;
-  font-family: georgia, serif;
-  font-size: 1.1em;
-  line-height: 1.1em;
-  text-transform: lowercase;
-  font-style: italic;
-  color: whitesmoke;
-  /*text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);*/
-}
-.leaflet-div-icon .msg.cluster,
-.divicon .msg.cluster,
-.leaflet-div-icon .word.cluster,
-.divicon .word.cluster {
-  color: #E1DE98;
-}
-.leaflet-div-icon .word,
-.divicon .word {
-  color: black;
-  font-size: 1.7em;
-  line-height: 1.7em;
-}
-.leaflet-div-icon .word.cluster,
-.divicon .word.cluster {
-  color: darkred;
-}
-.leaflet-div-icon .point,
-.divicon .point {
+.parismap-icon.event .point {
   /* see http://stackoverflow.com/questions/13059190/html5-css3-circle-with-partial-border
      TO MAKE 30 min 1h 2h 5h delay next event as a circle arc */
   width: 25px;
   height: 25px;
   background: #64a1c3;
+  -webkit-transition: background 200ms;
+  -moz-transition: background 200ms;
+  -ms-transition: background 200ms;
+  -o-transition: background 200ms;
+  transition: background 200ms;
   border-radius: 20px;
   box-shadow: 3px 3px 10px #8f8f8f;
+  /* ------------------------------ */
 }
-.leaflet-div-icon .point .clock-container,
-.divicon .point .clock-container {
+.parismap-icon.event .point .clock-container {
   position: absolute;
 }
-.leaflet-div-icon .point .clock,
-.divicon .point .clock {
+.parismap-icon.event .point .clock {
   z-index: 5;
   content: '';
   width: 20px;
@@ -182,8 +81,7 @@ body {
   border-radius: 16px;
   position: relative;
 }
-.leaflet-div-icon .point .clock:after,
-.divicon .point .clock:after {
+.parismap-icon.event .point .clock:after {
   z-index: 2;
   content: '';
   position: absolute;
@@ -200,24 +98,19 @@ body {
   -webkit-transform-origin: 0 0px;
   /*-webkit-transform: rotate(10deg);*/
 }
-.leaflet-div-icon .point .clock.h6:after,
-.divicon .point .clock.h6:after {
+.parismap-icon.event .point .clock.h6:after {
   -webkit-transform: rotate(180deg);
 }
-.leaflet-div-icon .point .clock.h7:after,
-.divicon .point .clock.h7:after {
+.parismap-icon.event .point .clock.h7:after {
   -webkit-transform: rotate(210deg);
 }
-.leaflet-div-icon .point .clock.h8:after,
-.divicon .point .clock.h8:after {
+.parismap-icon.event .point .clock.h8:after {
   -webkit-transform: rotate(240deg);
 }
-.leaflet-div-icon .point .clock.h9:after,
-.divicon .point .clock.h9:after {
+.parismap-icon.event .point .clock.h9:after {
   -webkit-transform: rotate(270deg);
 }
-.leaflet-div-icon .point .clock:before,
-.divicon .point .clock:before {
+.parismap-icon.event .point .clock:before {
   z-index: 2;
   content: '';
   position: absolute;
@@ -230,20 +123,16 @@ body {
   -webkit-transform-origin: 0 0px;
   -webkit-transform: rotate(0deg);
 }
-.leaflet-div-icon .point .clock.m15:before,
-.divicon .point .clock.m15:before {
+.parismap-icon.event .point .clock.m15:before {
   -webkit-transform: rotate(90deg);
 }
-.leaflet-div-icon .point .clock.m30:before,
-.divicon .point .clock.m30:before {
+.parismap-icon.event .point .clock.m30:before {
   -webkit-transform: rotate(180deg);
 }
-.leaflet-div-icon .point .clock.m45:before,
-.divicon .point .clock.m45:before {
+.parismap-icon.event .point .clock.m45:before {
   -webkit-transform: rotate(270deg);
 }
-.leaflet-div-icon .point i,
-.divicon .point i {
+.parismap-icon.event .point i {
   z-index: 5;
   position: absolute;
   color: white;
@@ -253,8 +142,7 @@ body {
   width: 25px;
   text-align: center;
 }
-.leaflet-div-icon .point .arro,
-.divicon .point .arro {
+.parismap-icon.event .point .arrow {
   z-index: 3;
   position: absolute;
   top: 16px;
@@ -263,34 +151,39 @@ body {
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
   border-top: 15px solid #64a1c3;
+  -webkit-transition: border-top 200ms;
+  -moz-transition: border-top 200ms;
+  -ms-transition: border-top 200ms;
+  -o-transition: border-top 200ms;
+  transition: border-top 200ms;
 }
-.leaflet-div-icon .point.cluster,
-.divicon .point.cluster {
-  width: 50px;
-  height: 50px;
-  background: rgba(100, 161, 195, 0.32);
-  border-radius: 50px;
-  box-shadow: 0px 0px 80px #64a1c3;
-  /*background: @colclust;*/
+.parismap-icon.event .point .arc {
+  z-index: 7;
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  border: 2px solid;
 }
-.leaflet-div-icon .point.cluster .arro,
-.divicon .point.cluster .arro {
-  border-top: 12px solid #3b72a5;
+.parismap-icon.event .point .arc_start {
+  border-color: transparent #ffffff #ffffff #ffffff;
+  -webkit-transform: rotate(-70deg);
+  -moz-transform: rotate(-70deg);
+  -ms-transform: rotate(-70deg);
+  -o-transform: rotate(-70deg);
+  transform: rotate(-70deg);
 }
-.leaflet-div-icon .point.cluster .clock,
-.divicon .point.cluster .clock,
-.leaflet-div-icon .point.cluster i,
-.divicon .point.cluster i,
-.leaflet-div-icon .point.cluster .arro,
-.divicon .point.cluster .arro,
-.leaflet-div-icon .point.cluster .time,
-.divicon .point.cluster .time,
-.leaflet-div-icon .point.cluster .arc,
-.divicon .point.cluster .arc {
-  display: none;
+.parismap-icon.event .point .arc_end {
+  border-color: #ffffff #ffffff #ffffff transparent;
+  -webkit-transform: rotate(60deg);
+  -moz-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  -o-transform: rotate(60deg);
+  transform: rotate(60deg);
 }
-.leaflet-div-icon .point .time,
-.divicon .point .time {
+.parismap-icon.event .point .time {
   color: white;
   position: absolute;
   left: 16px;
@@ -306,212 +199,174 @@ body {
   -webkit-font-feature-settings: "onum";
   -o-font-feature-settings: "onum";
 }
-.leaflet-div-icon .point .arc,
-.divicon .point .arc {
-  z-index: 7;
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  width: 24px;
-  height: 24px;
-  border-radius: 100%;
-  border: 2px solid;
-}
-.leaflet-div-icon .point .arc_start,
-.divicon .point .arc_start {
-  border-color: transparent #ffffff #ffffff #ffffff;
-  -webkit-transform: rotate(-70deg);
-  -moz-transform: rotate(-70deg);
-  -ms-transform: rotate(-70deg);
-  -o-transform: rotate(-70deg);
-  transform: rotate(-70deg);
-}
-.leaflet-div-icon .point .arc_end,
-.divicon .point .arc_end {
-  border-color: #ffffff #ffffff #ffffff transparent;
-  -webkit-transform: rotate(60deg);
-  -moz-transform: rotate(60deg);
-  -ms-transform: rotate(60deg);
-  -o-transform: rotate(60deg);
-  transform: rotate(60deg);
-}
-.leaflet-div-icon .point .focus,
-.divicon .point .focus {
-  background: white;
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  position: absolute;
-  top: 28px;
-  left: 8px;
-  z-index: 99;
+.parismap-icon.event .point .template {
+  -webkit-transition: opacity 600ms;
+  -moz-transition: opacity 600ms;
+  -ms-transition: opacity 600ms;
+  -o-transition: opacity 600ms;
+  transition: opacity 600ms;
   opacity: 0;
-  -webkit-transition: opacity 2s;
-  -moz-transition: opacity 2s;
-  -ms-transition: opacity 2s;
-  -o-transition: opacity 2s;
-  transition: opacity 2s;
-}
-.leaflet-div-icon .point .focus .line,
-.divicon .point .focus .line {
-  width: 2px;
-  height: 0px;
-  -webkit-transition: height 2s;
-  -moz-transition: height 2s;
-  -ms-transition: height 2s;
-  -o-transition: height 2s;
-  transition: height 2s;
-  background: white;
-  margin: 3px;
-}
-.leaflet-div-icon.focused .point .focus,
-.divicon.focused .point .focus {
-  opacity: 1;
-}
-.leaflet-div-icon.focused .point .focus .line,
-.divicon.focused .point .focus .line {
-  height: 400px;
-}
-.leaflet-div-icon .evt,
-.divicon .evt {
-  -moz-border-radius: 8px;
-  border-radius: 8px;
-  padding: 6px;
-  text-align: left;
-  color: white;
-  font-size: 1.1em;
-  font-family: georgia, serif;
-  line-height: 1.1em;
-  text-transform: lowercase;
-  font-style: italic;
-  background: rgba(0, 0, 0, 0.63);
-  /*transition: background 0.1s linear;*/
-}
-.leaflet-div-icon .evt span,
-.divicon .evt span {
-  margin-left: 7px;
-}
-.leaflet-div-icon .evt.cluster span,
-.divicon .evt.cluster span {
-  margin-left: 0;
-  margin-right: 7px;
-}
-.leaflet-div-icon .evt.cluster,
-.divicon .evt.cluster {
-  background-color: #9E9E9E;
-}
-.leaflet-div-icon.visited .evt,
-.divicon.visited .evt {
-  background: rgba(126, 126, 126, 0.73);
-}
-.leaflet-div-icon.focused .evt,
-.divicon.focused .evt {
-  background: #528fc7;
-}
-/* SLIDES */
-.container.paneled .ellipsis {
-  z-index: 60;
   position: fixed;
-  width: 100%;
-  height: 400px;
-  bottom: 0;
-  left: 0;
-  background-position: center bottom;
-  background-size: 100% 100px;
-  background-repeat: no-repeat;
-  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #ffffff 67%, #ffffff 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(67%, #ffffff), color-stop(100%, #ffffff));
-  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #ffffff 67%, #ffffff 100%);
-  background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #ffffff 67%, #ffffff 100%);
-  background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #ffffff 67%, #ffffff 100%);
-  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 67%, #ffffff 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='white', GradientType=0);
+  display: table;
+  pointer-events: none;
 }
-.plouf-container {
-  height: 100%;
-  background: #FAFAFA;
+.parismap-icon.event .point.cluster {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  -webkit-transition: background 600ms, box-shadow 600ms;
+  -moz-transition: background 600ms, box-shadow 600ms;
+  -ms-transition: background 600ms, box-shadow 600ms;
+  -o-transition: background 600ms, box-shadow 600ms;
+  transition: background 600ms, box-shadow 600ms;
+  background: rgba(100, 161, 195, 0.21);
+  box-shadow: 0px 0px 80px #64a1c3;
+  /* you can try following, but gradient don't support css transitions yet */
+  /*box-shadow: none;
+      .transition(background, @delaytemplate);
+      @colcluster: rgba(108, 138, 182, 0.55);
+      background: -webkit-radial-gradient(@colcluster 2%, transparent 75%);
+      background: -o-radial-gradient(@colcluster 2%, transparent 75%);
+      background: -moz-radial-gradient(@colcluster 2%, transparent 75%);
+      background: radial-gradient(@colcluster 2%, transparent 75%);
+      background-opacity: 0.5;*/
 }
-.plouf-container .arrow {
-  position: relative;
-  height: 0;
+.parismap-icon.event .point.cluster .arrow,
+.parismap-icon.event .point.cluster .clock,
+.parismap-icon.event .point.cluster i,
+.parismap-icon.event .point.cluster .time,
+.parismap-icon.event .point.cluster .arc {
+  display: none;
 }
-.plouf-container .arrow:after {
-  content: '';
-  position: relative;
-  border-style: solid;
-  border-width: 0 15px 15px;
-  display: block;
-  width: 0;
-  z-index: 60;
-  margin-left: -15px;
-  top: -15px;
-  left: 50%;
+.parismap-icon.event.focused .point {
+  background: #d13d3d;
 }
-.plouf-container.msg .arrow:after {
-  border-color: #FFFFFF transparent;
+.parismap-icon.event.focused .point .arrow {
+  border-top: 15px solid #d13d3d;
 }
-.plouf-container.evt .arrow:after {
-  border-color: #FAFAFA transparent;
+.parismap-icon.event.focused .point.cluster {
+  background: rgba(213, 86, 86, 0.32);
+  box-shadow: 0px 0px 80px #FF1400;
+  /*
+      @colclusterfocused: rgba(138, 138, 182, 0.55);
+      background: -webkit-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: -o-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: -moz-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: radial-gradient(colclusterfocused 2%, transparent 75%);
+      */
 }
-.plouf-container .content {
+.parismap-icon.event .template {
+  background: rgba(245, 245, 245, 0.86);
+  box-shadow: 0px 0px 100px white;
+}
+.parismap-icon.event .template .content {
   height: 100%;
   padding: 5px;
   text-align: center;
   /*font-family: 'Lato', sans-serif;*/
   font-family: 'Source Sans Pro', sans-serif;
   /* EVT */
-  /* MSG */
 }
-.plouf-container .content .meta {
+.parismap-icon.event .template .content .meta {
   /*background: whitesmoke;*/
   padding-top: 8px;
   padding-bottom: 8px;
   margin-bottom: 5px;
   border-bottom: 1px solid lightgray;
 }
-.plouf-container .content .meta .address {
+.parismap-icon.event .template .content .meta .address {
   display: inline-block;
   font-size: 0.9em;
   color: black;
 }
-.plouf-container .content .title {
+.parismap-icon.event .template .content .title {
   margin-bottom: 4px;
   font-size: 0.9em;
   color: gray;
 }
-.plouf-container .content .text {
+.parismap-icon.event .template .content .text {
   height: 100%;
   padding: 0 17% 0 17%;
   text-align: center;
-  font-size: 2.5em;
+  font-size: 1.4em;
   overflow: hidden;
   /*font-family: georgia, serif;*/
   /*font-style: italic;*/
 }
 @media only screen and (max-width: 600px) {
-  .plouf-container .content .text {
+  .parismap-icon.event .template .content .text {
     font-size: 1.4em;
     padding: 10px;
   }
 }
-.plouf-container .content .seemore {
-  z-index: 999;
-  position: fixed;
-  width: 100%;
-  height: 40px;
-  bottom: 0;
-  left: 0;
+/*
+  --------------------------
+  WORD MARKERS
+  --------------------------
+*/
+.parismap-icon.msg {
+  border: none;
+  background: none;
+  /* words */
 }
-.plouf-container .content .seemore a {
-  /*z-index: 9999;*/
-  background: #ffffff;
-  padding: 7px 12px 8px 12px;
-  border-radius: 10px;
-  text-decoration: none;
-  color: #CFCFCF;
-}
-.plouf-container .content .word {
-  padding: 20px 17% 0 17%;
+.parismap-icon.msg .word {
+  -webkit-transition: color 200ms;
+  -moz-transition: color 200ms;
+  -ms-transition: color 200ms;
+  -o-transition: color 200ms;
+  transition: color 200ms;
+  width: 90px;
   text-align: center;
-  font-size: 1.5em;
+  font-family: georgia, serif;
+  font-size: 1.1em;
+  line-height: 1.1em;
+  text-transform: lowercase;
+  font-style: italic;
+  color: whitesmoke;
+  /*text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.82);*/
+}
+.parismap-icon.msg .word.cluster {
+  color: #A3A3A3;
+}
+.parismap-icon.msg .template {
+  -webkit-transition: opacity 600ms;
+  -moz-transition: opacity 600ms;
+  -ms-transition: opacity 600ms;
+  -o-transition: opacity 600ms;
+  transition: opacity 600ms;
+  opacity: 0;
+  position: fixed;
+  display: table;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.77);
+  box-shadow: 0px 0px 100px black;
+}
+.parismap-icon.msg .template .text {
+  padding-left: 10%;
+  padding-right: 10%;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  display: table-cell;
+  vertical-align: middle;
+  color: white;
+  text-shadow: 1px 1px 4px black;
+  font-size: 2.5em;
+  line-height: 1.1em;
+  font-style: initial;
+}
+.parismap-icon.msg.focused .word {
+  color: #ffa300;
+}
+/*
+  --------------------------
+  FOR ALL SITUATIONS
+  --------------------------
+*/
+body .parismap-icon.opened .template {
+  opacity: 1 !important;
+}
+body.leaflet-dragging .parismap-icon .template,
+body.mousedown .parismap-icon .template {
+  opacity: 0 !important;
 }

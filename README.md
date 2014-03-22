@@ -1,4 +1,11 @@
 # Parismap client
+## States
+
+each mouse interaction state updates the marker class
+
+* marker `off`: normal state, non focused
+* marker `on`: when dragging, is the one at the center of the map
+* marker `full`: when mouse released, marker become fullscreen
 
 ## Install
 
@@ -22,7 +29,7 @@ if you really want to be part of the system
 > https://coderwall.com/p/eceasa
 
 ## Licence
-Both parismap client and server are MIT Licensed
+Both refactored parismap client and server are LGPL Licensed
 
 # Ploufmap options
 
