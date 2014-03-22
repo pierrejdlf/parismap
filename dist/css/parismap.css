@@ -476,7 +476,9 @@
 	background: #fff;
 	border: 1px solid #666;
 	}
-;/* Compatible with Leaflet 0.7 */
+
+
+/* Compatible with Leaflet 0.7 */
 
 .leaflet-touch .leaflet-bar-part-single {
 	-webkit-border-radius: 7px 7px 7px 7px;
@@ -511,7 +513,9 @@
 	border: 2px solid rgba(0,0,0,0.2);
 	background-clip: padding-box;
 }
-;.leaflet-control-fullscreen a {
+
+
+.leaflet-control-fullscreen a {
   background:#fff url(fullscreen.png) no-repeat 0 0;
   background-size:26px 52px;
   }
@@ -539,7 +543,9 @@
       background-image:url(fullscreen@2x.png);
     }
   }
-;/*!
+
+
+/*!
  *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
@@ -1877,7 +1883,9 @@
 .fa-plus-square-o:before {
   content: "\f196";
 }
-;html {
+
+
+html {
   margin: 0px;
   padding: 0px;
   overflow: hidden;

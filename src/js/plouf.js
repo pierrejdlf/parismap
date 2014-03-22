@@ -1,7 +1,6 @@
 function Ploufmap(options) {
 
     plo = {};
-    plo.log = function(str) { console.log(str); }; //if(plo.config.dev) console.log(str); };
 
     var defaults = {
         eventSource: false,
@@ -14,10 +13,13 @@ function Ploufmap(options) {
         maxClusterRadius: 25,
         bounce:         true,
         locateButton:   true,
-        isMobile:   $(document).width()<900
+        isMobile:   $(document).width()<900,
+        log: false,
     };
     plo.config = _.extend(defaults,options);
     plo.config.bounce = !plo.config.clusterize;
+
+    plo.log = function(str) { if(plo.config.log) console.log(str); };
 
     plo.map = null;
     
@@ -68,7 +70,7 @@ function Ploufmap(options) {
     };
 
     window.onresize = function(event) {
-        console.log("Window resized.");
+        plo.log("Window resized.");
     };
 
     //////////////////////////////////////////////////////
@@ -142,12 +144,12 @@ function Ploufmap(options) {
                 closest = m;
             }
         });
-        //console.log("closest:",closest);
+        //plo.log("closest:",closest);
         return closest;
     };
     //////////////////////////////////////////////////////
     plo.showCurrent = function() {
-        console.log("showing current.",plo.current);
+        plo.log("showing current.",plo.current);
         // moving box at center of screen
         var e = $(plo.current._icon);
         var t = plo.getTransform(e);
@@ -167,7 +169,7 @@ function Ploufmap(options) {
                 });
         }
         plo.setMarkerStatus(plo.current,"opened");
-        console.log("current showed.");
+        plo.log("current showed.");
     };
     //////////////////////////////////////////////////////
     plo.setTransform = function(obj,val) {
@@ -209,14 +211,14 @@ function Ploufmap(options) {
                 .addClass(status)
                 .css("z-index", 800);
         } else 
-            console.log("ERROR: no marker to set status.");
+            plo.log("ERROR: no marker to set status.");
     };
 
     //////////////////////////////////////////////////////
     plo.clickMarker = function(event,type) {
         plo.log(type+" clicked (centering.)");
-        //console.log('cluster ' + a.layer.getAllChildMarkers().length);
-        //console.log(event);
+        //plo.log('cluster ' + a.layer.getAllChildMarkers().length);
+        //plo.log(event);
 
         var marker = event.target;
         plo.map.setView(marker._latlng);
@@ -282,13 +284,13 @@ function Ploufmap(options) {
             if(plo.config.clusterize) {
                 // click events
                 markerLayer.on('click', function (a) {
-                    console.log("CLICK!");
-                    //console.log(a);
+                    plo.log("CLICK!");
+                    //plo.log(a);
                     //plo.clickMarker(a,"marker");
                 });
                 markerLayer.on('clusterclick', function (a) {
-                    console.log("CLUSTERCLICK!");
-                    //console.log(a);
+                    plo.log("CLUSTERCLICK!");
+                    //plo.log(a);
                     //plo.clickMarker(a,"cluster");
                 });
             }
@@ -304,11 +306,11 @@ function Ploufmap(options) {
             //markGroup.on('click', plo.clickMarker);
           //});
         });
-        //console.log(plo.layers);
+        //plo.log(plo.layers);
         //plo.log("groupedOverlays:",groupedOverlays);
 
-        console.log("We have layers:");
-        console.log(plo.layers);
+        plo.log("We have layers:");
+        plo.log(plo.layers);
 
         plo.map = L.map(plo.config.map, _.defaults(plo.config.leaflet, {
             fullscreenControl: true,
@@ -448,7 +450,7 @@ function Ploufmap(options) {
         _.each(plo.config.markers, function(m,k) {
             // if starts by "http://", then try to load geojson feed
             if(/^http/.test(k)) {
-                console.log("Adding geojson feed: "+k);
+                plo.log("Adding geojson feed: "+k);
                 $.get(k, function(response) {
                     _.each(response.features, function(d) {
                         var p = {

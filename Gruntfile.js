@@ -30,13 +30,13 @@ module.exports = function(grunt) {
 
     concat: {
       options: {
-        separator: ';'
+        separator: '\n\n'
       },
       build_css: {
         src: [
           'vendor/leaflet/leaflet.css',
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
-          'vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.css',
+          'vendor/leaflet.fullscreen/dist/leaflet.fullscreen.css',
           'vendor/font-awesome/css/font-awesome.css',
           'src/css/style.css'
         ],
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
           'vendor/leaflet.markercluster/dist/leaflet.markercluster.js',
           'vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.min.js',
           'vendor/moment/moment.js',
-          'src/**/*.js'
+          'src/js/plouf.js'
         ],
         dest: 'dist/js/<%= pkg.name %>.js'
       }
