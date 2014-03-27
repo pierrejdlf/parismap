@@ -1951,6 +1951,8 @@ body {
   -ms-transition: background 200ms;
   -o-transition: background 200ms;
   transition: background 200ms;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
   border-radius: 20px;
   box-shadow: 3px 3px 10px #8f8f8f;
   /* ------------------------------ */
@@ -1965,6 +1967,8 @@ body {
   height: 20px;
   border: 2px solid white;
   display: inline-block;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
   border-radius: 16px;
   position: relative;
 }
@@ -2030,7 +2034,7 @@ body {
   text-align: center;
 }
 .parismap-icon.event .point .arrow {
-  z-index: 3;
+  z-index: 9;
   position: absolute;
   top: 16px;
   width: 0;
@@ -2051,6 +2055,8 @@ body {
   left: -2px;
   width: 24px;
   height: 24px;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
   border-radius: 100%;
   border: 2px solid;
 }
@@ -2086,20 +2092,75 @@ body {
   -webkit-font-feature-settings: "onum";
   -o-font-feature-settings: "onum";
 }
-.parismap-icon.event .point .template {
-  -webkit-transition: opacity 600ms;
-  -moz-transition: opacity 600ms;
-  -ms-transition: opacity 600ms;
-  -o-transition: opacity 600ms;
-  transition: opacity 600ms;
+.parismap-icon.event .point .popup {
+  -webkit-transition: opacity 1s;
+  -moz-transition: opacity 1s;
+  -ms-transition: opacity 1s;
+  -o-transition: opacity 1s;
+  transition: opacity 1s;
+  -webkit-transition: height 200ms, padding 200ms, top 200ms;
+  -moz-transition: height 200ms, padding 200ms, top 200ms;
+  -ms-transition: height 200ms, padding 200ms, top 200ms;
+  -o-transition: height 200ms, padding 200ms, top 200ms;
+  transition: height 200ms, padding 200ms, top 200ms;
   opacity: 0;
-  position: fixed;
-  display: table;
+  position: absolute;
+  z-index: 8;
+  left: -55px;
+  top: 0;
   pointer-events: none;
+  padding: 0;
+  height: 0px;
+  width: 120px;
+  overflow: hidden;
+  background: #f5f5f5;
+  box-shadow: 0px 0px 30px #7C7C7C;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+}
+.parismap-icon.event .point .popup .content {
+  height: 100%;
+  text-align: center;
+  /*font-family: 'Lato', sans-serif;*/
+  font-family: 'Source Sans Pro', sans-serif;
+}
+.parismap-icon.event .point .popup .content .meta {
+  /*background: whitesmoke;*/
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid lightgray;
+}
+.parismap-icon.event .point .popup .content .meta .address {
+  display: inline-block;
+  font-size: 0.9em;
+  color: black;
+}
+.parismap-icon.event .point .popup .content .title {
+  display: none;
+  margin-bottom: 4px;
+  font-size: 0.9em;
+  color: gray;
+}
+.parismap-icon.event .point .popup .content .text {
+  height: 100%;
+  text-align: center;
+  font-size: 1em;
+  line-height: 130%;
+  overflow: hidden;
+}
+@media only screen and (max-width: 600px) {
+  .parismap-icon.event .point .popup .content .text {
+    font-size: 1.4em;
+    padding: 10px;
+  }
 }
 .parismap-icon.event .point.cluster {
   width: 40px;
   height: 40px;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
   border-radius: 40px;
   -webkit-transition: background 600ms, box-shadow 600ms;
   -moz-transition: background 600ms, box-shadow 600ms;
@@ -2126,10 +2187,16 @@ body {
   display: none;
 }
 .parismap-icon.event.focused .point {
-  background: #d13d3d;
+  background: #f5f5f5;
 }
 .parismap-icon.event.focused .point .arrow {
-  border-top: 15px solid #d13d3d;
+  border-top: 15px solid #f5f5f5;
+}
+.parismap-icon.event.focused .point.normal .popup {
+  opacity: 1;
+  top: -61px;
+  padding: 5px;
+  height: 70px;
 }
 .parismap-icon.event.focused .point.cluster {
   background: rgba(213, 86, 86, 0.32);
@@ -2142,49 +2209,11 @@ body {
       background: radial-gradient(colclusterfocused 2%, transparent 75%);
       */
 }
-.parismap-icon.event .template {
-  background: rgba(245, 245, 245, 0.86);
-  box-shadow: 0px 0px 100px white;
+.parismap-icon.event.opened .point {
+  background: #f5f5f5;
 }
-.parismap-icon.event .template .content {
-  height: 100%;
-  padding: 5px;
-  text-align: center;
-  /*font-family: 'Lato', sans-serif;*/
-  font-family: 'Source Sans Pro', sans-serif;
-  /* EVT */
-}
-.parismap-icon.event .template .content .meta {
-  /*background: whitesmoke;*/
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid lightgray;
-}
-.parismap-icon.event .template .content .meta .address {
-  display: inline-block;
-  font-size: 0.9em;
-  color: black;
-}
-.parismap-icon.event .template .content .title {
-  margin-bottom: 4px;
-  font-size: 0.9em;
-  color: gray;
-}
-.parismap-icon.event .template .content .text {
-  height: 100%;
-  padding: 0 17% 0 17%;
-  text-align: center;
-  font-size: 1.4em;
-  overflow: hidden;
-  /*font-family: georgia, serif;*/
-  /*font-style: italic;*/
-}
-@media only screen and (max-width: 600px) {
-  .parismap-icon.event .template .content .text {
-    font-size: 1.4em;
-    padding: 10px;
-  }
+.parismap-icon.event.opened .point .arrow {
+  border-top: 15px solid #f5f5f5;
 }
 /*
   --------------------------
@@ -2225,7 +2254,7 @@ body {
   position: fixed;
   display: table;
   pointer-events: none;
-  background: rgba(0, 0, 0, 0.77);
+  background: rgba(0, 0, 0, 0.67);
   box-shadow: 0px 0px 100px black;
 }
 .parismap-icon.msg .template .text {
@@ -2238,8 +2267,8 @@ body {
   vertical-align: middle;
   color: white;
   text-shadow: 1px 1px 4px black;
-  font-size: 2.5em;
-  line-height: 1.1em;
+  font-size: 2.4em;
+  line-height: 140%;
   font-style: initial;
 }
 .parismap-icon.msg.focused .word {

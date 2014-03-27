@@ -6930,13 +6930,13 @@ function Ploufmap(options) {
         dev: false,
         baseUrl:        "http://beta.parismappartient.fr",
         throttleDelay:  1000,
-        throttleCentererDelay:  400,
+        throttleCentererDelay:  100,
         clusterize:     false,
         maxClusterRadius: 25,
         bounce:         true,
         locateButton:   true,
         isMobile:   $(document).width()<900,
-        log: false,
+        log: true,
     };
     plo.config = _.extend(defaults,options);
     plo.config.bounce = !plo.config.clusterize;
@@ -7026,6 +7026,8 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     // update focused marker
     plo.updateFocused = function() {
+        // ... only do it if nothing opened ?
+        console.log("focusing.");
         plo.current = plo.getClosestMarker( plo.map.getCenter() );
         plo.setMarkerStatus(plo.current,"focused");
     };
@@ -7072,6 +7074,7 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     plo.showCurrent = function() {
         plo.log("showing current.",plo.current);
+        plo.setMarkerStatus(plo.current,"focused");
         // moving box at center of screen
         var e = $(plo.current._icon);
         var t = plo.getTransform(e);
@@ -7144,6 +7147,10 @@ function Ploufmap(options) {
 
         var marker = event.target;
         plo.map.setView(marker._latlng);
+
+        plo.current = marker;
+        
+        //plo.updateFocused();
         //plo.map.panTo(plo.current.ploufdata);
     };
     plo.clickMap = function(event) {
@@ -7264,9 +7271,9 @@ function Ploufmap(options) {
             $('body').removeClass("mousedown");
         });
         plo.map.on('move', function(e) {
-            //plo.log("! moving");
-            plo.updateFocusedThrottled();
-            plo.throttleFetch();
+            plo.log("! moving");
+            //plo.updateFocusedThrottled();
+            //plo.throttleFetch();
         });
         plo.map.on('moveend', function(e) {
             plo.log("! movedEnd");
@@ -7278,8 +7285,8 @@ function Ploufmap(options) {
         });
         plo.map.on("zoomend", function(e) {
             plo.log("! zoomend");
-            plo.updateFocused();
-            plo.showCurrent();
+            //plo.updateFocused();
+            //plo.showCurrent();
         });
         plo.map.on('dragstart', function(e) {
             plo.log("! dragstart");
@@ -7356,8 +7363,13 @@ function Ploufmap(options) {
             
             // we used to set listener here, but better to plug it on layer creation
             // todo: verify it works with new added markers ?
-            newM.on('click', function(a) {
-                plo.clickMarker(a,"marker");
+            newM.on('click', function(ev) {
+                plo.clickMarker(ev,"marker");
+            });
+            newM.on('mouseover', function(ev) {
+                plo.current = ev.target;
+                //plo.setMarkerStatus(ev.target,"focused");
+                plo.showCurrent();
             });
             newM.addTo(markLayer);
 
