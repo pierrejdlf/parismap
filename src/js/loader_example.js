@@ -49,7 +49,7 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['twitter'] = {
-    maxClusterRadius: 60,
+    maxClusterRadius: 40,
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
     markers: {
         "tweet": 'msg',
@@ -126,38 +126,30 @@ $(function(){
       },
       ///////////////////////////////////////////////////
       evt: function(p,clustCount) {
-        var cla = "point"
-        if(clustCount>1)
-          cla += " cluster";
+        var cla = "point "+(clustCount>1 ? "cluster" : "normal");
         var ic = EVENT_ICONS[p.ptype];
         //ic = "circle";
         var ti = moment(p.date.start).format("HH[h]mm");
         ti = ti.replace(/h00$/,"h").replace(/^0/,"");
         var cclass = moment(p.date.start).format("[h]HH [m]mm");
-
-        var ht = '<div class="template {{markertype}}">'+
-          '<div class="content">'+
-            '<div class="meta">'+
-              '<a class="link" href="{{link}}" target="_blank"><div class="address">{{place}} - {{address}}</div></a>'+
-            '</div>'+
-            '<div class="title">{{title}}</div>'+
-            '<div class="text">{{text}}</div>'+
-          '</div></div>';
-        var html = Handlebars.compile(ht)(p);
         return L.divIcon({
-          iconAnchor:   [0, 0],
-          iconSize:     [0, 0],
-          html: "<div class='"+cla+"'>"+
-                    "<i class='fa fa-"+ic+"'></i>"+
-                    "<div class='arrow'></div>"+
-                    // "<div class='focus'><div class='line'></div></div>"+
-                    // "    <div class='arc arc_start'></div>"+
-                    // "    <div class='arc arc_end'></div>"+
-                    "<div class='time'>"+ti+"</div>"+
-                    html+
-                "</div>",
-          //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
-          popupAnchor:  [0, 0],
+          //iconAnchor:   [0, 0], / centered by default if size is specified !
+          iconSize:     [25, 25],
+          html: Handlebars.compile(
+            "<div class='"+cla+"'>"+
+              "<i class='fa fa-"+ic+"'></i>"+
+              "<div class='arrow'></div>"+
+              "<div class='time'>"+ti+"</div>"+
+              '<div class="popup {{markertype}}">'+
+                '<div class="content">'+
+                  /*'<div class="meta">'+
+                    '<a class="link" href="{{link}}" target="_blank"><div class="address">{{place}} - {{address}}</div></a>'+
+                  '</div>'+*/
+                  '<div class="title">{{title}}</div>'+
+                  '<div class="text">{{text}}</div>'+
+                '</div>'+
+              '</div>'+
+            '</div>')(p),
           className: clustCount>1 ? "parismap-icon event back" : "parismap-icon event front"
         });
       },

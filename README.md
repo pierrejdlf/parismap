@@ -43,3 +43,10 @@ Both refactored parismap client and server are LGPL Licensed
   * `/p/get` all ploufs within the given rectangle
   * `/p/zoomed` all ploufs with a `onZoom` property to set their opacity depending on zoom
 * `zoomClustering=true|false` to set opacity of ploufs based on `onZoom` property of fetched ploufs
+
+# Styling markers
+
+* .focused: when dragging around, mouseouver
+* .opened: class when clicked, centered
+* .template: just add this class to make an element take the fullscreen
+
