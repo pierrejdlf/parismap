@@ -32,10 +32,32 @@
     </head>
 
     <body>
-      <div class="container">
-        <div id="map"></div>
-      </div>
-    </body>
+        <div class="container">
+            <div id="map"></div>
+        </div>
+
+        <script id="evt-template" type="text/x-handlebars-template">
+            <div class='{{css}}'>
+
+            {{#if cluster}}
+                <div class="cloud">{{wordcloud}}</div>
+            {{else}}
+                <i class='fa fa-{{icon}}'></i>
+                <div class='arrow'></div>
+                <div class='time'>{{timestr}}</div>
+                <div class="popup {{markertype}}">
+                    <div class="content">
+                        <div class="meta">{{place}} - {{address}}</div>
+                        <div class="text">{{title}} - {{text}}</div>
+                        <div class="more"><a href="{{link}}" target="_blank">{{papi}}</a></div>
+                    </div>
+                </div>
+            {{/if}}
+
+            </div>
+        </script>
+
+        </body>
 
     <!-- map is loaded using: -->
     <script type="text/javascript" src="./js/loader_example.js"></script>

@@ -125,7 +125,7 @@ function Ploufmap(options) {
                     // for each children marker, store the parent (icon & data), to be able to style it on swipes
                     var children = e.getAllChildMarkers();
                     children = _.map(children, function(c) {
-                        c.ploufdata.parentMarker = e;
+                        //c.ploufdata.parentMarker = e;
                         c._icon = e._icon;
                         return c;
                     });
@@ -202,14 +202,13 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     plo.setMarkerStatus = function(m,status) {
         // we may be being setting a cluster !
+        //console.log(m);
         if(m) {
-            isCluster = m.ploufdata.hasOwnProperty('parentMarker');
-            if(isCluster) {
-                m = m.ploufdata.parentMarker;
-            }
-            $(".parismap-icon")
-                .removeClass(status)
-                .css("z-index",isCluster ? 400 : 600);
+            $(".parismap-icon").each(function(k,e) {
+                $(e).removeClass(status);
+                var zi = $(e).hasClass("front") ? 600 : 400;
+                $(e).css({"z-index":zi});
+            });
             $(m._icon)
                 .addClass(status)
                 .css("z-index", 800);
@@ -277,6 +276,12 @@ function Ploufmap(options) {
                         var children = cluster.getAllChildMarkers();
 
                         var p = children[0].ploufdata; // data of choosen one
+                        p.isCluster = children.length>1;
+                        
+                        var concat = _.map(children, function(c) {
+                            return c.ploufdata.title;
+                        }).join(" ").match(/[\w]{5,}/g);
+                        p.wordcloud = concat ? concat.slice(0,2).join(" ").toLowerCase() : "" ;
 
                         // return icon
                         return plo.getIcon(p)(p,children.length);;
@@ -355,7 +360,7 @@ function Ploufmap(options) {
         });
         plo.map.on('moveend', function(e) {
             plo.log("! movedEnd");
-            plo.showCurrent();
+            plo.current && plo.showCurrent();
             plo.throttleFetch();
         });
         plo.map.on("zoomstart", function(e) {

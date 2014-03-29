@@ -53,6 +53,16 @@ body {
   /* 70px is ok if you use gradient */
   /* when clicking/dragging around */
 }
+.parismap-icon.event.back {
+  z-index: 800;
+}
+.parismap-icon.event.front {
+  z-index: 900;
+}
+.parismap-icon.event.focused,
+.parismap-icon.event.opened {
+  z-index: 901;
+}
 .parismap-icon.event .point {
   /* see http://stackoverflow.com/questions/13059190/html5-css3-circle-with-partial-border
      TO MAKE 30 min 1h 2h 5h delay next event as a circle arc */
@@ -192,10 +202,10 @@ body {
 .parismap-icon.event .point .time {
   color: white;
   position: absolute;
-  left: 16px;
-  top: 18px;
+  left: 18px;
+  top: 19px;
   text-align: left;
-  font-size: 14px;
+  font-size: 12px;
   width: 30px;
   text-shadow: 1px 1px 2px #414141;
   font-family: 'Arial, Arial, Helvetica, sans-serif';
@@ -205,26 +215,34 @@ body {
   -webkit-font-feature-settings: "onum";
   -o-font-feature-settings: "onum";
 }
+.parismap-icon.event .point .cloud {
+  position: absolute;
+  display: table-cell;
+  /*      width: 200%;
+      height: 200%;
+      left: -50%;
+      top: -50%;*/
+  color: #c4dbf0;
+  font-size: 0.9em;
+  text-align: center;
+  vertical-align: middle;
+}
 .parismap-icon.event .point .popup {
-  -webkit-transition: opacity 1s;
-  -moz-transition: opacity 1s;
-  -ms-transition: opacity 1s;
-  -o-transition: opacity 1s;
-  transition: opacity 1s;
-  -webkit-transition: height 200ms, padding 200ms, top 200ms;
-  -moz-transition: height 200ms, padding 200ms, top 200ms;
-  -ms-transition: height 200ms, padding 200ms, top 200ms;
-  -o-transition: height 200ms, padding 200ms, top 200ms;
-  transition: height 200ms, padding 200ms, top 200ms;
+  -webkit-transition: all 300ms;
+  -moz-transition: all 300ms;
+  -ms-transition: all 300ms;
+  -o-transition: all 300ms;
+  transition: all 300ms;
+  /*.transitiontriple(height,padding,top, 200ms);*/
   opacity: 0;
   position: absolute;
   z-index: 8;
-  left: -55px;
+  left: -85px;
   top: 0;
   pointer-events: none;
   padding: 0;
   height: 0px;
-  width: 120px;
+  width: 170px;
   overflow: hidden;
   background: #f5f5f5;
   box-shadow: 0px 0px 30px #7C7C7C;
@@ -233,45 +251,51 @@ body {
   border-radius: 7px;
 }
 .parismap-icon.event .point .popup .content {
+  display: table;
+  width: 100%;
   height: 100%;
   text-align: center;
   /*font-family: 'Lato', sans-serif;*/
   font-family: 'Source Sans Pro', sans-serif;
+  /*        @media only screen and (max-width : 600px) {
+          .text {
+            font-size: 1.4em;
+            padding: 10px;
+          }
+        }*/
 }
 .parismap-icon.event .point .popup .content .meta {
-  /*background: whitesmoke;*/
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin-bottom: 5px;
+  height: 18px;
   border-bottom: 1px solid lightgray;
-}
-.parismap-icon.event .point .popup .content .meta .address {
-  display: inline-block;
   font-size: 0.9em;
   color: black;
-}
-.parismap-icon.event .point .popup .content .title {
-  display: none;
-  margin-bottom: 4px;
-  font-size: 0.9em;
-  color: gray;
+  overflow: hidden;
 }
 .parismap-icon.event .point .popup .content .text {
-  height: 100%;
+  height: 56px;
+  padding: 4px;
   text-align: center;
+  vertical-align: middle;
   font-size: 1em;
   line-height: 130%;
   overflow: hidden;
 }
-@media only screen and (max-width: 600px) {
-  .parismap-icon.event .point .popup .content .text {
-    font-size: 1.4em;
-    padding: 10px;
-  }
+.parismap-icon.event .point .popup .content .more {
+  pointer-events: all;
+  text-align: center;
+}
+.parismap-icon.event .point .popup .content .more a {
+  text-decoration: none;
+}
+.parismap-icon.event .point .popup .content .more a:hover {
+  color: darkred;
 }
 .parismap-icon.event .point.cluster {
+  position: absolute;
+  display: table;
   width: 40px;
   height: 40px;
+  left: -20px;
   -webkit-border-radius: 40px;
   -moz-border-radius: 40px;
   border-radius: 40px;
@@ -280,8 +304,8 @@ body {
   -ms-transition: background 600ms, box-shadow 600ms;
   -o-transition: background 600ms, box-shadow 600ms;
   transition: background 600ms, box-shadow 600ms;
-  background: rgba(100, 161, 195, 0.21);
-  box-shadow: 0px 0px 80px #64a1c3;
+  background: rgba(100, 161, 195, 0.4);
+  box-shadow: 0px 0px 60px 3px #64a1c3;
   /* you can try following, but gradient don't support css transitions yet */
   /*box-shadow: none;
       .transition(background, @delaytemplate);
@@ -306,10 +330,13 @@ body {
   border-top: 15px solid #f5f5f5;
 }
 .parismap-icon.event.focused .point.normal .popup {
-  opacity: 1;
-  top: -61px;
+  opacity: 0.5;
+  top: -93px;
   padding: 5px;
-  height: 70px;
+  height: 100px;
+}
+.parismap-icon.event.focused .point.normal .more {
+  opacity: 1;
 }
 .parismap-icon.event.focused .point.cluster {
   background: rgba(213, 86, 86, 0.32);
@@ -327,6 +354,9 @@ body {
 }
 .parismap-icon.event.opened .point .arrow {
   border-top: 15px solid #f5f5f5;
+}
+.parismap-icon.event:hover .popup {
+  opacity: 1 !important;
 }
 /*
   --------------------------

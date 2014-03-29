@@ -32,7 +32,7 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['parisevents'] = {
-    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
     markers: {
         "event_cibul": 'evt',
         "event_demosphere": 'evt',
@@ -126,30 +126,16 @@ $(function(){
       },
       ///////////////////////////////////////////////////
       evt: function(p,clustCount) {
-        var cla = "point "+(clustCount>1 ? "cluster" : "normal");
-        var ic = EVENT_ICONS[p.ptype];
-        //ic = "circle";
-        var ti = moment(p.date.start).format("HH[h]mm");
-        ti = ti.replace(/h00$/,"h").replace(/^0/,"");
-        var cclass = moment(p.date.start).format("[h]HH [m]mm");
+        p.cluster = clustCount>1;
+        p.css = "point "+(p.cluster ? "cluster" : "normal");
+        p.icon = EVENT_ICONS[p.ptype];
+        p.timestr = moment(p.date.start).format("HH[h]mm").replace(/h00$/,"h").replace(/^0/,"");
+        //var cclass = moment(p.date.start).format("[h]HH [m]mm");
+
         return L.divIcon({
+          iconSize:     [0, 0],
           //iconAnchor:   [0, 0], / centered by default if size is specified !
-          iconSize:     [25, 25],
-          html: Handlebars.compile(
-            "<div class='"+cla+"'>"+
-              "<i class='fa fa-"+ic+"'></i>"+
-              "<div class='arrow'></div>"+
-              "<div class='time'>"+ti+"</div>"+
-              '<div class="popup {{markertype}}">'+
-                '<div class="content">'+
-                  /*'<div class="meta">'+
-                    '<a class="link" href="{{link}}" target="_blank"><div class="address">{{place}} - {{address}}</div></a>'+
-                  '</div>'+*/
-                  '<div class="title">{{title}}</div>'+
-                  '<div class="text">{{text}}</div>'+
-                '</div>'+
-              '</div>'+
-            '</div>')(p),
+          html: Handlebars.compile( $("#evt-template").html() )(p),
           className: clustCount>1 ? "parismap-icon event back" : "parismap-icon event front"
         });
       },
