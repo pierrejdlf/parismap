@@ -1939,6 +1939,14 @@ body {
   /* simple point & arrow */
   /* 70px is ok if you use gradient */
   /* when clicking/dragging around */
+  /*&.opened {
+    .point {
+      background: @colpopup;
+      .arrow {
+        border-top: @asize solid @colpopup;
+      }
+    }
+  }*/
 }
 .parismap-icon.event.back {
   z-index: 800;
@@ -1951,8 +1959,6 @@ body {
   z-index: 901;
 }
 .parismap-icon.event .point {
-  /* see http://stackoverflow.com/questions/13059190/html5-css3-circle-with-partial-border
-     TO MAKE 30 min 1h 2h 5h delay next event as a circle arc */
   width: 25px;
   height: 25px;
   background: #64a1c3;
@@ -1967,73 +1973,7 @@ body {
   box-shadow: 3px 3px 10px #8f8f8f;
   /* ------------------------------ */
 }
-.parismap-icon.event .point .clock-container {
-  position: absolute;
-}
-.parismap-icon.event .point .clock {
-  z-index: 5;
-  content: '';
-  width: 20px;
-  height: 20px;
-  border: 2px solid white;
-  display: inline-block;
-  -webkit-border-radius: 16px;
-  -moz-border-radius: 16px;
-  border-radius: 16px;
-  position: relative;
-}
-.parismap-icon.event .point .clock:after {
-  z-index: 2;
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 7px;
-  height: 2px;
-  background: lightgray;
-  display: inline-block;
-  /*transform: rotate(190deg);
-        transform-origin: 0 0.25em;
-        -ms-transform: rotate(190deg);
-        -ms-transform-origin:0 0.25em;*/
-  -webkit-transform-origin: 0 0px;
-  /*-webkit-transform: rotate(10deg);*/
-}
-.parismap-icon.event .point .clock.h6:after {
-  -webkit-transform: rotate(180deg);
-}
-.parismap-icon.event .point .clock.h7:after {
-  -webkit-transform: rotate(210deg);
-}
-.parismap-icon.event .point .clock.h8:after {
-  -webkit-transform: rotate(240deg);
-}
-.parismap-icon.event .point .clock.h9:after {
-  -webkit-transform: rotate(270deg);
-}
-.parismap-icon.event .point .clock:before {
-  z-index: 2;
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 9px;
-  height: 1px;
-  background: white;
-  display: inline-block;
-  -webkit-transform-origin: 0 0px;
-  -webkit-transform: rotate(0deg);
-}
-.parismap-icon.event .point .clock.m15:before {
-  -webkit-transform: rotate(90deg);
-}
-.parismap-icon.event .point .clock.m30:before {
-  -webkit-transform: rotate(180deg);
-}
-.parismap-icon.event .point .clock.m45:before {
-  -webkit-transform: rotate(270deg);
-}
-.parismap-icon.event .point i {
+.parismap-icon.event .point i.mark {
   z-index: 5;
   position: absolute;
   color: white;
@@ -2044,7 +1984,7 @@ body {
   text-align: center;
 }
 .parismap-icon.event .point .arrow {
-  z-index: 9;
+  z-index: 4;
   position: absolute;
   top: 16px;
   width: 0;
@@ -2058,33 +1998,9 @@ body {
   -o-transition: border-top 200ms;
   transition: border-top 200ms;
 }
-.parismap-icon.event .point .arc {
-  z-index: 7;
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  width: 24px;
-  height: 24px;
-  -webkit-border-radius: 100%;
-  -moz-border-radius: 100%;
-  border-radius: 100%;
-  border: 2px solid;
-}
-.parismap-icon.event .point .arc_start {
-  border-color: transparent #ffffff #ffffff #ffffff;
-  -webkit-transform: rotate(-70deg);
-  -moz-transform: rotate(-70deg);
-  -ms-transform: rotate(-70deg);
-  -o-transform: rotate(-70deg);
-  transform: rotate(-70deg);
-}
-.parismap-icon.event .point .arc_end {
-  border-color: #ffffff #ffffff #ffffff transparent;
-  -webkit-transform: rotate(60deg);
-  -moz-transform: rotate(60deg);
-  -ms-transform: rotate(60deg);
-  -o-transform: rotate(60deg);
-  transform: rotate(60deg);
+.parismap-icon.event .point:hover .arrow,
+.parismap-icon.event .point.opened .arrow {
+  z-index: 9;
 }
 .parismap-icon.event .point .time {
   color: white;
@@ -2109,12 +2025,13 @@ body {
       height: 200%;
       left: -50%;
       top: -50%;*/
-  color: #c4dbf0;
+  color: #ECECEC;
   font-size: 0.9em;
   text-align: center;
   vertical-align: middle;
 }
 .parismap-icon.event .point .popup {
+  z-index: 8;
   -webkit-transition: all 300ms;
   -moz-transition: all 300ms;
   -ms-transition: all 300ms;
@@ -2123,8 +2040,7 @@ body {
   /*.transitiontriple(height,padding,top, 200ms);*/
   opacity: 0;
   position: absolute;
-  z-index: 8;
-  left: -85px;
+  left: -78.75px;
   top: 0;
   pointer-events: none;
   padding: 0;
@@ -2144,12 +2060,6 @@ body {
   text-align: center;
   /*font-family: 'Lato', sans-serif;*/
   font-family: 'Source Sans Pro', sans-serif;
-  /*        @media only screen and (max-width : 600px) {
-          .text {
-            font-size: 1.4em;
-            padding: 10px;
-          }
-        }*/
 }
 .parismap-icon.event .point .popup .content .meta {
   height: 18px;
@@ -2210,36 +2120,28 @@ body {
 .parismap-icon.event .point.cluster .arc {
   display: none;
 }
-.parismap-icon.event.focused .point {
-  background: #f5f5f5;
-}
-.parismap-icon.event.focused .point .arrow {
-  border-top: 15px solid #f5f5f5;
+.parismap-icon.event.focused {
+  /*.point {
+      background: @colpopup;
+      .arrow {
+        border-top: @asize solid @colpopup;
+      }
+    }*/
 }
 .parismap-icon.event.focused .point.normal .popup {
-  opacity: 0.5;
+  opacity: 0;
   top: -93px;
   padding: 5px;
   height: 100px;
 }
-.parismap-icon.event.focused .point.normal .more {
-  opacity: 1;
-}
 .parismap-icon.event.focused .point.cluster {
   background: rgba(213, 86, 86, 0.32);
   box-shadow: 0px 0px 80px #FF1400;
-  /*
-      @colclusterfocused: rgba(138, 138, 182, 0.55);
-      background: -webkit-radial-gradient(colclusterfocused 2%, transparent 75%);
-      background: -o-radial-gradient(colclusterfocused 2%, transparent 75%);
-      background: -moz-radial-gradient(colclusterfocused 2%, transparent 75%);
-      background: radial-gradient(colclusterfocused 2%, transparent 75%);
-      */
 }
-.parismap-icon.event.opened .point {
+.parismap-icon.event:hover .point.normal {
   background: #f5f5f5;
 }
-.parismap-icon.event.opened .point .arrow {
+.parismap-icon.event:hover .point.normal .arrow {
   border-top: 15px solid #f5f5f5;
 }
 .parismap-icon.event:hover .popup {

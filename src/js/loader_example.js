@@ -32,7 +32,7 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['parisevents'] = {
-    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
     markers: {
         "event_cibul": 'evt',
         "event_demosphere": 'evt',
