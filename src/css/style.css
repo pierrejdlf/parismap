@@ -1,37 +1,9 @@
-html {
-  margin: 0px;
-  padding: 0px;
-  overflow: hidden;
-}
-body {
-  margin: 0px;
-  padding: 0px;
-  overflow: hidden;
-}
 .numeral {
   font-feature-settings: "onum";
   -moz-font-feature-settings: "onum";
   -ms-font-feature-settings: "onum";
   -webkit-font-feature-settings: "onum";
   -o-font-feature-settings: "onum";
-}
-.container {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  /*pointer-events:none;*/
-}
-/* general */
-#map {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 /* marker cluster */
 .leaflet-cluster-anim .leaflet-marker-icon,

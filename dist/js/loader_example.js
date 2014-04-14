@@ -1,6 +1,8 @@
 
 function getURLParameter(name) {return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);}
 
+
+
 Handlebars.registerHelper('formatdate', function(date) {
   try {
     var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
@@ -12,7 +14,6 @@ Handlebars.registerHelper('formatdate', function(date) {
 Handlebars.registerHelper('splitype', function(type) {
   return type.split("_")[1];
 });
-
 var EVENT_ICONS = {
     'event_demosphere':     'bullhorn',
     'event_lylo':           'eye',
@@ -25,10 +26,14 @@ var EVENT_ICONS = {
     'event_linternaute':    'unsorted'
 };
 
-$(function(){
-  //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
 
+
+$(function(){
+
+  //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
+  var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
   var configs = {};
+
 
   ////////////////////////////////////////////
   configs['parisevents'] = {
@@ -44,11 +49,32 @@ $(function(){
         "event_calenda": 'evt',
         "event_linternaute": 'evt'
     },
+    icons: {
+      evt: function(p,clustCount) {
+        p.cluster = clustCount>1;
+        p.css = "point "+(p.cluster ? "cluster" : "normal");
+        p.icon = EVENT_ICONS[p.ptype];
+        p.timestr = moment(p.date.start).format("HH[h]mm").replace(/h00$/,"h").replace(/^0/,"");
+        //var cclass = moment(p.date.start).format("[h]HH [m]mm");
+        return L.divIcon({
+          iconSize:     [0, 0],
+          //iconAnchor:   [0, 0], / centered by default if size is specified !
+          html: Handlebars.compile( $("#evt-template").html() )(p),
+          className: clustCount>1 ? "parismap-icon event back" : "parismap-icon event front"
+        });
+      },
+    }
   };
 
 
+
   ////////////////////////////////////////////
+  var dev = window.location.hostname == "localhost";
   configs['twitter'] = {
+    useServer: false,
+    dev: dev,
+    baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
+
     maxClusterRadius: 40,
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
     markers: {
@@ -58,58 +84,7 @@ $(function(){
         "sample.csv": 'msg',
         "story.csv": 'msg',
     },
-  };
-
-
-  ////////////////////////////////////////////
-  configs['europewords'] = {
-    clusterize: false,
-    leaflet: {
-      zoom: 5,
-      minZoom: 4,
-      maxZoom: 9,
-    },
-    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
-    markers: {
-      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi'
-    },
-  };
-
-
-  ////////////////////////////////////////////
-  // which config to load ?
-  var options = {};
-  if(window.location.hash=='#msg')
-    options = configs['twitter'];
-  else if(window.location.hash=='#emi')
-    options = configs['europewords'];
-  else
-    options = configs['parisevents'];
-  
-  ////////////////////////////////////////////
-  var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
-  var dev = window.location.hostname == "localhost";
-
-  // init map on div, with all required options
-  var p = Ploufmap(_.defaults(options, {
-    map: "map", // map div id (carefull with css !)
-
-    useServer: false,
-    dev: dev,
-    baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-
-    leaflet: {
-      // here you could override default leaflet map options
-      //minZoom: 2,
-      //maxZoom: 18,
-      //scrollWheelZoom: false,
-    },
-
-    clusterize: true,
-
-    // define icons
     icons: {
-      ///////////////////////////////////////////////////
       msg: function(p,clustCount) {
         var cla = "word";
         if(clustCount>1)
@@ -130,22 +105,27 @@ $(function(){
           className: clustCount>1 ? "parismap-icon msg back" : "parismap-icon msg front"
         });
       },
-      ///////////////////////////////////////////////////
-      evt: function(p,clustCount) {
-        p.cluster = clustCount>1;
-        p.css = "point "+(p.cluster ? "cluster" : "normal");
-        p.icon = EVENT_ICONS[p.ptype];
-        p.timestr = moment(p.date.start).format("HH[h]mm").replace(/h00$/,"h").replace(/^0/,"");
-        //var cclass = moment(p.date.start).format("[h]HH [m]mm");
+    }
+  };
 
-        return L.divIcon({
-          iconSize:     [0, 0],
-          //iconAnchor:   [0, 0], / centered by default if size is specified !
-          html: Handlebars.compile( $("#evt-template").html() )(p),
-          className: clustCount>1 ? "parismap-icon event back" : "parismap-icon event front"
-        });
-      },
-      ///////////////////////////////////////////////////
+
+  ////////////////////////////////////////////
+  configs['europewords'] = {
+    clusterize: false,
+    useServer: false,
+    leaflet: {
+      zoom: 5,
+      minZoom: 4,
+      maxZoom: 9,
+      locateButton: false,
+      scrollWheelZoom: false,
+      fullscreenControl: false,
+    },
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
+    markers: {
+      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi'
+    },
+    icons: {
       emi: function(p,clustCount) {
         var video = /:\/\//.test(p.description);
         var vimeo = /vimeo/.test(p.description);
@@ -173,7 +153,21 @@ $(function(){
           className: video ? "parismap-icon emi video" : "parismap-icon emi image",
         });
       },
-      ///////////////////////////////////////////////////
     }
-  }));
+  };
+
+
+  ////////////////////////////////////////////
+  // which config to load ?
+  var options = {};
+  if(window.location.hash=='#msg')
+    options = configs['twitter'];
+  else if(window.location.hash=='#emi')
+    options = configs['europewords'];
+  else
+    options = configs['parisevents'];
+  ////////////////////////////////////////////
+
+  var p = Ploufmap(options);  
+
 });

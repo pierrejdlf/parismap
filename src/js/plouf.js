@@ -3,20 +3,24 @@ function Ploufmap(options) {
     plo = {};
 
     var defaults = {
+        map: "map", // map div id (carefull with css !)
         eventSource: false,
         useServer: true,
         dev: false,
-        baseUrl:        "http://beta.parismappartient.fr",
+        baseUrl: "http://beta.parismappartient.fr",
         throttleDelay:  1000,
         throttleCentererDelay:  100,
-        clusterize:     false,
+        clusterize:     true,
         maxClusterRadius: 25,
         bounce:         true,
-        locateButton:   true,
+        leaflet: {
+            locateButton:   true,
+            fullscreenControl: true,
+        },
         isMobile:   $(document).width()<900,
         log: true,
     };
-    plo.config = _.extend(defaults,options);
+    plo.config = _.defaults(options,defaults);
     plo.config.bounce = !plo.config.clusterize;
 
     plo.log = function(str) { if(plo.config.log) console.log(str); };
@@ -376,7 +380,7 @@ function Ploufmap(options) {
         });
 
 
-        if(plo.config.locateButton) {
+        if(plo.config.leaflet.locateButton) {
             var lc = L.control.locate({
                 position: 'topleft',  // set the location of the control
                 drawCircle: true,  // controls whether a circle is drawn that shows the uncertainty about the location
@@ -469,6 +473,7 @@ function Ploufmap(options) {
             if(/^http/.test(k)) {
                 plo.log("Adding geojson feed: "+k);
                 $.get(k, function(response) {
+                    console.log("Processing",response.features.length,"ploufs");
                     _.each(response.features, function(d) {
                         var p = {
                             lat:        d.geometry.coordinates[1],
@@ -503,22 +508,24 @@ function Ploufmap(options) {
 
         //plo.log(data);
         $.post( plo.config.baseUrl+"/p/get", data, function(response) {
-            var data = JSON.parse(response);
-            //plo.log(Object.keys(data).length+" ploufs received !");
-            //plo.log(data);
-            _.each(data,function(p) {
-                plo.already.push(p._id);
-                p.markertype = plo.config.markers[p.ptype];
-                try {
-                    //p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
-                    p.text = $('<div>'+p.text+'</div>').text();
-                } catch(err) {
-                    p.text = "[error texting html]";
-                    plo.log("!! html>text error: "+err);
-                    plo.log(p);
-                }
-                plo.addPlouf(p);  
-            });
+            if(!_.isEmpty(response)) {
+                var data = JSON.parse(response);
+                //plo.log(Object.keys(data).length+" ploufs received !");
+                //plo.log(data);
+                _.each(data,function(p) {
+                    plo.already.push(p._id);
+                    p.markertype = plo.config.markers[p.ptype];
+                    try {
+                        //p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
+                        p.text = $('<div>'+p.text+'</div>').text();
+                    } catch(err) {
+                        p.text = "[error texting html]";
+                        plo.log("!! html>text error: "+err);
+                        plo.log(p);
+                    }
+                    plo.addPlouf(p);  
+                });
+            }
         });
     };
 
