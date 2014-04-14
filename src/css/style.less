@@ -10,9 +10,6 @@ body {
   overflow: hidden;
 }
 
-@swiperheigth: 65%;
-@duration: 200ms;
-
 .transition(@prop, @duration) {
   -webkit-transition: @prop @duration;
   -moz-transition: @prop @duration;
@@ -39,7 +36,6 @@ body {
   -moz-border-radius: @rad;
   border-radius: @rad;
 }
-
 .numeral {
   font-feature-settings: "onum";
   -moz-font-feature-settings: "onum";
@@ -244,7 +240,7 @@ body {
       background: radial-gradient(@colcluster 2%, transparent 75%);
       background-opacity: 0.5;*/
 
-      .arrow, .clock, i, .time, .arc {
+      .arrow, .clock, i, .time {
         display: none;
       }
     }

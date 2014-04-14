@@ -229,8 +229,7 @@ body {
 .parismap-icon.event .point.cluster .arrow,
 .parismap-icon.event .point.cluster .clock,
 .parismap-icon.event .point.cluster i,
-.parismap-icon.event .point.cluster .time,
-.parismap-icon.event .point.cluster .arc {
+.parismap-icon.event .point.cluster .time {
   display: none;
 }
 .parismap-icon.event.focused {

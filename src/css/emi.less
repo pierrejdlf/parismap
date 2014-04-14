@@ -1,0 +1,203 @@
+.transition(@prop, @duration) {
+  -webkit-transition: @prop @duration;
+  -moz-transition: @prop @duration;
+  -ms-transition: @prop @duration;
+  -o-transition: @prop @duration;
+  transition: @prop @duration;
+}
+.transitiondouble(@prop, @prob, @duration) {
+  -webkit-transition: @prop @duration, @prob @duration;
+  -moz-transition: @prop @duration, @prob @duration;
+  -ms-transition: @prop @duration, @prob @duration;
+  -o-transition: @prop @duration, @prob @duration;
+  transition: @prop @duration, @prob @duration;
+}
+.transitiontriple(@prop, @prob, @proc, @duration) {
+  -webkit-transition: @prop @duration, @prob @duration, @proc @duration;
+  -moz-transition: @prop @duration, @prob @duration, @proc @duration;
+  -ms-transition: @prop @duration, @prob @duration, @proc @duration;
+  -o-transition: @prop @duration, @prob @duration, @proc @duration;
+  transition: @prop @duration, @prob @duration, @proc @duration;
+}
+.borderradius(@rad) {
+  -webkit-border-radius: @rad;
+  -moz-border-radius: @rad;
+  border-radius: @rad;
+}
+
+
+@delayicon: 200ms;
+@delaytemplate: 450ms;
+
+/*@-webkit-keyframes pulse_animation {
+  25% { color: rgb(100,100,100); }
+  45% { color: rgb(130,130,130); }
+  55% { color: rgb(160,160,160); }
+  75% { color: rgb(200,200,200); }
+}*/
+
+
+/*
+  --------------------------
+  EMI MARKERS
+  --------------------------
+*/
+.parismap-icon.emi {
+  border:none;
+  background: none;
+  &.back {
+    z-index: 800;
+  }
+  &.front {
+    z-index: 900;
+  }
+  &.focused, &.opened {
+    z-index: 901;
+  }
+
+  /* simple point & arrow */
+  @size: 22px;
+  @bigsize: 40px; /* 70px is ok if you use gradient */
+  @sizefont: 13px;
+  @colbase: #E28929;
+  @colfocused: #D13D3D;
+  @colpopup: #f5f5f5;
+
+  @atop: 14px;
+  @asize: 13px;
+  @asizet: 11px;
+
+  @popupw: 190px;
+  @popuph: 140px;
+
+  .skull {
+    width: @size;
+    height: @size;
+    background: @colbase;
+    .transition(background, @delayicon);
+    .borderradius(20px);
+    box-shadow: 0px 13px 25px 0px rgb(116, 116, 116);
+  
+    i.mark {
+      z-index: 5;
+      position: absolute;
+      color: white;
+      font-size: @sizefont;
+      margin-top: 4px;
+      text-shadow: 1px 1px 3px rgb(90, 90, 90);
+      width: @size;
+      text-align: center;
+    }
+    .arrow {
+      z-index: 4;
+      position: absolute;
+      top: @atop;
+      width: 0; 
+      height: 0; 
+      border-left: @asizet solid transparent;
+      border-right: @asizet solid transparent;
+      border-top: @asize solid @colbase;
+      .transition(border-top, @delayicon);
+    }
+    &:hover .arrow, &.opened .arrow {
+      z-index:9;
+    }
+    .popup {
+      z-index: 8;
+      .transition(all, @delayicon);
+      /*.transitiontriple(height,padding,top, 200ms);*/
+      box-sizing: border-box;
+      position: absolute;
+      opacity: 0;
+      left: -@popupw/2 + @size/3;
+      top: 0;
+      padding: 0;
+      height: 0px;
+      width: @popupw;
+      overflow: hidden;
+      background: @colpopup;
+      border: 3px solid white;
+      box-shadow: 0px 0px 30px #7C7C7C;
+      pointer-events: none;
+
+      .borderradius(7px);
+      
+      .content {
+        /*display: table;*/
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        /*font-family: 'Lato', sans-serif;*/
+        font-family: 'Source Sans Pro', sans-serif;
+
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+
+        .fond {
+          width: 100%;
+          height: 100%;
+          img {
+
+          }
+        }
+        .word {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          font-size: 2.6em;
+          line-height: 400%;
+          color: white;
+          text-shadow: 1px 1px 5px rgb(34, 34, 34);
+        }
+        .click {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          padding: 4px;
+          text-align: center;
+          font-size: 0.9em;
+          color: rgb(185, 185, 185);
+          background-color: black;
+
+/*          -webkit-animation-name: 'pulse_animation';
+          -webkit-animation-duration: 1000ms;
+          -webkit-animation-iteration-count: infinite;
+          -webkit-animation-timing-function: ease;*/
+        }
+      }
+    }
+  }
+
+  @colimg: #85A6BD;
+  &.image {
+    .skull {
+      background: @colimg;
+      .arrow {
+        border-top: @asize solid @colimg;
+      }
+    }
+  }
+
+  /* when clicking/dragging around */
+  &:hover, &.opened {
+    .skull {
+      .popup {
+        opacity: 0;
+        top: -@popuph + 16;
+        height: @popuph;
+      }
+      background: @colpopup;
+      .arrow {
+        border-top: @asize solid @colpopup;
+      }
+    }
+    .popup {
+      opacity: 1 !important;
+    }
+  }
+}
+

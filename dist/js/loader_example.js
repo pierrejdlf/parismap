@@ -63,9 +63,15 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['europewords'] = {
+    clusterize: false,
+    leaflet: {
+      zoom: 5,
+      minZoom: 4,
+      maxZoom: 9,
+    },
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
-      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'word'
+      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi'
     },
   };
 
@@ -85,7 +91,7 @@ $(function(){
   var dev = window.location.hostname == "localhost";
 
   // init map on div, with all required options
-  var p = Ploufmap(_.extend(options, {
+  var p = Ploufmap(_.defaults(options, {
     map: "map", // map div id (carefull with css !)
 
     useServer: false,
@@ -137,6 +143,34 @@ $(function(){
           //iconAnchor:   [0, 0], / centered by default if size is specified !
           html: Handlebars.compile( $("#evt-template").html() )(p),
           className: clustCount>1 ? "parismap-icon event back" : "parismap-icon event front"
+        });
+      },
+      ///////////////////////////////////////////////////
+      emi: function(p,clustCount) {
+        var video = /:\/\//.test(p.description);
+        var vimeo = /vimeo/.test(p.description);
+        p.movie = video;
+        p.icon = video ? "film" : "asterisk";
+        p.jumpto = p.title.split(".")[0];
+        p.title = p.title.replace(/\d*\./,"");
+        var d = p.description ;
+
+        if(!video) {      // un mot un jour
+          var img = d.match(/\[\[(.*)\]\]/)[1];
+          p.imgurl = "https://googledrive.com/host/0B2b_ECAYHVctWGJkUkdWTXFrdDA/"+img;
+        } else if(vimeo)  // vimeo
+          p.imgurl = d.match(/\((.*)\)/) ? d.match(/\((.*)\)/)[1] : "no";
+        else            // youtube
+          p.imgurl = d.replace(/^.*[\/=]([^\/^=]*)].*/,"http://i2.ytimg.com/vi/\$1/hqdefault.jpg");
+
+        p.imgurl = p.imgurl.replace(/ /g,"%20");
+
+        //console.log("Got: ",p.imgurl);
+
+        return L.divIcon({
+          iconSize:     [0, 0],
+          html: Handlebars.compile( $("#emi-template").html() )(p),
+          className: video ? "parismap-icon emi video" : "parismap-icon emi image",
         });
       },
       ///////////////////////////////////////////////////

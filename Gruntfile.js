@@ -23,7 +23,8 @@ module.exports = function(grunt) {
           paths: ["assets"]
         },
         files: {
-          "src/css/style.css": "src/css/style.less"
+          "src/css/style.css": "src/css/style.less",
+          "src/css/emi.css": "src/css/emi.less"
         }
       }
     },
@@ -38,7 +39,7 @@ module.exports = function(grunt) {
           'vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
           'vendor/leaflet.fullscreen/dist/leaflet.fullscreen.css',
           'vendor/font-awesome/css/font-awesome.css',
-          'src/css/style.css'
+          'src/css/*.css'
         ],
         dest: 'dist/css/<%= pkg.name %>.css'
       },

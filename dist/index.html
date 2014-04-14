@@ -57,6 +57,25 @@
             </div>
         </script>
 
+        <script id="emi-template" type="text/x-handlebars-template">
+            <div class="skull hint--bottom" data-hint="click to watch the film !">
+
+                <i class='mark fa fa-{{icon}}'></i>
+                <div class='arrow'></div>
+                <div class="popup">
+                    <a href="#jumpto_{{jumpto}}">
+                    <div class="content" style="background-image: url({{imgurl}});">
+                        <div class="word">{{title}}</div>
+                        {{#if movie}}
+                        <div class="click">click to watch the film</div>
+                        {{/if}}
+                    </div>
+                    </a>
+                </div>
+
+            </div>
+        </script>
+
         </body>
 
     <!-- map is loaded using: -->
