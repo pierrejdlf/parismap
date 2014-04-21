@@ -37,6 +37,7 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['parisevents'] = {
+    //baseUrl: "http://localhost:8080",
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
     markers: {
         "event_cibul": 'evt',
@@ -69,13 +70,12 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  var dev = window.location.hostname == "localhost";
   configs['twitter'] = {
     useServer: false,
-    dev: dev,
-    baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-
-    maxClusterRadius: 40,
+    clusterize: false,
+    /*maxClusterRadius: 40,
+    zoomToBoundsOnClick: false,*/
+    focusOnMove: true,
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
     markers: {
         "tweet": 'msg',
@@ -97,9 +97,10 @@ $(function(){
               '<div class="template">'+
                 '<div class="text">'+p.text+'</div>'+
               '</div>'+
-              '<div>'+p.words.join(" ")+'</div>'+
+              '<div>•</div>'+
             "</div>"
             )(p),
+          //p.words.join(" ")
           //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
           popupAnchor:  [0, 0],
           className: clustCount>1 ? "parismap-icon msg back" : "parismap-icon msg front"
