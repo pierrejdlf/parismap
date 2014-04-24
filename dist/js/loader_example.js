@@ -1,8 +1,6 @@
 
 function getURLParameter(name) {return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);}
 
-
-
 Handlebars.registerHelper('formatdate', function(date) {
   try {
     var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
@@ -37,6 +35,7 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['parisevents'] = {
+    //baseUrl: "http://localhost:8080",
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
     markers: {
         "event_cibul": 'evt',
@@ -69,13 +68,12 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  var dev = window.location.hostname == "localhost";
   configs['twitter'] = {
     useServer: false,
-    dev: dev,
-    baseUrl: dev ? "http://localhost:8080" : "http://beta.parismappartient.fr",
-
-    maxClusterRadius: 40,
+    clusterize: false,
+    /*maxClusterRadius: 40,
+    zoomToBoundsOnClick: false,*/
+    focusOnMove: true,
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
     markers: {
         "tweet": 'msg',
@@ -97,9 +95,10 @@ $(function(){
               '<div class="template">'+
                 '<div class="text">'+p.text+'</div>'+
               '</div>'+
-              '<div>'+p.words.join(" ")+'</div>'+
+              '<div>•</div>'+
             "</div>"
             )(p),
+          //p.words.join(" ")
           //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
           popupAnchor:  [0, 0],
           className: clustCount>1 ? "parismap-icon msg back" : "parismap-icon msg front"
@@ -111,8 +110,12 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['europewords'] = {
-    clusterize: false,
+    clusterize: true,
+    maxClusterRadius: 50,
+    //serverUrl: "http://490512b42b.url-de-test.ws",
+    serverUrl: "//localhost:8080",
     leaflet: {
+      center: L.latLng(48.810236,16.331055),
       zoom: 5,
       minZoom: 4,
       maxZoom: 9,
@@ -122,11 +125,14 @@ $(function(){
     },
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
-      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
-      "tweet": 'msg',
+      //'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
+      'tweet_eutrack': 'wordeon',
+      'tweet_eusearch': 'wordeon',
     },
-    icons: {
-      emi: function(p,clustCount) {
+    // preprocess ploufdata at fetch ! (to only do it once !)
+    preplouf: function(p) {
+      var t = p.markertype;
+      if(t=='emi') {
         var video = /:\/\//.test(p.description);
         var vimeo = /vimeo/.test(p.description);
         p.movie = video;
@@ -144,9 +150,62 @@ $(function(){
           p.imgurl = d.replace(/^.*[\/=]([^\/^=]*)].*/,"http://i2.ytimg.com/vi/\$1/hqdefault.jpg");
 
         p.imgurl = p.imgurl.replace(/ /g,"%20");
-
         //console.log("Got: ",p.imgurl);
+      }
+      if(t=='wordeon') {
+        // do nothing
+      }
+      return p;
+    },
+    icons: {
+      wordeon: function(p,clustCount,children) {
+        var cla = "single";
 
+        if(clustCount>1) {
+          cla += " cluster";
+          p.text = _.map(children, function(e) {
+            return e.text;
+          }).join(" ");
+        }
+
+        //var text = .replace(/[^ ]*http[^ ]*/g,'#');
+        var words = p.text.split(/[\/\n .,!?:;'"“”\(\)]+/);
+        var w = /[a-zA-Zàâéèêëiîoôöuùûü]{3,}/; // only if contains at least 3 normal chars
+        var r = /([a-zA-Zàâéèêëiîoôöuùûü])\1{2,}/; // avoid repeated chars (x3)
+
+        // we'll build the whole text by splitting text into words (whose only longest will appear if not hover)
+        //var max = 1;
+        var wordlist = _.map(words, function(el) {
+          var len = 0;
+          if(w.test(el) && !r.test(el) && el.indexOf('#')==-1 && el.indexOf('@')!=0 && el.indexOf('parismap')==-1)
+            len = el.length;
+          //max = Math.max(max,len);
+          return {
+            e: el,
+            len: len,
+            text: "<span class='short'>"+el+"</span>",
+          };
+        })
+        //console.log("GO",JSON.stringify(wordlist,null,4));
+        var maxed = _.max(wordlist, function(e){return e.len;});
+        maxed.text = "<span class='long'>"+maxed.e+"</span>";
+        //console.log("MAXED",maxed);
+
+        p.wordeon = _.map(wordlist, function(e){return e.text;}).join(" ");
+        //console.log(p.wordeon);
+
+        return L.divIcon({
+          iconAnchor:   [0, 0],
+          iconSize:     [0, 0],
+          html: Handlebars.compile(
+            "<div class='"+cla+"'>"+ p.wordeon + "</div>"
+          )(p),
+          //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
+          popupAnchor:  [0, 0],
+          className: clustCount>1 ? "parismap-icon wordeon back" : "parismap-icon wordeon front"
+        });
+      },
+      emi: function(p,clustCount) {
         return L.divIcon({
           iconSize:     [0, 0],
           html: Handlebars.compile( $("#emi-template").html() )(p),

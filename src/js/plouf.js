@@ -11,8 +11,10 @@ function Ploufmap(options) {
         throttleDelay:  1000,
         throttleCentererDelay:  100,
         clusterize:     true,
+        zoomToBoundsOnClick: true,
         maxClusterRadius: 25,
         bounce:         true,
+        focusOnMove: false, // to throttle focus on nearest from center on move
         leaflet: {
             locateButton:   true,
             fullscreenControl: true,
@@ -267,7 +269,7 @@ function Ploufmap(options) {
                 markerLayer = new L.MarkerClusterGroup({
                     //spiderfyOnMaxZoom: false,
                     //showCoverageOnHover: false,
-                    //zoomToBoundsOnClick: false,
+                    zoomToBoundsOnClick: plo.config.zoomToBoundsOnClick,
 
                     //animateAddingMarkers:true, // default true
 
@@ -366,7 +368,7 @@ function Ploufmap(options) {
         });
         plo.map.on('move', function(e) {
             plo.log("! moving");
-            //plo.updateFocusedThrottled();
+            if(plo.config.focusOnMove) plo.updateFocusedThrottled();
             //plo.throttleFetch();
         });
         plo.map.on('moveend', function(e) {
