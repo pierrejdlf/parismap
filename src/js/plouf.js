@@ -7,7 +7,7 @@ function Ploufmap(options) {
         eventSource: false,
         useServer: true,
         dev: false,
-        baseUrl: "http://beta.parismappartient.fr",
+        serverUrl: "http://beta.parismappartient.fr",
         throttleDelay:  1000,
         throttleCentererDelay:  100,
         clusterize:     true,
@@ -16,6 +16,10 @@ function Ploufmap(options) {
         leaflet: {
             locateButton:   true,
             fullscreenControl: true,
+            center:  L.latLng(48.87,2.347),
+            zoom: 13,
+            minZoom: 2,
+            maxZoom: 18,
         },
         isMobile:   $(document).width()<900,
         log: true,
@@ -61,7 +65,7 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     plo.initConfig = function(callb) {
         if(plo.config.useServer) {
-            $.get( plo.config.baseUrl+"/config", function(response) {
+            $.get( plo.config.serverUrl+"/config", function(response) {
                 // rather extend ?
                 plo.config.apis = response.apis;
                 plo.config.esHQ = response.esHQ;
@@ -155,26 +159,33 @@ function Ploufmap(options) {
     };
     //////////////////////////////////////////////////////
     plo.showCurrent = function() {
-        plo.log("showing current.",plo.current);
         plo.setMarkerStatus(plo.current,"focused");
-        // moving box at center of screen
+
+        // if there is a .template within marker, then move box at center of screen
         var e = $(plo.current._icon);
-        var t = plo.getTransform(e);
-        var tmap = plo.getTransform($(".leaflet-map-pane"));
-        if(t) {
-            var pad = 0;
-            var x = -t[0]-tmap[0]+pad,
-                y = -t[1]-tmap[1]+pad,
-                W = $(window).width(),
-                H = $(window).height();
-            e.css("z-index",9992);
-            plo.setTransform(e.find(".template"), "translate3d("+x+"px, "+y+"px, 0px)")
-                .css({
-                    "width": W-2*pad,
-                    "height": H-2*pad,
-                    "z-index": 9998,
-                });
+        var temp = e.find(".template");
+
+        if(temp) {
+            var t = plo.getTransform(e);
+            var tmap = plo.getTransform($(".leaflet-map-pane"));
+            if(t) {
+                var pad = 0;
+                var x = -t[0]-tmap[0]+pad,
+                    y = -t[1]-tmap[1]+pad,
+                    W = $(window).width(),
+                    H = $(window).height();
+                e.css("z-index",9992);
+                plo.setTransform(e.find(".template"), "translate3d("+x+"px, "+y+"px, 0px)")
+                    .css({
+                        "width": W-2*pad,
+                        "height": H-2*pad,
+                        "z-index": 9998,
+                    });
+            }
+        } else {
+            plo.log("no template.");    
         }
+
         plo.setMarkerStatus(plo.current,"opened");
         plo.log("current showed.");
     };
@@ -288,7 +299,7 @@ function Ploufmap(options) {
                         p.wordcloud = concat ? concat.slice(0,2).join(" ").toLowerCase() : "" ;
 
                         // return icon
-                        return plo.getIcon(p)(p,children.length);;
+                        return plo.getIcon(p)(p, children.length, children);
                         //return new L.DivIcon({ html: '<b>' + "oui"+cluster.getChildCount() + '</b>' });
                     }
                 });
@@ -333,10 +344,6 @@ function Ploufmap(options) {
             attributionControl: false,
             keyboard: false,
             icons: plo.config.icons,
-            center:  L.latLng(48.87,2.347),
-            zoom: 13,
-            minZoom: 2,
-            maxZoom: 18,
             layers: [baseLayer].concat(_.values(plo.layers))
         }));
 
@@ -507,7 +514,7 @@ function Ploufmap(options) {
         };
 
         //plo.log(data);
-        $.post( plo.config.baseUrl+"/p/get", data, function(response) {
+        $.post( plo.config.serverUrl+"/p/get", data, function(response) {
             if(!_.isEmpty(response)) {
                 var data = JSON.parse(response);
                 //plo.log(Object.keys(data).length+" ploufs received !");
@@ -523,6 +530,9 @@ function Ploufmap(options) {
                         plo.log("!! html>text error: "+err);
                         plo.log(p);
                     }
+                    // we may do things here if preplouf is defined
+                    if(typeof plo.config.preplouf === 'function')
+                        p = plo.config.preplouf(p);
                     plo.addPlouf(p);  
                 });
             }
@@ -538,7 +548,7 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.initEventSource = function() {
-        var source = new EventSource(plo.config.baseUrl+'/riviere-de-ploufs');
+        var source = new EventSource(plo.config.serverUrl+'/riviere-de-ploufs');
         source.onopen = function() {
             plo.log("Event Source connected");
         };
@@ -564,7 +574,7 @@ function Ploufmap(options) {
     //////////////////////////////////////////////////////
     // special if heroku server
     plo.initEventSourceHQ = function() {
-      var source = new ESHQ(plo.config.esChannel,{auth_url: plo.config.baseUrl+'/riviere-de-ploufs-hq'});
+      var source = new ESHQ(plo.config.esChannel,{auth_url: plo.config.serverUrl+'/riviere-de-ploufs-hq'});
       
       source.onopen = function(e) {
         plo.log(" ... ESHQ connexion ok");
@@ -595,7 +605,7 @@ function Ploufmap(options) {
         pid: plo.current.ploufdata.pid,
         vote:vote ? 1 : -1
       };
-      $.post( plo.config.baseUrl+"/p/vote", data, function(response) {
+      $.post( plo.config.serverUrl+"/p/vote", data, function(response) {
           //var res = JSON.parse(response);
           plo.log(response);
       });
@@ -613,7 +623,7 @@ function Ploufmap(options) {
                 message:    f.messform.message
             };
             plo.log(newPlouf);
-            $.post( plo.config.baseUrl+"/p/new", newPlouf,function(response) {
+            $.post( plo.config.serverUrl+"/p/new", newPlouf,function(response) {
                 plo.log("form response ok");
             });
         });

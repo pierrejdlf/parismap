@@ -112,7 +112,6 @@ $(function(){
   ////////////////////////////////////////////
   configs['europewords'] = {
     clusterize: false,
-    useServer: false,
     leaflet: {
       zoom: 5,
       minZoom: 4,
@@ -123,7 +122,8 @@ $(function(){
     },
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
-      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi'
+      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
+      "tweet": 'msg',
     },
     icons: {
       emi: function(p,clustCount) {
