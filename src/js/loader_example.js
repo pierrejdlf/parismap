@@ -87,6 +87,13 @@ $(function(){
         var cla = "word";
         if(clustCount>1)
           cla += " cluster";
+
+        // if you need word cloud (?)
+        // var concat = _.map(children, function(c) {
+        //   return c.ploufdata.title;
+        // }).join(" ").match(/[\w]{5,}/g);
+        // p.wordcloud = concat ? concat.slice(0,2).join(" ").toLowerCase() : "" ;
+
         return L.divIcon({
           iconAnchor:   [0, 0],
           iconSize:     [0, 0],
@@ -117,10 +124,10 @@ $(function(){
     leaflet: {
       center: L.latLng(48.810236,16.331055),
       zoom: 5,
-      minZoom: 4,
-      maxZoom: 9,
+      //minZoom: 4,
+      //maxZoom: 9,
       locateButton: false,
-      scrollWheelZoom: false,
+      //scrollWheelZoom: false,
       fullscreenControl: false,
     },
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
@@ -160,45 +167,38 @@ $(function(){
     icons: {
       wordeon: function(p,clustCount,children) {
         var cla = "single";
-
         if(clustCount>1) {
-          cla += " cluster";
+          cla = "cluster";
           p.text = _.map(children, function(e) {
-            return e.text;
+            return e.ploufdata.text;
           }).join(" ");
         }
 
         //var text = .replace(/[^ ]*http[^ ]*/g,'#');
-        var words = p.text.split(/[\/\n .,!?:;'"“”\(\)]+/);
+        var words = p.text.replace(/[^ ]*http[^ ]*/g,'#').split(/[\/\n .,!?:;'"“”\(\)]+/);
         var w = /[a-zA-Zàâéèêëiîoôöuùûü]{3,}/; // only if contains at least 3 normal chars
         var r = /([a-zA-Zàâéèêëiîoôöuùûü])\1{2,}/; // avoid repeated chars (x3)
 
         // we'll build the whole text by splitting text into words (whose only longest will appear if not hover)
         //var max = 1;
-        var wordlist = _.map(words, function(el) {
-          var len = 0;
-          if(w.test(el) && !r.test(el) && el.indexOf('#')==-1 && el.indexOf('@')!=0 && el.indexOf('parismap')==-1)
-            len = el.length;
-          //max = Math.max(max,len);
-          return {
-            e: el,
-            len: len,
-            text: "<span class='short'>"+el+"</span>",
-          };
-        })
-        //console.log("GO",JSON.stringify(wordlist,null,4));
-        var maxed = _.max(wordlist, function(e){return e.len;});
-        maxed.text = "<span class='long'>"+maxed.e+"</span>";
-        //console.log("MAXED",maxed);
-
-        p.wordeon = _.map(wordlist, function(e){return e.text;}).join(" ");
-        //console.log(p.wordeon);
+        function getLen(w) {
+          return
+            w.test(el) && !r.test(el) && el.indexOf('#')==-1 && el.indexOf('@')!=0 && el.indexOf('parismap')==-1 ?
+            w.length : 0;
+        };
+        var sorted = _.sortBy(words, function(a,b) {
+          return getLen(a)-getLen(b);
+        });
+        var twomax = sorted[0]+" "+sorted[1];
 
         return L.divIcon({
           iconAnchor:   [0, 0],
           iconSize:     [0, 0],
           html: Handlebars.compile(
-            "<div class='"+cla+"'>"+ p.wordeon + "</div>"
+            "<div class='"+cla+"'>"+
+              "<div class='inner long'>"+p.text+"</div>"+
+              "<div class='inner short'>"+twomax+"</div>"+
+            "</div>"
           )(p),
           //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
           popupAnchor:  [0, 0],
@@ -206,6 +206,7 @@ $(function(){
         });
       },
       emi: function(p,clustCount) {
+        var video = /:\/\//.test(p.description);
         return L.divIcon({
           iconSize:     [0, 0],
           html: Handlebars.compile( $("#emi-template").html() )(p),

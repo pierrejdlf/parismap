@@ -8,7 +8,7 @@ function Ploufmap(options) {
         useServer: true,
         dev: false,
         serverUrl: "http://beta.parismappartient.fr",
-        throttleDelay:  1000,
+        throttleDelay:  1500,
         throttleCentererDelay:  100,
         clusterize:     true,
         zoomToBoundsOnClick: true,
@@ -292,13 +292,7 @@ function Ploufmap(options) {
                     iconCreateFunction: function(cluster) {
                         var children = cluster.getAllChildMarkers();
 
-                        var p = children[0].ploufdata; // data of choosen one
-                        p.isCluster = children.length>1;
-                        
-                        var concat = _.map(children, function(c) {
-                            return c.ploufdata.title;
-                        }).join(" ").match(/[\w]{5,}/g);
-                        p.wordcloud = concat ? concat.slice(0,2).join(" ").toLowerCase() : "" ;
+                        var p = children[0].ploufdata; // data of choosen one (let's say first one)
 
                         // return icon
                         return plo.getIcon(p)(p, children.length, children);
@@ -438,6 +432,11 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.addPlouf = function(p) {
+
+        // we may do things here if preplouf is defined
+        if(typeof plo.config.preplouf === 'function')
+            p = plo.config.preplouf(p);
+
         var markLayer = plo.getMarkerLayer(p);
         var i = plo.getIcon(p)(p);
         var ltln = new L.LatLng(p.lat, p.lng);
@@ -532,9 +531,6 @@ function Ploufmap(options) {
                         plo.log("!! html>text error: "+err);
                         plo.log(p);
                     }
-                    // we may do things here if preplouf is defined
-                    if(typeof plo.config.preplouf === 'function')
-                        p = plo.config.preplouf(p);
                     plo.addPlouf(p);  
                 });
             }
