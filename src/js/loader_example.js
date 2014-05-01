@@ -117,24 +117,27 @@ $(function(){
 
   ////////////////////////////////////////////
   configs['europewords'] = {
-    clusterize: true,
+    clusterize: false,
     maxClusterRadius: 50,
-    //serverUrl: "http://490512b42b.url-de-test.ws",
+    //serverUrl: "//490512b42b.url-de-test.ws",
     serverUrl: "//localhost:8080",
     leaflet: {
       center: L.latLng(48.810236,16.331055),
       zoom: 5,
-      //minZoom: 4,
-      //maxZoom: 9,
+      minZoom: 5,
+      maxZoom: 7,
       locateButton: false,
       //scrollWheelZoom: false,
       fullscreenControl: false,
+      maxBounds: L.latLngBounds( L.latLng(34.0162,-11.6015),L.latLng(62.6741,40.9570) )
     },
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
-      //'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
       'tweet_eutrack': 'wordeon',
+      'tweet_euword': 'wordeon',
       'tweet_eusearch': 'wordeon',
+      'tweet_eulocs': 'wordeon',
+      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
     },
     // preprocess ploufdata at fetch ! (to only do it once !)
     preplouf: function(p) {
@@ -166,38 +169,44 @@ $(function(){
     },
     icons: {
       wordeon: function(p,clustCount,children) {
-        var cla = "single";
-        if(clustCount>1) {
-          cla = "cluster";
-          p.text = _.map(children, function(e) {
-            return e.ploufdata.text;
-          }).join(" ");
-        }
+        
+        // WE USED TO EXTRACT LONGEST WORD, AND MANAGE CLUSTERS
 
-        //var text = .replace(/[^ ]*http[^ ]*/g,'#');
-        var words = p.text.replace(/[^ ]*http[^ ]*/g,'#').split(/[\/\n .,!?:;'"“”\(\)]+/);
-        var w = /[a-zA-Zàâéèêëiîoôöuùûü]{3,}/; // only if contains at least 3 normal chars
-        var r = /([a-zA-Zàâéèêëiîoôöuùûü])\1{2,}/; // avoid repeated chars (x3)
-
-        // we'll build the whole text by splitting text into words (whose only longest will appear if not hover)
-        //var max = 1;
-        function getLen(w) {
-          return
-            w.test(el) && !r.test(el) && el.indexOf('#')==-1 && el.indexOf('@')!=0 && el.indexOf('parismap')==-1 ?
-            w.length : 0;
-        };
-        var sorted = _.sortBy(words, function(a,b) {
-          return getLen(a)-getLen(b);
-        });
-        var twomax = sorted[0]+" "+sorted[1];
+        // var cla = "single";
+        // if(clustCount>1) {
+        //   cla = "cluster";
+        //   p.text = _.map(children, function(e) {
+        //     return e.ploufdata.text;
+        //   }).join(" ");
+        // }
+        // //var text = .replace(/[^ ]*http[^ ]*/g,'#');
+        // var words = p.text.replace(/[^ ]*http[^ ]*/g,'#').split(/[\/\n .,!?:;'"“”\(\)]+/);
+        // var w = /[a-zA-Zàâéèêëiîoôöuùûü]{3,}/; // only if contains at least 3 normal chars
+        // var r = /([a-zA-Zàâéèêëiîoôöuùûü])\1{2,}/; // avoid repeated chars (x3)
+        // // we'll build the whole text by splitting text into words (whose only longest will appear if not hover)
+        // //var max = 1;
+        // function getLen(w) {
+        //   return
+        //     w.test(el) && !r.test(el) && el.indexOf('#')==-1 && el.indexOf('@')!=0 && el.indexOf('parismap')==-1 ?
+        //     w.length : 0;
+        // };
+        // var sorted = _.sortBy(words, function(a,b) {
+        //   return getLen(a)-getLen(b);
+        // });
+        // var twomax = sorted[0]+" "+sorted[1];
+        //
+        // "<div class='"+p.ptype.split("_")[1]+"'>"+
+        //   "<div class='inner long'>"+p.text+"</div>"+
+        //   "<div class='inner short'>"+twomax+"</div>"+
+        // "</div>"
 
         return L.divIcon({
           iconAnchor:   [0, 0],
           iconSize:     [0, 0],
           html: Handlebars.compile(
-            "<div class='"+cla+"'>"+
-              "<div class='inner long'>"+p.text+"</div>"+
-              "<div class='inner short'>"+twomax+"</div>"+
+            "<div class='wodon "+p.ptype.split("_")[1]+"'>"+
+              "<div class='bubble'></div>"+
+              "<div class='popup'>{{text}}</div>"+
             "</div>"
           )(p),
           //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
@@ -208,7 +217,8 @@ $(function(){
       emi: function(p,clustCount) {
         var video = /:\/\//.test(p.description);
         return L.divIcon({
-          iconSize:     [0, 0],
+          iconSize: [22,22],
+          iconAnchor: [0,22],
           html: Handlebars.compile( $("#emi-template").html() )(p),
           className: video ? "parismap-icon emi video" : "parismap-icon emi image",
         });
