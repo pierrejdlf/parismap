@@ -246,7 +246,7 @@ $(function(){
   cf['europewords_films'] = _.extend({
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
-      //'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
+      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
     },
   }, cf['europewords']);
   console.log(cf['europewords_films']);
@@ -254,10 +254,10 @@ $(function(){
   cf['europewords_tweets'] = _.extend({
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.i87kbj5g/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
-      // 'tweet_eutrack': 'wordeon',
-      // 'tweet_euword': 'wordeon',
-      // 'tweet_eusearch': 'wordeon',
-      // 'tweet_eulocs': 'wordeon',
+      'tweet_eutrack': 'wordeon',
+      'tweet_euword': 'wordeon',
+      'tweet_eusearch': 'wordeon',
+      'tweet_eulocs': 'wordeon',
     },
   }, cf['europewords']);
   
@@ -274,7 +274,8 @@ $(function(){
   //   options = cf['parisevents'];
   ////////////////////////////////////////////
 
-  pp = new Ploufmap(_.extend({mapid:"mapleft"}, cf['europewords_films'] ));
+  
   qq = new Ploufmap(_.extend({mapid:"mapright"}, cf['europewords_tweets'] ));
+  pp = new Ploufmap(_.extend({mapid:"mapleft"}, cf['europewords_films'] ));
 
 });

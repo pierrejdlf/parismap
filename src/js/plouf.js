@@ -337,7 +337,7 @@ function Ploufmap(options) {
         //plo.log(plo.layers);
         //plo.log("groupedOverlays:",groupedOverlays);
 
-        plo.log("We have layers:");
+        plo.log("On mapid: "+plo.config.mapid+", we have layers:");
         plo.log(plo.layers);
 
         plo.map = L.map(plo.config.mapid, _.defaults(plo.config.leaflet, {
@@ -358,33 +358,33 @@ function Ploufmap(options) {
             plo.log("! map clicked");
         });
         plo.map.on('mousedown', function(e) {
-            plo.log("! mousedown");
+            //plo.log("! mousedown");
             $('body').addClass("mousedown");
         });
         plo.map.on('mouseup', function(e) {
-            plo.log("! mouseup");
+            //plo.log("! mouseup");
             $('body').removeClass("mousedown");
         });
         plo.map.on('move', function(e) {
-            plo.log("! moving");
+            //plo.log("! moving");
             if(plo.config.focusOnMove) plo.updateFocusedThrottled();
             //plo.throttleFetch();
         });
         plo.map.on('moveend', function(e) {
-            plo.log("! movedEnd");
+            //plo.log("! movedEnd");
             plo.current && plo.showCurrent();
             plo.throttleFetch();
         });
         plo.map.on("zoomstart", function(e) {
-            plo.log("! zoomstart");
+            //plo.log("! zoomstart");
         });
         plo.map.on("zoomend", function(e) {
-            plo.log("! zoomend");
+            //plo.log("! zoomend");
             //plo.updateFocused();
             //plo.showCurrent();
         });
         plo.map.on('dragstart', function(e) {
-            plo.log("! dragstart");
+            //plo.log("! dragstart");
         });
 
 
@@ -486,7 +486,7 @@ function Ploufmap(options) {
             if(/^http/.test(k)) {
                 plo.log("Adding geojson feed: "+k);
                 $.get(k, function(response) {
-                    console.log("Processing",response.features.length,"ploufs");
+                    console.log("Processing",response.features.length,"ploufs on Ploufmap: "+plo.config.mapid);
                     _.each(response.features, function(d) {
                         var p = {
                             lat:        d.geometry.coordinates[1],
@@ -523,7 +523,7 @@ function Ploufmap(options) {
         $.post( plo.config.serverUrl+"/p/get", data, function(response) {
             if(!_.isEmpty(response)) {
                 var data = JSON.parse(response);
-                //plo.log(Object.keys(data).length+" ploufs received !");
+                plo.log(Object.keys(data).length+" ploufs received from server on mapid: "+plo.config.mapid);
                 //plo.log(data);
                 _.each(data,function(p) {
                     plo.already.push(p._id);
