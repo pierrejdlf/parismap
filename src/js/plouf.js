@@ -340,12 +340,13 @@ function Ploufmap(options) {
         plo.log("On mapid: "+plo.config.mapid+", we have layers:");
         plo.log(plo.layers);
 
+        plo.config.leaflet.layers = [baseLayer].concat(_.values(plo.layers));
+
         plo.map = L.map(plo.config.mapid, _.defaults(plo.config.leaflet, {
             fullscreenControl: true,
             attributionControl: false,
             keyboard: false,
             icons: plo.config.icons,
-            layers: [baseLayer].concat(_.values(plo.layers))
         }));
 
         // optional control to select visible layers
