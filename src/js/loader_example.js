@@ -1,6 +1,23 @@
 
 function getURLParameter(name) {return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);}
 
+var countries = ["UnitedKingdom","Ireland","Portugal","Spain","france","Belgium","Netherlands","Germany","Switzerland","Italy","Denmark","Sweden","Norway","Finland","Austria","CzechRepublic","Slovenia","Croatia","Hungary","Slovakia","Poland","Lithuania","Latvia","Estonia","Belarus","Ukraine","Moldava","Romania","Serbia","BosniaHerzegovina","Montenegro","Albania","Kosovo","Macedonia","Bulgaria","Greece","Iceland"];
+var countregexp = new RegExp(countries.join('|'),'i');
+
+function getLongestWords(t) {
+  var text = t.replace(/[^ ]*http[^ ]*/g,'#');
+  var words = text.split(/[\/\n .,!?:;'"“”\(\)]+/);
+  var list = [".."];
+  var w = /[a-zA-Zàâéèêëiîoôöuùûü]{3,}/; // only if contains at least 3 normal chars
+  var r = /([a-zA-Zàâéèêëiîoôöuùûü])\1{2,}/; // avoid repeated chars (x3)
+  words.forEach(function(el) {
+    if(w.test(el) && !r.test(el) && el.indexOf('#')==-1 && el.indexOf('@')!=0 && el.indexOf('parismap')==-1)
+      list.push(el);
+  });
+  return _.sortBy(list,function(t){return -t.length});
+};
+
+
 Handlebars.registerHelper('formatdate', function(date) {
   try {
     var datestr = moment(date.start).format("HH[h]mm")+"-"+moment(date.end).format("HH[h]mm");
@@ -30,12 +47,13 @@ $(function(){
 
   //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
   var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
-  var configs = {};
+  var cf = {};
 
 
   ////////////////////////////////////////////
-  configs['parisevents'] = {
-    //baseUrl: "http://localhost:8080",
+  cf['parisevents'] = {
+    serverUrl: "//490512b42b.url-de-test.ws",
+    //serverUrl: "//localhost:8080",
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
     markers: {
         "event_cibul": 'evt',
@@ -68,7 +86,7 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  configs['twitter'] = {
+  cf['twitter'] = {
     useServer: false,
     clusterize: false,
     /*maxClusterRadius: 40,
@@ -116,11 +134,11 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  configs['europewords'] = {
+  cf['europewords'] = {
     clusterize: false,
     maxClusterRadius: 50,
-    //serverUrl: "//490512b42b.url-de-test.ws",
-    serverUrl: "//localhost:8080",
+    serverUrl: "//490512b42b.url-de-test.ws",
+    //serverUrl: "//localhost:8080",
     leaflet: {
       center: L.latLng(48.810236,16.331055),
       zoom: 5,
@@ -130,14 +148,6 @@ $(function(){
       //scrollWheelZoom: false,
       fullscreenControl: false,
       maxBounds: L.latLngBounds( L.latLng(34.0162,-11.6015),L.latLng(62.6741,40.9570) )
-    },
-    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
-    markers: {
-      'tweet_eutrack': 'wordeon',
-      'tweet_euword': 'wordeon',
-      'tweet_eusearch': 'wordeon',
-      'tweet_eulocs': 'wordeon',
-      'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
     },
     // preprocess ploufdata at fetch ! (to only do it once !)
     preplouf: function(p) {
@@ -163,7 +173,11 @@ $(function(){
         //console.log("Got: ",p.imgurl);
       }
       if(t=='wordeon') {
-        // do nothing
+        // process longest word
+        var longestW = getLongestWords(p.text);
+        if(longestW.length && /europeinaword/i.test(longestW[0]) ) longestW.shift();
+        if(longestW.length && countregexp.test(longestW[0]) ) longestW.shift();
+        p.theword = (longestW.length ? longestW[0] : "...").toLowerCase();
       }
       return p;
     },
@@ -206,7 +220,8 @@ $(function(){
           html: Handlebars.compile(
             "<div class='wodon "+p.ptype.split("_")[1]+"'>"+
               "<div class='bubble'></div>"+
-              "<div class='popup'>{{text}}</div>"+
+              "<div class='wordfly'>{{theword}}</div>"+
+              "<div class='popup'><a href='{{link}}' target='_blank'>@{{user.id}}</a><hr>{{text}}</div>"+
             "</div>"
           )(p),
           //html:         "<div class='"+cla+"'><div class='clock "+cclass+"'></div><div class='arro'></div></div>",
@@ -226,18 +241,40 @@ $(function(){
     }
   };
 
+  console.log(cf['europewords']);
+
+  cf['europewords_films'] = _.extend({
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
+    markers: {
+      //'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
+    },
+  }, cf['europewords']);
+  console.log(cf['europewords_films']);
+
+  cf['europewords_tweets'] = _.extend({
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.i87kbj5g/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
+    markers: {
+      // 'tweet_eutrack': 'wordeon',
+      // 'tweet_euword': 'wordeon',
+      // 'tweet_eusearch': 'wordeon',
+      // 'tweet_eulocs': 'wordeon',
+    },
+  }, cf['europewords']);
+  
+
 
   ////////////////////////////////////////////
   // which config to load ?
-  var options = {};
-  if(window.location.hash=='#msg')
-    options = configs['twitter'];
-  else if(window.location.hash=='#emi')
-    options = configs['europewords'];
-  else
-    options = configs['parisevents'];
+  // var options = {};
+  // if(window.location.hash=='#msg')
+  //   options = cf['twitter'];
+  // else if(window.location.hash=='#emi')
+  //   options = cf['europewords'];
+  // else
+  //   options = cf['parisevents'];
   ////////////////////////////////////////////
 
-  var p = Ploufmap(options);  
+  pp = new Ploufmap(_.extend({mapid:"mapleft"}, cf['europewords_films'] ));
+  qq = new Ploufmap(_.extend({mapid:"mapright"}, cf['europewords_tweets'] ));
 
 });

@@ -42,7 +42,8 @@
   WORDEON MARKERS
   --------------------------
 */
-@bubs: 7px;
+@bubs: 8px;
+@poppadding: 9px;
 
 .parismap-icon.wordeon {
   border:none;
@@ -58,32 +59,60 @@
       box-shadow: 1px 1px 4px gray;
       border: 1px solid white;
       border-radius: 10px;
+      display: none;
+    }
+    .wordfly {
+      position: absolute;
+      /*pointer-events: none;*/
+      left: 12px;
+      top: 7px;
+      color: #FFFFFF;
+      text-shadow: 1px 1px 5px black;
     }
     .popup {
       position: absolute;
       display: none;
-      pointer-events: none;
+      /*pointer-events: none;*/
 
       top: @bubs;
       left: @bubs;
       text-align: left;
       background: white;
-      padding: 5px;
+      padding: @poppadding;
       border-radius: 4px;
       box-shadow: 2px 2px 30px gray;
       font-size: 0.9em;
+      min-width: 200px;
+      a {
+        font-style: none;
+        &:hover {
+          color: gray;
+        }
+      }
+      hr {
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 10px 0;
+        padding: 0;
+      }
     }
 
   }
 
-  &:hover .popup { display: inline-block; }
-  &:hover .bubble { border: 1px solid black; }
-
   @opopop: 0.5;
-  .eutrack .bubble { background:rgba(64, 202, 92, @opopop) ;}
+/*  .eutrack .bubble { background:rgba(64, 202, 92, @opopop) ;}
   .euword .bubble { background:rgba(207, 67, 67, @opopop) ;}
   .eulocs .bubble { background:rgba(11, 121, 11, @opopop) ;}
-  .eusearch .bubble { background:rgba(101, 203, 223, @opopop) ;}
+  .eusearch .bubble { background:rgba(101, 203, 223, @opopop) ;}*/
+  @specialred: white; /*#686868;*/
+  .eutrack .bubble { background:@specialred ;}
+  .euword .bubble { background:@specialred ;}
+  .eulocs .bubble { background:@specialred ;}
+  .eusearch .bubble { background:@specialred ;}
+
+  &:hover .popup { display: inline-block; }
+  &:hover .bubble { border: 1px solid black; background: white; }
 }
 
 /*.parismap-icon.wordeon {

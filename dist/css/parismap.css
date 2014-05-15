@@ -2004,49 +2004,117 @@
 .parismap-icon.wordeon {
   border: none;
   background: none;
+  /*  .eutrack .bubble { background:rgba(64, 202, 92, @opopop) ;}
+  .euword .bubble { background:rgba(207, 67, 67, @opopop) ;}
+  .eulocs .bubble { background:rgba(11, 121, 11, @opopop) ;}
+  .eusearch .bubble { background:rgba(101, 203, 223, @opopop) ;}*/
+  /*#686868;*/
 }
-.parismap-icon.wordeon .single,
-.parismap-icon.wordeon .cluster {
-  display: table;
-  width: 110px;
-  height: 90px;
-  text-align: center;
-  font-family: "Open Sans", sans-serif;
-  font-size: 1em;
-  line-height: 1.2em;
-  text-transform: lowercase;
-  font-style: italic;
-}
-.parismap-icon.wordeon .single .inner,
-.parismap-icon.wordeon .cluster .inner {
-  vertical-align: middle;
-  -webkit-transition: color 200ms;
-  -moz-transition: color 200ms;
-  -ms-transition: color 200ms;
-  -o-transition: color 200ms;
-  transition: color 200ms;
-  color: #6b6b6b;
-}
-.parismap-icon.wordeon .single .short,
-.parismap-icon.wordeon .cluster .short {
-  display: table-cell;
-}
-.parismap-icon.wordeon .single .long,
-.parismap-icon.wordeon .cluster .long {
+.parismap-icon.wordeon .wodon .bubble {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: white;
+  box-shadow: 1px 1px 4px gray;
+  border: 1px solid white;
+  border-radius: 10px;
   display: none;
 }
-.parismap-icon.wordeon .cluster .inner {
-  color: #BBA174;
+.parismap-icon.wordeon .wodon .wordfly {
+  position: absolute;
+  /*pointer-events: none;*/
+  left: 12px;
+  top: 7px;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 5px black;
 }
-.parismap-icon.wordeon .single:hover .inner {
-  color: darkred;
-}
-.parismap-icon.wordeon .single:hover .short {
+.parismap-icon.wordeon .wodon .popup {
+  position: absolute;
   display: none;
+  /*pointer-events: none;*/
+  top: 8px;
+  left: 8px;
+  text-align: left;
+  background: white;
+  padding: 9px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 30px gray;
+  font-size: 0.9em;
+  min-width: 200px;
 }
-.parismap-icon.wordeon .single:hover .long {
-  display: table-cell;
+.parismap-icon.wordeon .wodon .popup a {
+  font-style: none;
 }
+.parismap-icon.wordeon .wodon .popup a:hover {
+  color: gray;
+}
+.parismap-icon.wordeon .wodon .popup hr {
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 0;
+}
+.parismap-icon.wordeon .eutrack .bubble {
+  background: #ffffff;
+}
+.parismap-icon.wordeon .euword .bubble {
+  background: #ffffff;
+}
+.parismap-icon.wordeon .eulocs .bubble {
+  background: #ffffff;
+}
+.parismap-icon.wordeon .eusearch .bubble {
+  background: #ffffff;
+}
+.parismap-icon.wordeon:hover .popup {
+  display: inline-block;
+}
+.parismap-icon.wordeon:hover .bubble {
+  border: 1px solid black;
+  background: white;
+}
+/*.parismap-icon.wordeon {
+  border:none;
+  background: none;
+
+  .single, .cluster {
+    display: table;
+    width: 110px;
+    height: 90px;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+    font-size: 1em;
+    line-height: 1.2em;
+    text-transform: lowercase;
+    font-style: italic;
+    
+    .inner {
+      vertical-align: middle;
+      .transition(color, @delayicon);
+      color: rgb(107, 107, 107);
+    }
+    .short { display: table-cell; }
+    .long { display: none; }
+  }
+  .cluster {
+    .inner {
+      color: #BBA174; 
+    }
+  }
+  .single:hover {
+    .inner {
+      color: darkred;  
+    }
+    .short { display: none; }
+    .long { display: table-cell; }
+  }
+
+  .eutrack .inner { color:blue ;}
+  .euword .inner { color:red ;}
+  .eulocs .inner { color:green ;}
+  .eusearch .inner { color:yellow ;}
+}*/
 /*
   --------------------------
   EMI MARKERS (FILMs / PHOTOs)

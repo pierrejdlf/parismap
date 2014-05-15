@@ -7081,7 +7081,7 @@ function Ploufmap(options) {
         useServer: true,
         dev: false,
         serverUrl: "http://beta.parismappartient.fr",
-        throttleDelay:  1000,
+        throttleDelay:  1500,
         throttleCentererDelay:  100,
         clusterize:     true,
         zoomToBoundsOnClick: true,

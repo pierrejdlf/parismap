@@ -1,9 +1,12 @@
+
+"use strict";
+
 function Ploufmap(options) {
 
-    plo = {};
+    var plo = {};
 
     var defaults = {
-        map: "map", // map div id (carefull with css !)
+        mapid: "map", // default map div id (carefull with css !)
         eventSource: false,
         useServer: true,
         dev: false,
@@ -37,9 +40,6 @@ function Ploufmap(options) {
 
     plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
 
-    plo.w = $("body").width();
-    //plo.log("width:"+plo.w);
-
     // extend marker objects to store data for each (be careful to put here all what you need !)
     plo.Marker = L.Marker.extend({
         options : { // really need to peuplate options {} ? don't think so
@@ -52,31 +52,36 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.init = function() {
-      plo.initConfig(function(conf) {
-        plo.log(conf);
+        plo.initConfig(function(conf) {
 
-        plo.initMap();
-        plo.throttleFetch();
-        plo.fetchGeoJson();
+            plo.log(plo.config);
 
-        if(plo.config.eventSource)
-            var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;       
-      });
+            plo.initMap();
+            plo.throttleFetch();
+            plo.fetchGeoJson();
+
+            if(plo.config.eventSource)
+                var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;       
+        });
     };
 
     //////////////////////////////////////////////////////
     plo.initConfig = function(callb) {
-        if(plo.config.useServer) {
-            $.get( plo.config.serverUrl+"/config", function(response) {
-                // rather extend ?
-                plo.config.apis = response.apis;
-                plo.config.esHQ = response.esHQ;
-                plo.config.esChannel = response.esChannel;
-                callb(plo.config);
-            });
-        } else {
-            callb(plo.config);
-        }
+
+        callb();
+
+        // just in case we would like to call server at start
+        // if(plo.config.useServer) {
+        //     $.get( plo.config.serverUrl+"/config", function(response) {
+        //         // rather extend ?
+        //         plo.config.apis = response.apis;
+        //         plo.config.esHQ = response.esHQ;
+        //         plo.config.esChannel = response.esChannel;
+        //         callb(plo.config);
+        //     });
+        // } else {
+        //     callb(plo.config);
+        // }
     };
 
     window.onresize = function(event) {
@@ -335,7 +340,7 @@ function Ploufmap(options) {
         plo.log("We have layers:");
         plo.log(plo.layers);
 
-        plo.map = L.map(plo.config.map, _.defaults(plo.config.leaflet, {
+        plo.map = L.map(plo.config.mapid, _.defaults(plo.config.leaflet, {
             fullscreenControl: true,
             attributionControl: false,
             keyboard: false,
@@ -492,7 +497,7 @@ function Ploufmap(options) {
                             markertype: m, // icon type
                             geojson:    k, // url of the feed
                         };
-                        plo.addPlouf(p);  
+                        plo.addPlouf(p);
                     });
                 });
             }
