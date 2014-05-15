@@ -520,26 +520,28 @@ function Ploufmap(options) {
         };
 
         //plo.log(data);
-        $.post( plo.config.serverUrl+"/p/get", data, function(response) {
-            if(!_.isEmpty(response)) {
-                var data = JSON.parse(response);
-                //plo.log(Object.keys(data).length+" ploufs received !");
-                //plo.log(data);
-                _.each(data,function(p) {
-                    plo.already.push(p._id);
-                    p.markertype = plo.config.markers[p.ptype];
-                    try {
-                        //p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
-                        p.text = $('<div>'+p.text+'</div>').text();
-                    } catch(err) {
-                        p.text = "[error texting html]";
-                        plo.log("!! html>text error: "+err);
-                        plo.log(p);
-                    }
-                    plo.addPlouf(p);
-                });
-            }
-        });
+        $.post( plo.config.serverUrl+"/p/get", data, _.bind(this.handleResponse, this));
+    };
+
+    plo.handleResponse = function(response) {
+        if(!_.isEmpty(response)) {
+            var data = JSON.parse(response);
+            //plo.log(Object.keys(data).length+" ploufs received !");
+            //plo.log(data);
+            _.each(data,function(p) {
+                plo.already.push(p._id);
+                p.markertype = plo.config.markers[p.ptype];
+                try {
+                    //p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
+                    p.text = $('<div>'+p.text+'</div>').text();
+                } catch(err) {
+                    p.text = "[error texting html]";
+                    plo.log("!! html>text error: "+err);
+                    plo.log(p);
+                }
+                plo.addPlouf(p);
+            });
+        }
     };
 
     //////////////////////////////////////////////////////
