@@ -175,7 +175,7 @@ function Ploufmap(options) {
         if(temp) {
             var t = plo.getTransform(e);
             var tmap = plo.getTransform($(".leaflet-map-pane"));
-            if(t) {
+            if(t && tmap && t.length+tmap.length>=4) {
                 var pad = 0;
                 var x = -t[0]-tmap[0]+pad,
                     y = -t[1]-tmap[1]+pad,
@@ -216,7 +216,7 @@ function Ploufmap(options) {
             obj.css("transform");
         if(matrix) {
             var values = matrix.match(/translate3d\(([-\d]*)px[, ]*([-\d]*)px/);
-            values.shift();
+            if(values && values.length) values.shift();
             return values;
         } else 
             return null;
