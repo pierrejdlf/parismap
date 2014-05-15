@@ -7071,12 +7071,15 @@ L.Control.Fullscreen=L.Control.extend({options:{position:"topleft",title:{"false
 }).call(this);
 
 
+
+"use strict";
+
 function Ploufmap(options) {
 
-    plo = {};
+    var plo = {};
 
     var defaults = {
-        map: "map", // map div id (carefull with css !)
+        mapid: "map", // default map div id (carefull with css !)
         eventSource: false,
         useServer: true,
         dev: false,
@@ -7110,9 +7113,6 @@ function Ploufmap(options) {
 
     plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
 
-    plo.w = $("body").width();
-    //plo.log("width:"+plo.w);
-
     // extend marker objects to store data for each (be careful to put here all what you need !)
     plo.Marker = L.Marker.extend({
         options : { // really need to peuplate options {} ? don't think so
@@ -7125,31 +7125,36 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.init = function() {
-      plo.initConfig(function(conf) {
-        plo.log(conf);
+        plo.initConfig(function(conf) {
 
-        plo.initMap();
-        plo.throttleFetch();
-        plo.fetchGeoJson();
+            plo.log(plo.config);
 
-        if(plo.config.eventSource)
-            var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;       
-      });
+            plo.initMap();
+            plo.throttleFetch();
+            plo.fetchGeoJson();
+
+            if(plo.config.eventSource)
+                var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;       
+        });
     };
 
     //////////////////////////////////////////////////////
     plo.initConfig = function(callb) {
-        if(plo.config.useServer) {
-            $.get( plo.config.serverUrl+"/config", function(response) {
-                // rather extend ?
-                plo.config.apis = response.apis;
-                plo.config.esHQ = response.esHQ;
-                plo.config.esChannel = response.esChannel;
-                callb(plo.config);
-            });
-        } else {
-            callb(plo.config);
-        }
+
+        callb();
+
+        // just in case we would like to call server at start
+        // if(plo.config.useServer) {
+        //     $.get( plo.config.serverUrl+"/config", function(response) {
+        //         // rather extend ?
+        //         plo.config.apis = response.apis;
+        //         plo.config.esHQ = response.esHQ;
+        //         plo.config.esChannel = response.esChannel;
+        //         callb(plo.config);
+        //     });
+        // } else {
+        //     callb(plo.config);
+        // }
     };
 
     window.onresize = function(event) {
@@ -7262,7 +7267,7 @@ function Ploufmap(options) {
         }
 
         plo.setMarkerStatus(plo.current,"opened");
-        plo.log("current showed.");
+        //plo.log("current showed.");
     };
     //////////////////////////////////////////////////////
     plo.setTransform = function(obj,val) {
@@ -7405,15 +7410,16 @@ function Ploufmap(options) {
         //plo.log(plo.layers);
         //plo.log("groupedOverlays:",groupedOverlays);
 
-        plo.log("We have layers:");
+        plo.log("On mapid: "+plo.config.mapid+", we have layers:");
         plo.log(plo.layers);
 
-        plo.map = L.map(plo.config.map, _.defaults(plo.config.leaflet, {
+        plo.config.leaflet.layers = [baseLayer].concat(_.values(plo.layers));
+
+        plo.map = L.map(plo.config.mapid, _.defaults(plo.config.leaflet, {
             fullscreenControl: true,
             attributionControl: false,
             keyboard: false,
             icons: plo.config.icons,
-            layers: [baseLayer].concat(_.values(plo.layers))
         }));
 
         // optional control to select visible layers
@@ -7426,33 +7432,33 @@ function Ploufmap(options) {
             plo.log("! map clicked");
         });
         plo.map.on('mousedown', function(e) {
-            plo.log("! mousedown");
+            //plo.log("! mousedown");
             $('body').addClass("mousedown");
         });
         plo.map.on('mouseup', function(e) {
-            plo.log("! mouseup");
+            //plo.log("! mouseup");
             $('body').removeClass("mousedown");
         });
         plo.map.on('move', function(e) {
-            plo.log("! moving");
+            //plo.log("! moving");
             if(plo.config.focusOnMove) plo.updateFocusedThrottled();
             //plo.throttleFetch();
         });
         plo.map.on('moveend', function(e) {
-            plo.log("! movedEnd");
+            //plo.log("! movedEnd");
             plo.current && plo.showCurrent();
             plo.throttleFetch();
         });
         plo.map.on("zoomstart", function(e) {
-            plo.log("! zoomstart");
+            //plo.log("! zoomstart");
         });
         plo.map.on("zoomend", function(e) {
-            plo.log("! zoomend");
+            //plo.log("! zoomend");
             //plo.updateFocused();
             //plo.showCurrent();
         });
         plo.map.on('dragstart', function(e) {
-            plo.log("! dragstart");
+            //plo.log("! dragstart");
         });
 
 
@@ -7554,7 +7560,7 @@ function Ploufmap(options) {
             if(/^http/.test(k)) {
                 plo.log("Adding geojson feed: "+k);
                 $.get(k, function(response) {
-                    console.log("Processing",response.features.length,"ploufs");
+                    console.log("Processing",response.features.length,"ploufs on Ploufmap: "+plo.config.mapid);
                     _.each(response.features, function(d) {
                         var p = {
                             lat:        d.geometry.coordinates[1],
@@ -7565,9 +7571,9 @@ function Ploufmap(options) {
                             markertype: m, // icon type
                             geojson:    k, // url of the feed
                         };
-                        plo.addPlouf(p);  
+                        plo.addPlouf(p);
                     });
-                });
+                },"json");
             }
         });
     };
@@ -7588,10 +7594,9 @@ function Ploufmap(options) {
         };
 
         //plo.log(data);
-        $.post( plo.config.serverUrl+"/p/get", data, function(response) {
-            if(!_.isEmpty(response)) {
-                var data = JSON.parse(response);
-                //plo.log(Object.keys(data).length+" ploufs received !");
+        $.post( plo.config.serverUrl+"/p/get", data, function(data) {
+            if(!_.isEmpty(data)) {
+                //plo.log(Object.keys(data).length+" ploufs received from server on mapid: "+plo.config.mapid);
                 //plo.log(data);
                 _.each(data,function(p) {
                     plo.already.push(p._id);
@@ -7607,7 +7612,7 @@ function Ploufmap(options) {
                     plo.addPlouf(p);  
                 });
             }
-        });
+        }, "json");
     };
 
     //////////////////////////////////////////////////////

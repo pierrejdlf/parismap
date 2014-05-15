@@ -194,7 +194,7 @@ function Ploufmap(options) {
         }
 
         plo.setMarkerStatus(plo.current,"opened");
-        plo.log("current showed.");
+        //plo.log("current showed.");
     };
     //////////////////////////////////////////////////////
     plo.setTransform = function(obj,val) {
@@ -500,7 +500,7 @@ function Ploufmap(options) {
                         };
                         plo.addPlouf(p);
                     });
-                });
+                },"json");
             }
         });
     };
@@ -521,10 +521,9 @@ function Ploufmap(options) {
         };
 
         //plo.log(data);
-        $.post( plo.config.serverUrl+"/p/get", data, function(response) {
-            if(!_.isEmpty(response)) {
-                var data = JSON.parse(response);
-                plo.log(Object.keys(data).length+" ploufs received from server on mapid: "+plo.config.mapid);
+        $.post( plo.config.serverUrl+"/p/get", data, function(data) {
+            if(!_.isEmpty(data)) {
+                //plo.log(Object.keys(data).length+" ploufs received from server on mapid: "+plo.config.mapid);
                 //plo.log(data);
                 _.each(data,function(p) {
                     plo.already.push(p._id);
@@ -540,7 +539,7 @@ function Ploufmap(options) {
                     plo.addPlouf(p);  
                 });
             }
-        });
+        }, "json");
     };
 
     //////////////////////////////////////////////////////

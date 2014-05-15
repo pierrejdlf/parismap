@@ -47,11 +47,11 @@ $(function(){
 
   //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {styleId: 999,   attribution: cloudmadeAttribution}),
   var cloudmadeAttribution = 'MD &copy;2011 OSM contribs, Img &copy;2011 CloudMade';
-  var configs = {};
+  var cf = {};
 
 
   ////////////////////////////////////////////
-  configs['parisevents'] = {
+  cf['parisevents'] = {
     serverUrl: "//490512b42b.url-de-test.ws",
     //serverUrl: "//localhost:8080",
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
@@ -86,7 +86,7 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  configs['twitter'] = {
+  cf['twitter'] = {
     useServer: false,
     clusterize: false,
     /*maxClusterRadius: 40,
@@ -134,7 +134,7 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  configs['europewords'] = {
+  cf['europewords'] = {
     clusterize: false,
     maxClusterRadius: 50,
     serverUrl: "//490512b42b.url-de-test.ws",
@@ -148,15 +148,6 @@ $(function(){
       //scrollWheelZoom: false,
       fullscreenControl: false,
       maxBounds: L.latLngBounds( L.latLng(34.0162,-11.6015),L.latLng(62.6741,40.9570) )
-    },
-    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.i87kbj5g/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
-    //baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
-    markers: {
-      'tweet_eutrack': 'wordeon',
-      'tweet_euword': 'wordeon',
-      'tweet_eusearch': 'wordeon',
-      'tweet_eulocs': 'wordeon',
-      //'https://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
     },
     // preprocess ploufdata at fetch ! (to only do it once !)
     preplouf: function(p) {
@@ -250,18 +241,40 @@ $(function(){
     }
   };
 
+  console.log(cf['europewords']);
+
+  cf['europewords_films'] = _.extend({
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
+    markers: {
+      'http://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
+    },
+  }, cf['europewords']);
+  console.log(cf['europewords_films']);
+
+  cf['europewords_tweets'] = _.extend({
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.i87kbj5g/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
+    markers: {
+      'tweet_eutrack': 'wordeon',
+      'tweet_euword': 'wordeon',
+      'tweet_eusearch': 'wordeon',
+      'tweet_eulocs': 'wordeon',
+    },
+  }, cf['europewords']);
+  
+
 
   ////////////////////////////////////////////
   // which config to load ?
-  var options = {};
-  if(window.location.hash=='#msg')
-    options = configs['twitter'];
-  else if(window.location.hash=='#emi')
-    options = configs['europewords'];
-  else
-    options = configs['parisevents'];
+  // var options = {};
+  // if(window.location.hash=='#msg')
+  //   options = cf['twitter'];
+  // else if(window.location.hash=='#emi')
+  //   options = cf['europewords'];
+  // else
+  //   options = cf['parisevents'];
   ////////////////////////////////////////////
 
-  var p = Ploufmap(options);  
-
+  pp = new Ploufmap(_.extend({mapid:"mapleft"}, cf['europewords_films'] ));
+  qq = new Ploufmap(_.extend({mapid:"mapright"}, cf['europewords_tweets'] ));
+  
 });
