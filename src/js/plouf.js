@@ -35,7 +35,7 @@ function Ploufmap(options) {
     plo.log = function(str) { if(plo.config.log) console.log(str); };
 
     plo.map = null;
-    
+
     plo.current = null;
 
     plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
@@ -61,7 +61,7 @@ function Ploufmap(options) {
             plo.fetchGeoJson();
 
             if(plo.config.eventSource)
-                var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;       
+                var es = plo.config.esHQ ? plo.initEventSourceHQ() : plo.initEventSource() ;
         });
     };
 
@@ -145,7 +145,7 @@ function Ploufmap(options) {
                         return c;
                     });
                     neighbors = neighbors.concat(children);
-                } else 
+                } else
                     neighbors.push(e);
                 // now we have an array with all the neighbors markers
                 // (keeping memory of the parentMarker(s) if there is) !
@@ -190,7 +190,7 @@ function Ploufmap(options) {
                     });
             }
         } else {
-            plo.log("no template.");    
+            plo.log("no template.");
         }
 
         plo.setMarkerStatus(plo.current,"opened");
@@ -201,8 +201,8 @@ function Ploufmap(options) {
         obj.css({
             "-webkit-transform": val,
             "-moz-transform": val,
-            "-ms-transform": val, 
-            "-o-transform": val,  
+            "-ms-transform": val,
+            "-o-transform": val,
             "transform": val,
         });
         return obj;
@@ -218,7 +218,7 @@ function Ploufmap(options) {
             var values = matrix.match(/translate3d\(([-\d]*)px[, ]*([-\d]*)px/);
             values.shift();
             return values;
-        } else 
+        } else
             return null;
     };
     //////////////////////////////////////////////////////
@@ -234,7 +234,7 @@ function Ploufmap(options) {
             $(m._icon)
                 .addClass(status)
                 .css("z-index", 800);
-        } else 
+        } else
             plo.log("ERROR: no marker to set status.");
     };
 
@@ -248,7 +248,7 @@ function Ploufmap(options) {
         plo.map.setView(marker._latlng);
 
         plo.current = marker;
-        
+
         //plo.updateFocused();
         //plo.map.panTo(plo.current.ploufdata);
     };
@@ -261,7 +261,7 @@ function Ploufmap(options) {
 
     //////////////////////////////////////////////////////
     plo.initMap = function() {
-        var baseLayer = plo.config.baseLayer;    
+        var baseLayer = plo.config.baseLayer;
 
         // NB: following can help you build different marker/base layers
 
@@ -279,11 +279,11 @@ function Ploufmap(options) {
                     //animateAddingMarkers:true, // default true
 
                     // If set, at this zoom level and below markers will not be clustered.
-                    //disableClusteringAtZoom: 10, 
-                    
+                    //disableClusteringAtZoom: 10,
+
                     // Default 80px. Decreasing will make more smaller clusters. You can also use a function
-                    maxClusterRadius: plo.config.maxClusterRadius, 
-                    
+                    maxClusterRadius: plo.config.maxClusterRadius,
+
                     //polygonOptions: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster
 
                     // If set to true, overrides the icon for all added markers to make them appear as a 1 size cluster
@@ -307,7 +307,7 @@ function Ploufmap(options) {
             } else {
                 markerLayer = new L.LayerGroup();
             }
-            
+
             // if clusterization, we need to set click events here
             if(plo.config.clusterize) {
                 // click events
@@ -445,7 +445,7 @@ function Ploufmap(options) {
         var markLayer = plo.getMarkerLayer(p);
         var i = plo.getIcon(p)(p);
         var ltln = new L.LatLng(p.lat, p.lng);
-        
+
         // ! no need to check if already here, cause we now fetch with a "ya-here-blacklisted-ids"
         //var f = _.find(markLayer._layers, function(e){ return e.ploufdata.pid == p.pid; });
         var f = false;
@@ -460,7 +460,7 @@ function Ploufmap(options) {
             newM.ploufdata = _.extend(p,{
                 seen: 'no'
             });
-            
+
             // we used to set listener here, but better to plug it on layer creation
             // todo: verify it works with new added markers ?
             newM.on('click', function(ev) {
@@ -536,7 +536,7 @@ function Ploufmap(options) {
                         plo.log("!! html>text error: "+err);
                         plo.log(p);
                     }
-                    plo.addPlouf(p);  
+                    plo.addPlouf(p);
                 });
             }
         });
@@ -573,12 +573,12 @@ function Ploufmap(options) {
             // }
         };
     };
-    
+
     //////////////////////////////////////////////////////
     // special if heroku server
     plo.initEventSourceHQ = function() {
       var source = new ESHQ(plo.config.esChannel,{auth_url: plo.config.serverUrl+'/riviere-de-ploufs-hq'});
-      
+
       source.onopen = function(e) {
         plo.log(" ... ESHQ connexion ok");
         // callback called when the connection is made
@@ -600,7 +600,7 @@ function Ploufmap(options) {
         plo.addPlouf(newdata);
       });
     };
-    
+
     //////////////////////////////////////////////////////
     // will POST down/up vote and swipe to next
     plo.voteAndSwipe = function(vote) {
@@ -646,10 +646,10 @@ function Ploufmap(options) {
     document.onkeydown = function(e) {
       if(43==23) {
         if (e.keyCode == '38') { // up arrow
-          plo.voteAndSwipe(false);   
+          plo.voteAndSwipe(false);
         }
         else if (e.keyCode == '40') { // down arrow
-          plo.voteAndSwipe(true);   
+          plo.voteAndSwipe(true);
         }
       }
     };
@@ -657,4 +657,3 @@ function Ploufmap(options) {
     plo.init();
     return plo;
 }
-
