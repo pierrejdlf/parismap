@@ -137,8 +137,8 @@ $(function(){
   cf['europewords'] = {
     clusterize: false,
     maxClusterRadius: 50,
-    serverUrl: "//490512b42b.url-de-test.ws",
-    //serverUrl: "//localhost:8080",
+    //serverUrl: "//490512b42b.url-de-test.ws",
+    serverUrl: "//localhost:8080",
     leaflet: {
       center: L.latLng(48.810236,16.331055),
       zoom: 5,

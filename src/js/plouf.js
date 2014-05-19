@@ -38,7 +38,8 @@ function Ploufmap(options) {
     
     plo.current = null;
 
-    plo.already = []; // will store list of already fetched plouf ids, (to avoid asking always !)
+    // to store list of already fetched (or blacklisted) plouf ids, (to avoid asking always !)
+    plo.already = plo.config.blacklisted ? plo.config.blacklisted : []; 
 
     // extend marker objects to store data for each (be careful to put here all what you need !)
     plo.Marker = L.Marker.extend({
@@ -526,7 +527,7 @@ function Ploufmap(options) {
                 //plo.log(Object.keys(data).length+" ploufs received from server on mapid: "+plo.config.mapid);
                 //plo.log(data);
                 _.each(data,function(p) {
-                    plo.already.push(p._id);
+                    plo.already.push(p.pid);
                     p.markertype = plo.config.markers[p.ptype];
                     try {
                         //p.text = plo.truncate($('<div>'+p.text+'</div>').text(),90);
