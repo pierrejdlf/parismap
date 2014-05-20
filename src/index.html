@@ -74,11 +74,6 @@
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css"/>
     <link rel="stylesheet" type="text/css" href="./css/parismap.css"/>
 
-    <script>
-    var pp = null,
-        qq = null;
-
-    </script>
 
 <!-- @endif -->
 
@@ -106,7 +101,7 @@
           position:absolute;
           left:0px;
           top:0px;
-          width:50%;
+          width:100%;
           height:100%;
           overflow:hidden;
         }
@@ -123,8 +118,9 @@
 
     <body>
         <div class="container">
-            <div id="mapleft" class="map"></div>
-            <div id="mapright" class="map"></div>
+            <div id="map" class="map"></div>
+            <!-- <div id="mapleft" class="map"></div>
+            <div id="mapright" class="map"></div> -->
         </div>
 
         <script id="evt-template" type="text/x-handlebars-template">
