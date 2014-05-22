@@ -70,6 +70,13 @@
       top: 7px;
       color: #FFFFFF;
       text-shadow: 1px 1px 5px black;
+      line-height: 13px;
+      &.normal {
+        color: lightblue;
+      }
+      &.cluster {
+        color: lightgray;
+      }
     }
     .popup {
       position: absolute;
@@ -85,6 +92,9 @@
       box-shadow: 2px 2px 30px gray;
       font-size: 0.9em;
       min-width: 200px;
+      &.cluster {
+        display: none;
+      }
       a {
         font-style: none;
         &:hover {

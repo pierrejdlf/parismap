@@ -93,7 +93,7 @@ $(function(){
     clusterize: false,
     /*maxClusterRadius: 40,
     zoomToBoundsOnClick: false,*/
-    focusOnMove: true,
+    //focusOnMove: true,
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
     markers: {
         //"tweet_parisCenter": 'msg',
@@ -140,19 +140,20 @@ $(function(){
     serverUrl: "//localhost:8080",
     useServer: false,
     clusterize: true,
-    /*maxClusterRadius: 40,
-    zoomToBoundsOnClick: false,*/
+    limit: 500,
+    maxClusterRadius: 40,
+    //zoomToBoundsOnClick: false,
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
     markers: {
         "tweet_parisCenter": 'msg',
     },
     icons: {
       msg: function(p,clustCount) {
-        var cla = "word";
+        var cla = "normal";
         if(clustCount>1)
-          cla += " cluster";
+          cla = "cluster";
 
-        p.thewords = p.words.slice(0,2).join(" ");
+        p.thewords = p.words.slice(0,3).join(" ");
         // if you need word cloud (?)
         // var concat = _.map(children, function(c) {
         //   return c.ploufdata.title;
@@ -165,8 +166,8 @@ $(function(){
           html: Handlebars.compile(
             "<div class='wodon "+p.ptype.split("_")[1]+"'>"+
               "<div class='bubble'></div>"+
-              "<div class='wordfly twitted'>{{thewords}}</div>"+
-              "<div class='popup'><a href='{{link}}' target='_blank'>@{{user.id}}</a><hr>{{text}}</div>"+
+              "<div class='wordfly "+cla+"' style='text-align:center;'>{{thewords}}</div>"+
+              "<div class='popup "+cla+"'><a href='{{link}}' target='_blank'>@{{user.id}}</a><hr>{{text}}</div>"+
             "</div>"
           )(p),
           popupAnchor:  [0, 0],
