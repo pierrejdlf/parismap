@@ -52,7 +52,7 @@ $(function(){
 
   ////////////////////////////////////////////
   cf['parisevents'] = {
-    serverUrl: "//api.europemovingimage.eu",
+    serverUrl: /localhost/.test(window.location) ? "//localhost:8080" : "//api.europemovingimage.eu",
     //serverUrl: "//490512b42b.url-de-test.ws",
     //serverUrl: "//localhost:8080",
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
@@ -68,12 +68,18 @@ $(function(){
         "event_linternaute": 'evt'
     },
     icons: {
-      evt: function(p,clustCount) {
+      evt: function(p,clustCount,children) {
         p.cluster = clustCount>1;
         p.css = "point "+(p.cluster ? "cluster" : "normal");
         p.icon = EVENT_ICONS[p.ptype];
         p.timestr = moment(p.date.start).format("HH[h]mm").replace(/h00$/,"h").replace(/^0/,"");
         //var cclass = moment(p.date.start).format("[h]HH [m]mm");
+
+        var concat = _.map(children, function(c) {
+          return c.ploufdata.title;
+        }).join(" ").match(/[\w]{5,}/g);
+        p.wordcloud = concat ? concat.slice(0,2).join(" ").toLowerCase() : "" ;
+
         return L.divIcon({
           iconSize:     [0, 0],
           //iconAnchor:   [0, 0], / centered by default if size is specified !
