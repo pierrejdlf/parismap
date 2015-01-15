@@ -35,13 +35,13 @@ module.exports = function(grunt) {
       },
       build_css: {
         src: [
-          'src/vendor/leaflet/leaflet.css',
-          'src/vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
-          'src/vendor/leaflet.fullscreen/carte/leaflet.fullscreen.css',
+          'src/vendor/leaflet/dist/leaflet.css',
+          'src/vendor/leaflet.locatecontrol/dist/L.Control.Locate.css',
+          'src/vendor/leaflet.fullscreen/dist/leaflet.fullscreen.css',
           'src/vendor/font-awesome/css/font-awesome.css',
           'src/css/*.css'
         ],
-        dest: 'carte/css/<%= pkg.name %>.css'
+        dest: 'carte/css/<%= pkg.name %>.min.css'
       },
       dist: {
         src: [
@@ -50,9 +50,9 @@ module.exports = function(grunt) {
           'src/vendor/zepto/src/event.js',
           'src/vendor/zepto/src/ajax.js',
           'src/vendor/handlebars/handlebars.js',
-          'src/vendor/leaflet/leaflet.js',
+          'src/vendor/leaflet/dist/leaflet.js',
           'src/vendor/leaflet.bouncemarker/bouncemarker.js',
-          'src/vendor/leaflet.locatecontrol/src/L.Control.Locate.js',
+          'src/vendor/leaflet.locatecontrol/dist/L.Control.Locate.min.js',
           'src/vendor/leaflet.markercluster/dist/leaflet.markercluster.js',
           'src/vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.min.js',
           'src/vendor/moment/moment.js',

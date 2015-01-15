@@ -52,7 +52,8 @@ $(function(){
 
   ////////////////////////////////////////////
   cf['parisevents'] = {
-    serverUrl: "//490512b42b.url-de-test.ws",
+    serverUrl: /localhost/.test(window.location) ? "//localhost:8080" : "//api.europemovingimage.eu",
+    //serverUrl: "//490512b42b.url-de-test.ws",
     //serverUrl: "//localhost:8080",
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-zvhmz6wx/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // normal paris
     markers: {
@@ -67,12 +68,18 @@ $(function(){
         "event_linternaute": 'evt'
     },
     icons: {
-      evt: function(p,clustCount) {
+      evt: function(p,clustCount,children) {
         p.cluster = clustCount>1;
         p.css = "point "+(p.cluster ? "cluster" : "normal");
         p.icon = EVENT_ICONS[p.ptype];
         p.timestr = moment(p.date.start).format("HH[h]mm").replace(/h00$/,"h").replace(/^0/,"");
         //var cclass = moment(p.date.start).format("[h]HH [m]mm");
+
+        var concat = _.map(children, function(c) {
+          return c.ploufdata.title;
+        }).join(" ").match(/[\w]{5,}/g);
+        p.wordcloud = concat ? concat.slice(0,2).join(" ").toLowerCase() : "" ;
+
         return L.divIcon({
           iconSize:     [0, 0],
           //iconAnchor:   [0, 0], / centered by default if size is specified !
@@ -86,19 +93,20 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  cf['twitter'] = {
+  cf['cdlm'] = {
+    serverUrl: "//localhost:8080",
     useServer: false,
     clusterize: false,
     /*maxClusterRadius: 40,
     zoomToBoundsOnClick: false,*/
-    focusOnMove: true,
+    //focusOnMove: true,
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
     markers: {
-        "tweet": 'msg',
+        //"tweet_parisCenter": 'msg',
         "cdlm": 'msg',
-        "geolocate.csv": 'msg',
-        "sample.csv": 'msg',
-        "story.csv": 'msg',
+        //"geolocate.csv": 'msg',
+        //"sample.csv": 'msg',
+        //"story.csv": 'msg',
     },
     icons: {
       msg: function(p,clustCount) {
@@ -133,12 +141,56 @@ $(function(){
   };
 
 
+    ////////////////////////////////////////////
+  cf['twitter'] = {
+    serverUrl: "//localhost:8080",
+    useServer: false,
+    clusterize: true,
+    limit: 500,
+    maxClusterRadius: 40,
+    //zoomToBoundsOnClick: false,
+    baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.map-qgm940aa/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // black
+    markers: {
+        "tweet_parisCenter": 'msg',
+    },
+    icons: {
+      msg: function(p,clustCount) {
+        var cla = "normal";
+        if(clustCount>1)
+          cla = "cluster";
+
+        p.thewords = p.words.slice(0,3).join(" ");
+        // if you need word cloud (?)
+        // var concat = _.map(children, function(c) {
+        //   return c.ploufdata.title;
+        // }).join(" ").match(/[\w]{5,}/g);
+        // p.wordcloud = concat ? concat.slice(0,2).join(" ").toLowerCase() : "" ;
+
+        return L.divIcon({
+          iconAnchor:   [0, 0],
+          iconSize:     [0, 0],
+          html: Handlebars.compile(
+            "<div class='wodon "+p.ptype.split("_")[1]+"'>"+
+              "<div class='bubble'></div>"+
+              "<div class='wordfly "+cla+"' style='text-align:center;'>{{thewords}}</div>"+
+              "<div class='popup "+cla+"'><a href='{{link}}' target='_blank'>@{{user.id}}</a><hr>{{text}}</div>"+
+            "</div>"
+          )(p),
+          popupAnchor:  [0, 0],
+          className: clustCount>1 ? "parismap-icon wordeon back" : "parismap-icon wordeon front"
+        });
+      },
+    }
+  };
+
+
   ////////////////////////////////////////////
   cf['europewords'] = {
     clusterize: false,
     maxClusterRadius: 50,
+    serverUrl: "//api.europemovingimage.eu",
     //serverUrl: "//490512b42b.url-de-test.ws",
-    serverUrl: "//localhost:8080",
+    //serverUrl: "//localhost:8080",
     leaflet: {
       center: L.latLng(48.810236,16.331055),
       zoom: 5,
@@ -241,17 +293,18 @@ $(function(){
     }
   };
 
-  console.log(cf['europewords']);
 
-  cf['europewords_films'] = _.extend({
+
+  cf['emi_films'] = _.extend({
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.hflfi81j/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
       'http://a.tiles.mapbox.com/v3/minut.hflfi81j/markers.geojson':'emi',
     },
   }, cf['europewords']);
-  console.log(cf['europewords_films']);
 
-  cf['europewords_tweets'] = _.extend({
+
+
+  cf['emi_tweets'] = _.extend({
     baseLayer: L.tileLayer('http://a.tiles.mapbox.com/v3/minut.i87kbj5g/{z}/{x}/{y}.jpg70', {styleId: 22677, attribution: cloudmadeAttribution}), // whole europe
     markers: {
       'tweet_eutrack': 'wordeon',
@@ -264,17 +317,15 @@ $(function(){
 
 
   ////////////////////////////////////////////
-  // which config to load ?
-  // var options = {};
-  // if(window.location.hash=='#msg')
-  //   options = cf['twitter'];
-  // else if(window.location.hash=='#emi')
-  //   options = cf['europewords'];
-  // else
-  //   options = cf['parisevents'];
+  // which config to load ? based on hash
+  var options = {};
+  if(window.location.hash!='')
+    options = cf[window.location.hash.replace("#","")];
+  else
+    options = cf['parisevents'];
   ////////////////////////////////////////////
 
-  pp = new Ploufmap(_.extend({mapid:"mapleft"}, cf['europewords_films'] ));
-  qq = new Ploufmap(_.extend({mapid:"mapright"}, cf['europewords_tweets'] ));
+
+  var pp = new Ploufmap(options);
   
 });

@@ -1,4 +1,5 @@
 # Parismap client
+
 ## States
 
 each mouse interaction state updates the marker class

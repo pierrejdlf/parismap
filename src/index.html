@@ -36,8 +36,8 @@
     <script type="text/javascript" src="vendor/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
     <script type="text/javascript" src="vendor/leaflet.bouncemarker/bouncemarker.js"></script>
-    <script type="text/javascript" src="vendor/leaflet.locatecontrol/src/L.Control.Locate.js"></script>
-    <link rel="stylesheet" type="text/css" href="vendor/leaflet.locatecontrol/src/L.Control.Locate.css"/>
+    <script type="text/javascript" src="vendor/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="vendor/leaflet.locatecontrol/dist/L.Control.Locate.css"/>
 
     <script type="text/javascript" src="vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.min.js"></script>
     <link rel="stylesheet" type="text/css" href="vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.css"/>
@@ -61,7 +61,7 @@
     <link rel="stylesheet/less" type="text/css" href="./css/style.less" />
     <link rel="stylesheet/less" type="text/css" href="./css/emi.less" />
 
-    <script type="text/javascript" src="vendor/less/dist/less-1.6.2.min.js"></script>
+    <script type="text/javascript" src="vendor/less/dist/less.min.js"></script>
 
 
 <!-- @endif -->
@@ -72,7 +72,7 @@
 
     <script type="text/javascript" src="js/parismap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="css/parismap.css"/>
+    <link rel="stylesheet" type="text/css" href="css/parismap.min.css"/>
 
 
 <!-- @endif -->
@@ -118,11 +118,15 @@
 
     <body>
         <div class="container">
+
             <div id="map" class="map"></div>
             <!-- <div id="mapleft" class="map"></div>
             <div id="mapright" class="map"></div> -->
+
         </div>
 
+
+        <!-- MARKER TEMPLATE -->
         <script id="evt-template" type="text/x-handlebars-template">
             <div class='{{css}}'>
 
@@ -144,6 +148,7 @@
             </div>
         </script>
 
+        <!-- MARKER TEMPLATE -->
         <script id="emi-template" type="text/x-handlebars-template">
             <div class="skull hint--bottom" data-hint="click to watch the film !">
 
