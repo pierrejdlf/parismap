@@ -10,7 +10,7 @@ function Ploufmap(options) {
         eventSource: false,
         useServer: true,
         dev: false,
-        serverUrl: "http://beta.parismappartient.fr",
+        serverUrl: "//beta.parismappartient.fr",
         throttleDelay:  1500,
         throttleCentererDelay:  100,
         clusterize:     true,
@@ -125,6 +125,7 @@ function Ploufmap(options) {
         plo.current = plo.getClosestMarker( plo.map.getCenter() );
         plo.setMarkerStatus(plo.current,"focused");
     };
+
     // get nearest marker in any layer
     plo.getClosestMarker = function(latlng) {
         var md = null,
@@ -521,6 +522,9 @@ function Ploufmap(options) {
             //screen: [$(document).width(),$(document).height()]
         };
 
+        if(plo.config.limit)
+            data.limit = plo.config.limit;
+        
         //plo.log(data);
         $.post( plo.config.serverUrl+"/p/get", data, function(data) {
             if(!_.isEmpty(data)) {
