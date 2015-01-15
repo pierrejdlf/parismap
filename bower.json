@@ -9,7 +9,7 @@
     "underscore": "1.5.2",
     "swiper": "latest",
     "eshq": "http://app.eventsourcehq.com/es.js",
-    "leaflet": "http://leaflet-cdn.s3.amazonaws.com/build/leaflet-0.7.zip",
+    "leaflet": "0.7.3",
     "leaflet.markercluster": "latest",
     "leaflet.bouncemarker": "https://github.com/maximeh/leaflet.bouncemarker/archive/master.zip",
     "leaflet.locatecontrol": "https://github.com/domoritz/leaflet-locatecontrol/archive/gh-pages.zip",

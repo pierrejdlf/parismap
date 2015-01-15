@@ -1,0 +1,103 @@
+/*        @media only screen and (max-width : 600px) {
+          .text {
+            font-size: 1.4em;
+            padding: 10px;
+          }
+        }*/
+
+      /*
+      @colclusterfocused: rgba(138, 138, 182, 0.55);
+      background: -webkit-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: -o-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: -moz-radial-gradient(colclusterfocused 2%, transparent 75%);
+      background: radial-gradient(colclusterfocused 2%, transparent 75%);
+      */
+      
+    .clock-container {
+      position: absolute;
+    }
+    .clock {
+      z-index: 5;
+      @clock: 20px;
+      content: '';
+      width: @clock;
+      height: @clock;
+      border: 2px solid white;
+      display: inline-block;
+      .borderradius(16px);
+      position: relative;
+      &:after {
+        z-index: 2;
+        content: '';
+        position: absolute;
+        top: @clock / 2;
+        left: @clock / 2;
+        width: @clock / 2 - 3;
+        height: 2px;
+        background: lightgray;
+        display: inline-block;
+        /*transform: rotate(190deg);
+        transform-origin: 0 0.25em;
+        -ms-transform: rotate(190deg);
+        -ms-transform-origin:0 0.25em;*/
+        -webkit-transform-origin:0 0px;
+        /*-webkit-transform: rotate(10deg);*/
+      }
+      &.h6:after { -webkit-transform: rotate(180deg); }
+      &.h7:after { -webkit-transform: rotate(210deg); }
+      &.h8:after { -webkit-transform: rotate(240deg); }
+      &.h9:after { -webkit-transform: rotate(270deg); }
+
+      &:before {
+        z-index: 2;
+        content: '';
+        position: absolute;
+        top: @clock / 2;
+        left: @clock / 2;
+        width: @clock / 2 - 1;
+        height: 1px;
+        background: white;
+        display: inline-block;
+        -webkit-transform-origin:0 0px;
+        -webkit-transform: rotate(0deg);
+      }
+      &.m15:before { -webkit-transform: rotate(90deg); }
+      &.m30:before { -webkit-transform: rotate(180deg); }
+      &.m45:before { -webkit-transform: rotate(270deg); }
+    }
+
+    /* see http://stackoverflow.com/questions/13059190/html5-css3-circle-with-partial-border
+     TO MAKE 30 min 1h 2h 5h delay next event as a circle arc */
+
+    .arc {
+      z-index: 7;
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      width: 24px;
+      height: 24px;
+      .borderradius(100%);
+      border: 2px solid;
+    }
+    @colarc: white;
+    @ang1: -70deg;
+    @ang2: 60deg;
+    .arc_start {
+      border-color:transparent @colarc @colarc @colarc;
+      -webkit-transform: rotate(@ang1);
+      -moz-transform: rotate(@ang1);
+      -ms-transform: rotate(@ang1);
+      -o-transform: rotate(@ang1);
+      transform: rotate(@ang1);
+    }
+    .arc_end {
+      border-color:@colarc @colarc @colarc transparent;
+      -webkit-transform: rotate(@ang2);
+      -moz-transform: rotate(@ang2);
+      -ms-transform: rotate(@ang2);
+      -o-transform: rotate(@ang2);
+      transform: rotate(@ang2);
+    }
+
+
+

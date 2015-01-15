@@ -35,30 +35,30 @@ module.exports = function(grunt) {
       },
       build_css: {
         src: [
-          'vendor/leaflet/leaflet.css',
-          'vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
-          'vendor/leaflet.fullscreen/dist/leaflet.fullscreen.css',
-          'vendor/font-awesome/css/font-awesome.css',
+          'src/vendor/leaflet/leaflet.css',
+          'src/vendor/leaflet.locatecontrol/src/L.Control.Locate.css',
+          'src/vendor/leaflet.fullscreen/carte/leaflet.fullscreen.css',
+          'src/vendor/font-awesome/css/font-awesome.css',
           'src/css/*.css'
         ],
-        dest: 'dist/css/<%= pkg.name %>.css'
+        dest: 'carte/css/<%= pkg.name %>.css'
       },
       dist: {
         src: [
-          'vendor/underscore/underscore-min.js',
-          'vendor/zepto/src/zepto.js',
-          'vendor/zepto/src/event.js',
-          'vendor/zepto/src/ajax.js',
-          'vendor/handlebars/handlebars.js',
-          'vendor/leaflet/leaflet.js',
-          'vendor/leaflet.bouncemarker/bouncemarker.js',
-          'vendor/leaflet.locatecontrol/src/L.Control.Locate.js',
-          'vendor/leaflet.markercluster/dist/leaflet.markercluster.js',
-          'vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.min.js',
-          'vendor/moment/moment.js',
+          'src/vendor/underscore/underscore-min.js',
+          'src/vendor/zepto/src/zepto.js',
+          'src/vendor/zepto/src/event.js',
+          'src/vendor/zepto/src/ajax.js',
+          'src/vendor/handlebars/handlebars.js',
+          'src/vendor/leaflet/leaflet.js',
+          'src/vendor/leaflet.bouncemarker/bouncemarker.js',
+          'src/vendor/leaflet.locatecontrol/src/L.Control.Locate.js',
+          'src/vendor/leaflet.markercluster/dist/leaflet.markercluster.js',
+          'src/vendor/leaflet.fullscreen/dist/Leaflet.fullscreen.min.js',
+          'src/vendor/moment/moment.js',
           'src/js/plouf.js'
         ],
-        dest: 'dist/js/<%= pkg.name %>.js'
+        dest: 'carte/js/<%= pkg.name %>.js'
       }
     },
 
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/js/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+          'carte/js/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
@@ -80,43 +80,43 @@ module.exports = function(grunt) {
                     expand: true,
                     flatten: true,
                     src: [
-                        'vendor/font-awesome/fonts/**'
+                        'src/vendor/font-awesome/fonts/**'
                     ],
-                    dest: 'dist/fonts/',
+                    dest: 'carte/fonts/',
                     filter: 'isFile'
                 },
                 {
                     expand: true,
                     flatten: true,
                     src: [
-                        'vendor/leaflet.locatecontrol/src/images/**'
+                        'src/vendor/leaflet.locatecontrol/src/images/**'
                     ],
-                    dest: 'dist/css/images/',
+                    dest: 'carte/css/images/',
                     filter: 'isFile'
                 },
                 {
                     expand: true,
                     flatten: true,
                     src: [
-                        'vendor/leaflet.fullscreen/dist/fullscreen*'
+                        'src/vendor/leaflet.fullscreen/dist/fullscreen*'
                     ],
-                    dest: 'dist/css/',
+                    dest: 'carte/css/',
                     filter: 'isFile'
                 },
                 {
                     expand: true,
                     flatten: true,
                     src: [
-                        'vendor/font-awesome/css/**'
+                        'src/vendor/font-awesome/css/**'
                     ],
-                    dest: 'dist/css/',
+                    dest: 'carte/css/',
                     filter: 'isFile'
                 },
                 {
                     expand: true,
                     flatten: true,
                     src: ['src/js/loader_example.js'],
-                    dest: 'dist/js/',
+                    dest: 'carte/js/',
                     filter: 'isFile'
                 }
             ]
@@ -130,15 +130,15 @@ module.exports = function(grunt) {
       },
       prod : {
         src : './src/index.html',
-        dest : 'dist/index.html'
+        dest : 'carte/index.html'
       },
       config : {
         src : './src/config.xml',
-        dest : 'dist/config.xml'
+        dest : 'carte/config.xml'
       },
       icon : {
         src : './src/icon.png',
-        dest : 'dist/icon.png'
+        dest : 'carte/icon.png'
       }
     },
 

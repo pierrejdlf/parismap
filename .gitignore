@@ -1,6 +1,4 @@
-build
-bin
 node_modules
-vendor
+src/vendor
 .env
 .DS_Store
